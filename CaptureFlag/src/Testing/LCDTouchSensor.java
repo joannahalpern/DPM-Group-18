@@ -1,6 +1,7 @@
 package Testing;
 
-import Lab5.*;
+import Controller.*;
+import Robot.*;
 import lejos.nxt.LCD;
 import lejos.util.Timer;
 import lejos.util.TimerListener;
@@ -11,7 +12,6 @@ public class LCDTouchSensor implements TimerListener{
 	private Timer lcdTimer;
 	private LightPoller lightPoller;
 	private UltrasonicPoller usPoller;
-	private USLocalizer usl;
 //	private TouchPoller tPoller;
 
 	public LCDTouchSensor(Odometer odo, LightPoller lightPoller, UltrasonicPoller usPoller/*, TouchPoller tPoller*/) {

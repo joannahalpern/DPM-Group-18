@@ -5,27 +5,12 @@ package Testing;
  * Joanna Halpern - 260410826
  */
 
-import Lab5.Colour;
-import Lab5.LCDInfo;
-import Lab5.LightPoller;
-import Lab5.Navigation;
-import Lab5.NavigationOur;
-import Lab5.Odometer;
-import Lab5.TwoWheeledRobot;
-import Lab5.USLocalizer;
-import Lab5.UltrasonicPoller;
-import Lab5.USLocalizer.LocalizationType;
 import lejos.nxt.*;
+import Controller.*;
+import Display.*;
+import Robot.*;
 
 public class ColourTestingExperiment {
-	public static int myMutex = 0; //global variable
-	
-	/* Create an object that can be used for synchronization across threads. */
-
-	static class theLock extends Object {//this is a lock
-	}
-
-	static public theLock lock = new theLock();
 	
 	public static void main(String[] args) {
 		
@@ -47,10 +32,8 @@ public class ColourTestingExperiment {
 		ColorSensor ls = new ColorSensor(SensorPort.S1);
 		
 		Navigation nav = new Navigation(odo);
-		NavigationOur ourNav = new NavigationOur(odo);
 		
 		UltrasonicPoller usPoller = new UltrasonicPoller(us);
-		USLocalizer usLocalizer = new USLocalizer(odo, USLocalizer.LocalizationType.FALLING_EDGE, ourNav, usPoller);
 
 		// perform the light sensor localization
 		LightPoller lsPoller = new LightPoller( ls, Colour.BLUE);
@@ -60,7 +43,7 @@ public class ColourTestingExperiment {
 		while (option == 0)
 			option = Button.waitForAnyPress();
 			
-		LCDInfo lcd = new LCDInfo(odo, lsPoller, usPoller, usLocalizer);
+		LCDInfo lcd = new LCDInfo(odo, lsPoller, usPoller);
 		
 		switch(option) {
 		case Button.ID_LEFT:

@@ -12,18 +12,16 @@ public class LCDInfo implements TimerListener{
 	private Timer lcdTimer;
 	private LightPoller lightPoller;
 	private UltrasonicPoller usPoller;
-	private USLocalizer usl;
 
 	
 	// arrays for displaying data
 	private double [] pos;
 	
-	public LCDInfo(Odometer odo, LightPoller lightPoller, UltrasonicPoller usPoller, USLocalizer usl) {
+	public LCDInfo(Odometer odo, LightPoller lightPoller, UltrasonicPoller usPoller) {
 		this.odo = odo;
 		this.lcdTimer = new Timer(LCD_REFRESH, this);
 		this.lightPoller = lightPoller;
 		this.usPoller = usPoller;
-		this.usl = usl;
 
 		
 		
@@ -46,8 +44,6 @@ public class LCDInfo implements TimerListener{
 //		LCD.drawString("Colour = " + lightPoller.getColourVal(), 0, 3);
 		LCD.drawString("Median = " + usPoller.getMedianDistance(), 0, 2);
 		LCD.drawString("Distance = " + usPoller.getDistance(), 0, 3);
-		LCD.drawString("AngleA = " + usl.getAngleA() , 0, 5);
-		LCD.drawString("AngleB = " + usl.getAngleB() , 0, 6);
 		
 //		for (int i = 1; i<4; i++){
 //			LCD.drawString("Line " + i + "= " +LightLocalizer.getAngle(i), 0, i+4);

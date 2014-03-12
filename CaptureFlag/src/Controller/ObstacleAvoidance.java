@@ -25,36 +25,5 @@ public class ObstacleAvoidance extends Thread {
 	}
 	
 	public void run(){
-		avoidObstacles();
-	}
-	public void avoidObstacles(){
-		while (Lab5.obstacleAvoidance == true){
-			if (isBlockinRange(usPoller, blockThreshold)){
-				
-				synchronized (Lab5.lock) {
-					Lab5.navigate = false;
-					do{
-						nav.turnTo( (90+odo.getAng()), true);
-					} while (isBlockinRange(usPoller, blockThreshold));
-					nav.goForward(blockThreshold-2);
-					Lab5.navigate = true;
-				}
-			}
-			try { Thread.sleep(500); } catch(Exception e){}
-			
-		}
-	}
-
-
-	public boolean isBlockinRange(UltrasonicPoller usPoller, double threshold){
-		double distance = usPoller.getMeanDistance();
-		if (distance< threshold){
-			return true;
-		}
-		return false;
-	}
-	
-	public void setBlockThreshold(double blockThreshod){
-		this.blockThreshold = blockThreshod;
 	}
 }

@@ -2,10 +2,9 @@ package Robot;
 
 import java.util.Queue;
 
-import all.Colour;
-import all.QuickSort;
-import PartA_Detection.Lab5_PartA;
+import Controller.*;
 import lejos.nxt.ColorSensor;
+
 
 public class LightPoller extends Thread{
 	public static final int QUEUE_SIZE = 9;
@@ -24,7 +23,7 @@ public class LightPoller extends Thread{
 
 	public void run() {
 		setFloodLight(colour);
-		while(true){//sleep every twentieth second until myMutex (permission variable) goes to 1
+		while(true){
 			colourVal = ls.getRawLightValue();
 			coloursQueue.push(colourVal);
 			coloursQueue.pop();

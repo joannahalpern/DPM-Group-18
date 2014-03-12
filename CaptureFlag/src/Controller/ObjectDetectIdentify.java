@@ -20,15 +20,15 @@ public class ObjectDetectIdentify extends Thread {
 	private static final double UPPER_WOOD_LIMIT = LOWER_FOAM_LIMIT;
 	
 	private UltrasonicPoller usPoller;
-	private LightPoller lsPoller;
+	private LightPoller colourDetector;
 	private Navigation nav;
 	private boolean objectDetected;
 	private boolean block;
 	private BlockType blockType;
 	
-	public ObjectDetectIdentify(UltrasonicPoller usPoller, LightPoller lsPoller, Navigation nav){
+	public ObjectDetectIdentify(UltrasonicPoller usPoller, LightPoller colourDetector, Navigation nav){
 		this.usPoller = usPoller;
-		this.lsPoller = lsPoller;
+		this.colourDetector = colourDetector;
 		this.nav = nav;
 		this.objectDetected = false;
 		this.block = false;
@@ -55,7 +55,7 @@ public class ObjectDetectIdentify extends Thread {
 					nav.setSpeeds(50, 50);
 				}
 				nav.setSpeeds(0, 0);//stop
-				blockType = identifyBlock(lsPoller);
+				blockType = identifyBlock(colourDetector);
 				switch (blockType){
 					case STYROFOAM:
 						block = true; //displays "Block" on LCD

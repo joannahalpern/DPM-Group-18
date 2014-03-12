@@ -1,6 +1,7 @@
 package Testing;
 
-import Lab5.*;
+import Controller.*;
+import Robot.*;
 import lejos.nxt.Button;
 import lejos.nxt.ColorSensor;
 import lejos.nxt.LCD;

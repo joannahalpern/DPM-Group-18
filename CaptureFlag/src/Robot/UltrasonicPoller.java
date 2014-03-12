@@ -2,9 +2,6 @@ package Robot;
 
 
 import java.util.Queue;
-
-import all.QuickSort;
-import all.USLocalizer;
 import lejos.nxt.UltrasonicSensor;
 
 //This code is what was given in lab 1 except that we added myMutex
@@ -13,7 +10,6 @@ public class UltrasonicPoller extends Thread{
 	public static final long POLLING_PERIOD = 28;
 	public static final double SENSOR_OFFSET = 1;
 	private UltrasonicSensor us;
-	private USLocalizer uSLocalizer;
 	private double distance = 99999;
 	private Queue<Double> distancesQueue;
 	

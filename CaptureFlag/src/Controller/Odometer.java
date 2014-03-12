@@ -26,7 +26,7 @@ public class Odometer implements TimerListener {
 		theta = 0.0;
 		oldDH = new double [2];
 		dDH = new double [2];
-		lock = Lab5.lock;
+		lock = Controller.lock;
 		
 		// start the odometer immediately, if necessary
 		if (start)

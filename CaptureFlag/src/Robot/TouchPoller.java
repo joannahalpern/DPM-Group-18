@@ -2,7 +2,6 @@ package Robot;
 
 
 import java.util.Queue;
-
 import lejos.nxt.TouchSensor;
 
 //This code is what was given in lab 1 except that we added myMutex
