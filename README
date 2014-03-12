@@ -1,1 +1,8 @@
-Skeleton of our Capture the flag project
+Skeleton of our Capture the flag project.
+
+Everything is initialized in the Controller class. The main method is also in Controller.
+
+Note that to use the colour sensors, you call getColourValue() from the instance of the LightPoller.
+	For example: lsPollerLeft.getMedian(); will give you the median colour value
+Same idea for the ultrasonic sensor. You don't call the sensor itself, rather the UltrasonicPoller
+	For example: usPoller.getDistance();
