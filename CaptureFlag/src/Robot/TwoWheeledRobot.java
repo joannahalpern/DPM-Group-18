@@ -1,40 +1,62 @@
 package Robot;
 
 import lejos.nxt.NXTRegulatedMotor;
+import lejos.nxt.*;
 
 public class TwoWheeledRobot {
-	public static final double DEFAULT_LEFT_RADIUS = 2.075;
-	public static final double DEFAULT_RIGHT_RADIUS = 2.075;
-	public static final double DEFAULT_WIDTH = 15.45;
+	public static final double DEFAULT_LEFT_RADIUS = 1.6;
+	public static final double DEFAULT_RIGHT_RADIUS = 1.6;
+	public static final double DEFAULT_WIDTH = 26.0;
+	
 	private NXTRegulatedMotor leftMotor, rightMotor, clawMotor;
+	private UltrasonicSensor usLeft, usRight;
+	private ColorSensor csFlagReader, csLineReader;
+	
 	private double leftRadius, rightRadius, width;
 	private double forwardSpeed, rotationSpeed;
 	
-	public TwoWheeledRobot(NXTRegulatedMotor leftMotor,
-						   NXTRegulatedMotor rightMotor,
-						   NXTRegulatedMotor clawMotor,
+	public TwoWheeledRobot(NXTRegulatedMotor leftMotor, NXTRegulatedMotor rightMotor, NXTRegulatedMotor clawMotor,
+							UltrasonicSensor usLeft, UltrasonicSensor usRight, ColorSensor csFlagReader, ColorSensor csLineReader,
 						   double width,
 						   double leftRadius,
 						   double rightRadius) {
 		this.leftMotor = leftMotor;
 		this.rightMotor = rightMotor;
 		this.clawMotor = clawMotor;
+		this.usLeft = usLeft;
+		this.usLeft = usRight;
+		this.csFlagReader = csFlagReader;
+		this.csLineReader = csLineReader;
+		
+		
 		this.leftRadius = leftRadius;
 		this.rightRadius = rightRadius;
 		this.width = width;
 		
 //		clawMotor.resetTachoCount();
 	}
-	
-	public TwoWheeledRobot(NXTRegulatedMotor leftMotor, NXTRegulatedMotor rightMotor, NXTRegulatedMotor clawMotor) {
-		this(leftMotor, rightMotor, clawMotor, DEFAULT_WIDTH, DEFAULT_LEFT_RADIUS, DEFAULT_RIGHT_RADIUS);
+
+	public TwoWheeledRobot(NXTRegulatedMotor leftMotor, NXTRegulatedMotor rightMotor, NXTRegulatedMotor clawMotor,
+			UltrasonicSensor usLeft, UltrasonicSensor usRight, ColorSensor csFlagReader, ColorSensor csLineReader) {
+		this(leftMotor, rightMotor, clawMotor, usLeft, usRight, csFlagReader, csLineReader, DEFAULT_WIDTH, DEFAULT_LEFT_RADIUS, DEFAULT_RIGHT_RADIUS);
 	}
-	
-	public TwoWheeledRobot(NXTRegulatedMotor leftMotor, NXTRegulatedMotor rightMotor, NXTRegulatedMotor clawMotor, double width) {
-		this(leftMotor, rightMotor, clawMotor, width, DEFAULT_LEFT_RADIUS, DEFAULT_RIGHT_RADIUS);
-	}
-	
+
 	// accessors
+	public NXTRegulatedMotor[] getWheelMotors() {
+		return new NXTRegulatedMotor[] {leftMotor, rightMotor};
+	}
+	public NXTRegulatedMotor getBlockGrabber() {
+		return clawMotor;
+	}
+	public UltrasonicSensor[] getusSensors() {
+		return new UltrasonicSensor[] {usLeft, usRight};
+	}
+	public ColorSensor getColourSensorFlag(){
+		return csFlagReader;
+	}
+	public ColorSensor getColourSensorLineReader(){
+		return csLineReader;
+	}
 	public double getDisplacement() {
 		return (leftMotor.getTachoCount() * leftRadius + rightMotor.getTachoCount() * rightRadius) * Math.PI / (180.0*2);
 	}
