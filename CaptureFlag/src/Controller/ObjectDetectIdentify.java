@@ -1,8 +1,6 @@
 package Controller;
  
-import Display.*;
 import Robot.*;
-
 import lejos.nxt.*;
 
 /**
@@ -11,108 +9,118 @@ import lejos.nxt.*;
  *  does identifyBlock(). If the block is within foam limit, it is identified as a styrofoam block and block=true. 
  *  Otherwise block=false.
  */
-public class ObjectDetectIdentify extends Thread {
-	private static final double COLOUR_READING_THRESHOLD = 9;
-	private static final double DETECTION_THRESHOLD = 30;
-	private static final double LOWER_FOAM_LIMIT = 380;
-	private static final double UPPER_FOAM_LIMIT = 540;
-	private static final double LOWER_WOOD_LIMIT = 230;
-	private static final double UPPER_WOOD_LIMIT = LOWER_FOAM_LIMIT;
-	
-	private UltrasonicPoller usPoller;
-	private LightPoller colourDetector;
+public class ObjectDetectIdentify {
 	private Navigation nav;
-	private boolean objectDetected;
-	private boolean block;
-	private BlockType blockType;
+	private TwoWheeledRobot robot;
+	private ColorSensor cs;
+	private UltrasonicSensor usLeft, usRight;
+	private ObjectDisplacement od;
 	
-	public ObjectDetectIdentify(UltrasonicPoller usPoller, LightPoller colourDetector, Navigation nav){
-		this.usPoller = usPoller;
-		this.colourDetector = colourDetector;
+	private LightPoller csFlagPoller;
+	private UltrasonicPoller usPollerLeft;
+	private UltrasonicPoller usPollerRight;
+
+	//Constructor
+	public ObjectDetectIdentify(TwoWheeledRobot robot, Navigation nav, ObjectDisplacement od){
 		this.nav = nav;
-		this.objectDetected = false;
-		this.block = false;
-		this.blockType = BlockType.UNKNOWN;
+		this.cs = robot.getColourSensorFlag();
+		this.od = od;
+
+		UltrasonicSensor[] usSensors = this.robot.getusSensors();
+		this.usLeft = usSensors[0];
+		this.usRight = usSensors[1];
 	}
-	
-	public void run() {
-		while(true){
-			doBlockDetection();
-			try { Thread.sleep(100); } catch(Exception e){}
-			objectDetected = false;
+	//this method will do the object detection
+	public void doDetection(){
+		
+		boolean doing = true;
+		while(doing){
+			//this should use nav, not the motors
+			leftMotor.forward();
+			rightMotor.forward();
+			
+			doUSBlockDetection();
+			
+			leftMotor.rotate(90);
+			rightMotor.rotate(-90);
+					
+			doUSBlockDetection();
+			
 		}
 	}
+		
 	
-	/**
-	 *  Returns true if styrofoam block is detected and false otherwise
-	 */
-	public boolean doBlockDetection(){
-			if (isBlockinRange(usPoller, DETECTION_THRESHOLD)){
-				objectDetected = true; //LCD will now display "Object Detected"
-
-				//check to see block is close enough to read colour. If not, then move forward.
-				while (!isBlockinRange(usPoller, COLOUR_READING_THRESHOLD)){
-					nav.setSpeeds(50, 50);
-				}
-				nav.setSpeeds(0, 0);//stop
-				blockType = identifyBlock(colourDetector);
-				switch (blockType){
-					case STYROFOAM:
-						block = true; //displays "Block" on LCD
-						break;
-					case WOOD:
-						block = false; //displays "Not Block" on LCD
-						break;
-					case UNKNOWN:
-						block = false; //displays "Not Block" on LCD
-						break;
-					default:
-						block = false;
-						break;
-				}
+	public void doUSBlockDetection() {
+			if ( ( (usLeft.getDistance() < 13) || (usRight.getDistance()  < 13) ) )
+			{
+				LCD.drawString("Object Detected!", 0, 1);
+				doCSBlockDetection();
 			}
-			return block;
-	}
-
-	/**
-	 * returns true if ultrasonc sensor detects that block is within given threshold. Else returns false
-	 */
-	public boolean isBlockinRange(UltrasonicPoller usPoller, double threshold){
-		double distance = usPoller.getMedianDistance(); 
-		if (distance< threshold){
-			return true;
-		}
-		return false;
+			
+		}	
+	
+			
+			
+			public void doCSBlockDetection() {
+				
+			
+			/*
+			 * color sensor can distinguish the blue foam and wood block
+			 * by calculating GREEN/RED's value 
+			 */
+				boolean isNotBlock = true;
+				boolean isBlock = false;
+			    double green = cs.getRawColor().getGreen();
+				double red = cs.getRawColor().getRed();
+				double blue = cs.getRawColor().getBlue();
+				double backgroundLumination = cs.getRawColor().getBackground();
+				
+				if( (blue > green ) && (green > red) ) {
+					LCD.drawString("Dark blue: ", 0, 2);
+//					LCD.drawString("LCDblue: " + blue, 0, 3);
+//					LCD.drawString("LCDgreen: " + green, 0, 4);
+//					LCD.drawString("LCDred: " + red, 0, 5);
+					isBlock = true;
+					od.ObjectDisplacement();
+				}
+				else if ( (red > green) && (green > blue)) {
+					LCD.drawString("Yellow: ", 0, 2);
+					isBlock = true;
+					od.ObjectDisplacement();
+					
+				}
+				else if ( ( (red > blue) && (red > green) ) ) {
+					LCD.drawString("Red: ", 0, 2);
+					isBlock = true;
+					od.ObjectDisplacement();
+					
+				}
+				else if ( ((red > 300) && (green > 300) && (blue > 300)) && (( (blue +70) > green) && ( (blue +70) > red) )	) { //((red && green && blue) >300) && ( (blue + 70) ) > (green && red) )
+					LCD.drawString("Light Blue: ", 0, 2);
+					isBlock = true;
+					od.ObjectDisplacement();
+				}
+				else { 			//((red && green && blue) >300) && ( (red + 20)  > (green && blue) )
+				LCD.drawString("White: ", 0, 2);
+				isBlock = true;
+				od.ObjectDisplacement();	
+				}
+									
+			}
+		
+			
+			
+			
+			
+/*		 
+	public boolean isBlock(){
+		return this.isBlock;
 	}
 	
-	public BlockType identifyBlock(LightPoller lsPoller){
-		try { Thread.sleep(lsPoller.POLLING_PERIOD*5); } catch(Exception e){}
-		double colourVal = lsPoller.getMedian();
-		BlockType blockType;
-		
-		if ((LOWER_FOAM_LIMIT < colourVal) && (colourVal < UPPER_FOAM_LIMIT)){
-			blockType = BlockType.STYROFOAM;
-		}
-		else if ((LOWER_WOOD_LIMIT) < colourVal && colourVal < (UPPER_WOOD_LIMIT)){
-			blockType = BlockType.WOOD;
-		}
-		else{
-			blockType = BlockType.UNKNOWN;
-		}
-		
-		return blockType;
+	//return true if the robot detects a block
+	public boolean isNotBlock(){
+		return this.isNotBlock;
 	}
-
-	public boolean isObjectDetected() {
-		return objectDetected;
-	}
-
-	public boolean isBlock() {
-		return block;
-	}
+	*/
 	
-	public BlockType getBlockType(){
-		return blockType;
-	}
-
 }

@@ -2,6 +2,7 @@ package Display;
 
 import Controller.*;
 import Robot.*;
+import lejos.nxt.ColorSensor;
 import lejos.nxt.SensorPort;
 import lejos.nxt.UltrasonicSensor;
 import lejos.nxt.comm.RConsole;
@@ -9,29 +10,43 @@ import lejos.nxt.LCD;
 import lejos.util.Timer;
 import lejos.util.TimerListener;
 
+/**
+ *Display on the computer 
+ */
 public class RConsoleDisplay implements TimerListener{
 	public static final int LCD_REFRESH = 143;
-	private Odometer odo;
 	private Timer lcdTimer;
-	private LightPoller lightPoller;
-	private UltrasonicPoller usPoller;
 
+	private Odometer odo;
+	private TwoWheeledRobot robot;
+	private ColorSensor csFlagReader, csLineReader;
+	private UltrasonicSensor usLeft, usRight;
+	
+//	private UltrasonicPoller usPollerLeft;
+//	private UltrasonicPoller usPollerRight;
+//	private LightPoller csLinePoller;
+//	private LightPoller csFlagPoller;
 	
 	// arrays for displaying data
-	private double [] pos;
 	
-	public RConsoleDisplay(Odometer odo, LightPoller lightPoller, UltrasonicPoller usPoller) {
+	public RConsoleDisplay(Odometer odo, TwoWheeledRobot robot) {
 		this.odo = odo;
-		this.lcdTimer = new Timer(LCD_REFRESH, this);
-		this.lightPoller = lightPoller;
-		this.usPoller = usPoller;
+		this.robot = robot;
+		this.csFlagReader = robot.getColourSensorFlag();
+		this.csLineReader = robot.getColourSensorLineReader();
+		
+		UltrasonicSensor[] usSensors = this.robot.getusSensors();
+		this.usLeft = usSensors[0];
+		this.usRight = usSensors[1];
 
+		this.lcdTimer = new Timer(LCD_REFRESH, this);
+		
 		// start the timer
 		lcdTimer.start();
-		RConsole.println("Angle  |  Median Distance |  Raw Distance");
+		RConsole.println("X  | Y | Angle");
 	}
 	
 	public void timedOut() { 
-		RConsole.println(odo.getAng() + ", " + usPoller.getMedianDistance() + ", " + usPoller.getDistance());
+		RConsole.println("" + odo.getX() + ", " + odo.getY() + ", " + odo.getAngle());
 	}
 }

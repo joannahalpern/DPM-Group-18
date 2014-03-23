@@ -5,6 +5,7 @@ import lejos.nxt.Button;
 import lejos.nxt.ColorSensor;
 import lejos.nxt.LCD;
 import lejos.nxt.Motor;
+import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.SensorPort;
 import lejos.nxt.UltrasonicSensor;
 import lejos.nxt.comm.RConsole;
@@ -30,29 +31,30 @@ public class Controller {
 		LCD.drawString("    to begin    ", 0, 3);
 		
 		// setup everything
-		UltrasonicSensor us = new UltrasonicSensor(SensorPort.S2);
-		ColorSensor lsLeft = new ColorSensor(SensorPort.S1);
-		ColorSensor lsRight = new ColorSensor(SensorPort.S3);
-		ColorSensor colourDetectorSensor = new ColorSensor(SensorPort.S4);
-		UltrasonicPoller usPoller = new UltrasonicPoller(us);
-		LightPoller lsPollerLeft = new LightPoller(lsLeft, Colour.BLUE);
-		LightPoller lsPollerRight = new LightPoller(lsRight, Colour.BLUE);
-		LightPoller colourDetector = new LightPoller(colourDetectorSensor, Colour.BLUE);
+		UltrasonicSensor usLeft = new UltrasonicSensor(SensorPort.S1);
+		UltrasonicSensor usRight = new UltrasonicSensor(SensorPort.S4);
+		ColorSensor csFlagReader = new ColorSensor(SensorPort.S2);
+		ColorSensor csLineReader = new ColorSensor(SensorPort.S3);
+		
+		UltrasonicPoller usPollerLeft = new UltrasonicPoller(usLeft);
+		UltrasonicPoller usPollerRight = new UltrasonicPoller(usRight);
+		
+		LightPoller csPollerLineReader = new LightPoller(csLineReader, Colour.BLUE);
+		LightPoller colourDetector = new LightPoller(csFlagReader, Colour.BLUE);
 
-		TwoWheeledRobot fuzzyPinkRobot = new TwoWheeledRobot(Motor.A, Motor.B, Motor.C);
+		TwoWheeledRobot fuzzyPinkRobot = new TwoWheeledRobot(Motor.A, Motor.B, Motor.C, usLeft, usRight, csFlagReader, csLineReader);
 		Odometer odo = new Odometer(fuzzyPinkRobot, true);
-		Navigation nav = new Navigation(odo);
-		OdometryCorrection odoCorection = new OdometryCorrection(odo, lsPollerLeft, lsPollerRight);
+		Navigation nav = new Navigation(odo, fuzzyPinkRobot);
+		OdometryCorrection odoCorection = new OdometryCorrection(odo, csPollerLineReader);
 		
-		Localization localizer = new Localization(odo, nav, usPoller, lsPollerLeft, lsPollerRight);
+		Localization localizer = new Localization(odo, nav, usPollerLeft, usPollerRight, csPollerLineReader);
 		
-		ObstacleAvoidance avoider = new ObstacleAvoidance(nav, usPoller, odo);
-		ObjectDetectIdentify objectDetection = new ObjectDetectIdentify(usPoller, colourDetector, nav);
-		ObjectDisplacement objectDisplacement = new ObjectDisplacement(usPoller, colourDetector, nav);
+		ObjectDisplacement objectDisplacement = new ObjectDisplacement(fuzzyPinkRobot, nav);
+		ObjectDetectIdentify objectDetection = new ObjectDetectIdentify(fuzzyPinkRobot, nav, objectDisplacement);
 		
 		
-		initializeRConsole();
-		RConsoleDisplay rcd = new RConsoleDisplay(odo, colourDetector, usPoller);
+//		initializeRConsole();
+//		RConsoleDisplay rcd = new RConsoleDisplay(odo, colourDetector, usPollerLeft);
 //		LCDInfo lcd = new LCDInfo(odo, lsPoller, usPoller, usLocalizer);
 
 		int option = 0;
@@ -72,17 +74,6 @@ public class Controller {
 		System.exit(0);
 
 	}
-	/**
-	 * Claw of robot grab block
-	 */
-	private static void grabBlock() {
-	}
-	/**
-	 * claw releases block
-	 */
-	private static void dropBlock() {
-	}
-
 	//for testing
 	private static void initializeRConsole() {
 		RConsole.openUSB(20000);

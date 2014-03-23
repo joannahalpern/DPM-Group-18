@@ -1,24 +1,20 @@
 package Controller;
 
+import lejos.nxt.NXTRegulatedMotor;
 import Robot.*;
 
 /**
- * The robot will pick up and throw styrofome block which is not the flag
- * @author Joanna
+ * The robot will pick up the flag block
  *
  */
 public class ObjectDisplacement {
-	private UltrasonicPoller usPoller;
-	private LightPoller colourDetector;
+	private TwoWheeledRobot robot;
+	private NXTRegulatedMotor blockGrabber;
 	private Navigation nav;
 	
-	public ObjectDisplacement(UltrasonicPoller usPoller, LightPoller colourDetector, Navigation nav) {
-		this.usPoller = usPoller;
-		this.colourDetector = colourDetector;
+	public ObjectDisplacement(TwoWheeledRobot robot, Navigation nav) {
+		this.robot = robot;
+		this.blockGrabber = robot.getBlockGrabber();
 		this.nav = nav;
 	}
-
-	public static void throwBlock(){
-	}
-	
 }

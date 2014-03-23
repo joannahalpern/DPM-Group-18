@@ -10,15 +10,13 @@ import Robot.*;
 public class OdometryCorrection extends Thread {
 	private static final long CORRECTION_PERIOD = 10;
 	private Odometer odometer;
-	private LightPoller lsPollerLeft;
-	private LightPoller lsPollerRight; 
+	private LightPoller csPoller;
 	
 
 	// constructor
-	public OdometryCorrection(Odometer odometer, LightPoller lsPollerLeft, LightPoller lsPollerRight) {
+	public OdometryCorrection(Odometer odometer, LightPoller csPollerLineReader) {
 		this.odometer = odometer;
-		this.lsPollerLeft = lsPollerLeft;
-		this.lsPollerRight = lsPollerRight;
+		this.csPoller = csPollerLineReader;
 	}
 
 	// run method (required for Thread)

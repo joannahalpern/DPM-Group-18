@@ -8,17 +8,17 @@ import Robot.*;
 public class Localization {
 	private Navigation nav;
 	private Odometer odo;
-	private UltrasonicPoller usPoller;
-	private LightPoller lsPollerLeft;
-	private LightPoller lsPollerRight;
+	private UltrasonicPoller usPollerLeft;
+	private UltrasonicPoller usPollerRight;
+	private LightPoller csPoller;
 
-	public Localization(Odometer odo, Navigation nav, UltrasonicPoller usPoller, 
-						LightPoller lsPollerLeft, LightPoller lsPollerRight) {
+	public Localization(Odometer odo, Navigation nav, UltrasonicPoller usPollerLeft, UltrasonicPoller usPollerRight, 
+						LightPoller csPoller) {
 		this.nav = nav;
 		this.odo = odo;
-		this.usPoller = usPoller;
-		this.lsPollerLeft = lsPollerLeft;
-		this.lsPollerRight = lsPollerRight;
+		this.usPollerLeft = usPollerLeft;
+		this.usPollerRight = usPollerRight;
+		this.csPoller = csPoller;
 	}
 }
 
