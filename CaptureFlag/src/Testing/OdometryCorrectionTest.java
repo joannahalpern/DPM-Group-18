@@ -21,7 +21,7 @@ public class OdometryCorrectionTest {
 	public static void main(String[] args) {
 		
 		LCD.clear();
-		LCD.drawString("   Navigation   ", 0, 0);
+		LCD.drawString(" Odo Correction ", 0, 0);
 		LCD.drawString("   Press left   ", 0, 2);
 		LCD.drawString("    to begin    ", 0, 3);
 		
