@@ -24,8 +24,7 @@ public class ObjectDisplacement {
 		clamp.setSpeed(CLAMP_SPEED);
 		clamp.backward();
 		clamp.rotate(180);
-		
-		clamp.lock(75);
+		clamp.stop();
 		
 	}
 }

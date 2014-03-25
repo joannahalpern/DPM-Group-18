@@ -8,7 +8,7 @@ import lejos.nxt.ColorSensor;
 
 public class LightPoller extends Thread{
 	public static final int QUEUE_SIZE = 9;
-	public static final long POLLING_PERIOD = 50; // (1 poll per 50ms)
+	public static long POLLING_PERIOD = 50; // (1 poll per 50ms)
 	private ColorSensor ls;
 	private double colourVal = 99999;
 	private Colour colour;
@@ -54,7 +54,11 @@ public class LightPoller extends Thread{
 				break;
 		}
 	}
-
+	public boolean search(){
+		
+		
+	}
+	
 	public double getColourVal() {
 		return colourVal;
 	}
