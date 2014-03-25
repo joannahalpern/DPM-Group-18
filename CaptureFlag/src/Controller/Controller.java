@@ -1,13 +1,4 @@
 /*
- * To change:
- * 	-make and TestNav___ for each thing and replace folder for each
- *  -check that no more arrays
- *  
- * 	-email Connor to test nav on TestNav
- *  email team to name well and alt-shift-r and ctrl-d
- *  email team about RConsole
- *  email Ben about detection and that we pollers
- *  
  *  RConsole
  *  	-goto C:\Program Files (x86)\leJOS NXJ\bin\nxjconsoleviewer
  */

@@ -1,5 +1,8 @@
 package Robot;
 
+import Controller.Coordinate;
+import Controller.Colour;
+
 /**
  * Bluetooth message specifying robot's starting corner, the location of its Home zone, the 
 location of its opponent’s Home zone, the location of the destination for the captured 
@@ -21,5 +24,113 @@ opponent’s Home flag respectively
  *
  */
 public class Bluetooth {
+	public Coordinate ourStartPos;
+	public Coordinate ourZoneBottomLeft;
+	public Coordinate ourZoneTopRight;
+	public Coordinate ourDropZoneBottomLeftCorner;
+	public Colour OurFlagType;
+	
+	//Opponent 
+	public Coordinate opponentStartPos;
+	public Coordinate opponentZoneBottomLeft;
+	public Coordinate opponentZoneTopRight;
+	public Coordinate opponentDropZoneBottomLeftCorner;
+	public Colour opponentFlagType;
+	
+	public Bluetooth() {
+		this.ourStartPos = ourStartPos = new Coordinate(0, 0);
+		this.ourZoneBottomLeft = new Coordinate(0, 0);
+		this.ourZoneTopRight = new Coordinate(0, 0);
+		this.ourDropZoneBottomLeftCorner = new Coordinate(0, 0);
+		OurFlagType = Colour.RED;
+		this.opponentStartPos = new Coordinate(0, 0);
+		this.opponentZoneBottomLeft = new Coordinate(0, 0);
+		this.opponentZoneTopRight = new Coordinate(0, 0);
+		this.opponentDropZoneBottomLeftCorner = new Coordinate(0, 0);
+		this.opponentFlagType = Colour.RED;
+	}
+
+	public Coordinate getOurStartPos() {
+		return ourStartPos;
+	}
+
+	public void setOurStartPos(Coordinate ourStartPos) {
+		this.ourStartPos = ourStartPos;
+	}
+
+	public Coordinate getOurZoneBottomLeft() {
+		return ourZoneBottomLeft;
+	}
+
+	public void setOurZoneBottomLeft(Coordinate ourZoneBottomLeft) {
+		this.ourZoneBottomLeft = ourZoneBottomLeft;
+	}
+
+	public Coordinate getOurZoneTopRight() {
+		return ourZoneTopRight;
+	}
+
+	public void setOurZoneTopRight(Coordinate ourZoneTopRight) {
+		this.ourZoneTopRight = ourZoneTopRight;
+	}
+
+	public Coordinate getOurDropZoneBottomLeftCorner() {
+		return ourDropZoneBottomLeftCorner;
+	}
+
+	public void setOurDropZoneBottomLeftCorner(
+			Coordinate ourDropZoneBottomLeftCorner) {
+		this.ourDropZoneBottomLeftCorner = ourDropZoneBottomLeftCorner;
+	}
+
+	public Colour getOurFlagType() {
+		return OurFlagType;
+	}
+
+	public void setOurFlagType(Colour ourFlagType) {
+		OurFlagType = ourFlagType;
+	}
+
+	public Coordinate getOpponentStartPos() {
+		return opponentStartPos;
+	}
+
+	public void setOpponentStartPos(Coordinate opponentStartPos) {
+		this.opponentStartPos = opponentStartPos;
+	}
+
+	public Coordinate getOpponentZoneBottomLeft() {
+		return opponentZoneBottomLeft;
+	}
+
+	public void setOpponentZoneBottomLeft(Coordinate opponentZoneBottomLeft) {
+		this.opponentZoneBottomLeft = opponentZoneBottomLeft;
+	}
+
+	public Coordinate getOpponentZoneTopRight() {
+		return opponentZoneTopRight;
+	}
+
+	public void setOpponentZoneTopRight(Coordinate opponentZoneTopRight) {
+		this.opponentZoneTopRight = opponentZoneTopRight;
+	}
+
+	public Coordinate getOpponentDropZoneBottomLeftCorner() {
+		return opponentDropZoneBottomLeftCorner;
+	}
+
+	public void setOpponentDropZoneBottomLeftCorner(
+			Coordinate opponentDropZoneBottomLeftCorner) {
+		this.opponentDropZoneBottomLeftCorner = opponentDropZoneBottomLeftCorner;
+	}
+
+	public Colour getOpponentFlagType() {
+		return opponentFlagType;
+	}
+
+	public void setOpponentFlagType(Colour opponentFlagType) {
+		this.opponentFlagType = opponentFlagType;
+	}
+	
 
 }
