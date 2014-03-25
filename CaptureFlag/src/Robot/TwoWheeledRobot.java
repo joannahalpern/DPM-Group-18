@@ -63,6 +63,9 @@ public class TwoWheeledRobot {
 	public ColorSensor getColourSensorLineReader(){
 		return csLineReader;
 	}
+	public double getRadius(){
+		return DEFAULT_RIGHT_RADIUS;
+	}
 	public double getDisplacement() {
 		return (leftMotor.getTachoCount() * leftRadius + rightMotor.getTachoCount() * rightRadius) * Math.PI / (180.0*2);
 	}
