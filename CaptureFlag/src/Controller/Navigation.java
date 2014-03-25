@@ -6,9 +6,15 @@ import lejos.nxt.*;
 public class Navigation {
 	// Initializers
 	private NXTRegulatedMotor leftMotor, rightMotor;
-	private TwoWheeledRobot robot;
-	private Odometer odometer;
 	private UltrasonicSensor usLeft, usRight;
+	private ObjectDisplacement displacer;
+	private TwoWheeledRobot robot;
+	private ObjectDisplacement od;
+	private Odometer odometer;
+	private ColorSensor cs;
+	private LightPoller colourDetector;
+
+	
 
 	// Constants for navigation
 	private final double ACCEPTABLE_THETA_ERROR = Math.PI / 110;
@@ -38,8 +44,16 @@ public class Navigation {
 	private boolean xAxis;
 	private boolean exit;
 
+	//Search variables
+	private int csCount = 0;
+	private double lowValue;
+	private double csValue;
+	private Colour flagColour;
+	private boolean searching = true;
+	
+	
 	// Constructor
-	public Navigation(Odometer odo, TwoWheeledRobot robot) {
+	public Navigation(Odometer odo, TwoWheeledRobot robot, ObjectDisplacement displacer, LightPoller colourDetector) {
 		this.odometer = odo;
 		this.robot = robot;
 
@@ -49,6 +63,9 @@ public class Navigation {
 		this.usLeft = this.robot.getLeftUSSensor();
 		this.usRight = this.robot.getRightUSSensor();
 
+		this.cs = robot.getColourSensorFlag();
+		this.displacer = displacer;
+		this.colourDetector = colourDetector;
 		// NXTRegulatedMotor[] motors = new NXTRegulatedMotor[2];
 		// motors = this.robot.getWheelMotors();
 		// this.leftMotor = motors[0];
@@ -59,8 +76,17 @@ public class Navigation {
 		// this.usRight = usSensors[1];
 	}
 
-	// avoid
-	public void travelTo(double x, double y, boolean avoid, boolean turn) {
+	/**Travels to x,y
+	 * Avoid sets obstacle avoidance on
+	 * 
+	 * 
+	 * @param x: final x coord	
+	 * @param y: final y coord
+	 * @param avoid: true turns avoid on
+	 * @param turn: true sets turn on
+	 * @param search: true sets search on
+	 */
+	public void travelTo(double x, double y, boolean avoid, boolean turn, boolean search) {
 		double desiredAngle;
 		exit = false;
 
@@ -71,7 +97,11 @@ public class Navigation {
 		rightMotor.setSpeed(FORWARD_SPEED);
 		leftMotor.forward();
 		rightMotor.forward();
-
+		
+		//Search Initializaers
+		if(search){
+			flagColour = Bluetooth.getOurFlagType();
+		}
 		// Concave L Obstacle avoidance and corner avoid
 		if (avoid) {
 			if (concaveAvoidance()) {
@@ -87,21 +117,20 @@ public class Navigation {
 			if ((Math.abs(y0 - odometer.getY())) <= ACCEPTABLE_DISTANCE_ERROR
 					&& avoid && !yReached) {
 				yReached = true;
-				travelTo(x0, y0, true, turnON);
+				travelTo(x0, y0, true, turnON, false);
 				Sound.twoBeeps();
 				exit = true;
 			}
 			// Exits loop when reaches proper x coordinate, xCall is used so
 			// that loop will no exit when travelling along xaxis to y
-			if (Math.abs(x0 - odometer.getX()) <= ACCEPTABLE_DISTANCE_ERROR
-					&& avoid && !xReached) {
+			if (Math.abs(x0 - odometer.getX()) <= ACCEPTABLE_DISTANCE_ERROR && avoid && !xReached) {
 				xReached = true;
-				travelTo(x0, y0, true, turnON);
+				travelTo(x0, y0, true, turnON, false);
 				Sound.twoBeeps();
 				exit = true;
 			}
 
-			if (exit) {
+			if (exit || !searching) {
 				return;
 			}
 
@@ -116,12 +145,22 @@ public class Navigation {
 
 			leftMotor.forward();
 			rightMotor.forward();
-
+			
+			//Search code
+			if (search){
+				if(isBlock()){
+					if(getColour() == flagColour){
+						displacer.run();
+						searching = false;
+				}
+			}
+			
+			
 			// Code for avoidance
 			/**
-			 * If avoidObstacle returns true, first checks speacial case of axis
+			 * If avoidObstacle returns true, first checks special case of axis
 			 * avoidance, then checks current heading. Sets xAxis to opposite
-			 * value and trusn 90 degrees towards x0/y0
+			 * value and turns 90 degrees towards x0/y0
 			 * 
 			 */
 			if (avoid) {
@@ -133,11 +172,11 @@ public class Navigation {
 					if (xAxis) {
 						cTurn(turnON);
 						xAxis = false;
-						travelTo(odometer.getX(), y0, true, turnON);
+						travelTo(odometer.getX(), y0, true, turnON, false);
 					} else {
 						cTurn(turnON);
 						xAxis = true;
-						travelTo(x0, odometer.getY(), true, turnON);
+						travelTo(x0, odometer.getY(), true, turnON, false);
 					}
 				}
 			}
@@ -149,7 +188,100 @@ public class Navigation {
 		return;
 
 	}
-
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	// SEARCH Methods
+	
+	/**Reads 5 values for each colour and returns median
+	 * Compares values to determine which colour flag it is
+	 * 
+	 * @return: colour enum
+	 */
+	private Colour getColour(){
+		
+		
+		//Calls and returns medians for each value
+		colourDetector.setFloodLight(Colour.GREEN);
+		colourDetector.run();
+		double green = colourDetector.getMedian();
+		
+		colourDetector.setFloodLight(Colour.BLUE);
+		colourDetector.run();
+		double blue = colourDetector.getMedian();
+		
+		colourDetector.setFloodLight(Colour.RED);
+		colourDetector.run();
+		double red = colourDetector.getMedian();
+		
+		
+		/*
+	    double green = cs.getRawColor().getGreen();
+		double red = cs.getRawColor().getRed();
+		double blue = cs.getRawColor().getBlue();
+		double backgroundLumination = cs.getRawColor().getBackground();
+		*/
+		
+		
+		if( (blue > green ) && (green > red) ) {
+			LCD.drawString("Dark blue: ", 0, 2);
+//			LCD.drawString("LCDblue: " + blue, 0, 3);
+//			LCD.drawString("LCDgreen: " + green, 0, 4);
+//			LCD.drawString("LCDred: " + red, 0, 5);
+			return Colour.DARK_BLUE;
+		}
+		else if ( (red > green) && (green > blue)) {
+			LCD.drawString("Yellow: ", 0, 2);
+			return Colour.YELLOW;
+			
+		}
+		else if ( ( (red > blue) && (red > green) ) ) {
+			LCD.drawString("Red: ", 0, 2);
+			return Colour.RED;
+			
+		}
+		else if ( ((red > 300) && (green > 300) && (blue > 300)) && (( (blue +70) > green) && ( (blue +70) > red) )	) { //((red && green && blue) >300) && ( (blue + 70) ) > (green && red) )
+			LCD.drawString("Light Blue: ", 0, 2);
+			return Colour.LIGHT_BLUE;
+		}
+		else { 			//((red && green && blue) >300) && ( (red + 20)  > (green && blue) )
+		LCD.drawString("White: ", 0, 2);
+		return Colour.WHITE;
+		}
+							
+	}
+		
+	/**Continuously checks light cs for a value greater than base value
+	 * 
+	 *
+	 * @return: true if more than 3 consecutive high values
+	 */
+	private boolean isBlock(){
+		csValue = cs.getRawLightValue();
+		if(csValue >= lowValue){
+			csCount++;
+			if(csCount > 3){
+				csCount = 0;
+				return true;
+			}
+		}
+	return false;
+	}
+	
+	
+	
+	
+	
+	
+	
+	// obstacle Avoidance Methods
+	
 	/**
 	 * Checks sensor values and returns lower of 2 sensors. If smaller value is
 	 * less than AVOID_DISTANCE more than 3 times, returns true indicating there
@@ -216,6 +348,10 @@ public class Navigation {
 
 	}
 
+	
+	
+	
+	
 	/**
 	 * Checks if there is an obstacle, if so turns again towards heading with an
 	 * offset of Lcorretciton. Used to avoid L-shaped obstacles
@@ -228,28 +364,28 @@ public class Navigation {
 				xAxis = false;
 				if (((y0 - odometer.getY()) >= 0)) {
 					travelTo(odometer.getX(), odometer.getY() - lCorrection,
-							true, turnON);
+							true, turnON, false);
 					xAxis = true;
-					travelTo(x0, odometer.getY(), true, turnON);
+					travelTo(x0, odometer.getY(), true, turnON, false);
 				} else {
 					travelTo(odometer.getX(), odometer.getY() + lCorrection,
-							true, turnON);
+							true, turnON, false);
 					xAxis = true;
-					travelTo(odometer.getX(), y0, true, turnON);
+					travelTo(odometer.getX(), y0, true, turnON, false);
 				}
 
 			} else {
 				xAxis = true;
 				if ((x0 - odometer.getX()) >= 0) {
 					travelTo(odometer.getX() - lCorrection, odometer.getY(),
-							true, turnON);
+							true, turnON, false);
 					xAxis = false;
-					travelTo(odometer.getX(), y0, true, turnON);
+					travelTo(odometer.getX(), y0, true, turnON, false);
 				} else {
 					travelTo(odometer.getX() - lCorrection, odometer.getY(),
-							true, turnON);
+							true, turnON, false);
 					xAxis = false;
-					travelTo(odometer.getX(), y0, true, turnON);
+					travelTo(odometer.getX(), y0, true, turnON, false);
 				}
 			}
 			return true;
@@ -271,9 +407,9 @@ public class Navigation {
 			xAxis = false;
 			yReached = false;
 			travelTo(odometer.getX(), odometer.getY() - lCorrection, true,
-					turnON);
+					turnON, false);
 			xAxis = true;
-			travelTo(x0, odometer.getY(), true, turnON);
+			travelTo(x0, odometer.getY(), true, turnON, false);
 			return true;
 		}
 		// robot traveling along y Axis while at x0
@@ -282,9 +418,9 @@ public class Navigation {
 			xAxis = true;
 			xReached = false;
 			travelTo(odometer.getX() - lCorrection, odometer.getY(), true,
-					turnON);
+					turnON, false);
 			xAxis = false;
-			travelTo(odometer.getX(), y0, true, turnON);
+			travelTo(odometer.getX(), y0, true, turnON, false);
 			return true;
 		}
 		return false;
@@ -330,6 +466,14 @@ public class Navigation {
 	 *            : true if input angle is in degrees
 	 */
 
+	
+	
+	
+	
+	//Navigation Methods
+	
+	
+	
 	public void turnTo(double theta, boolean stop, boolean degrees) {
 
 		// Changes degrees to radians
@@ -368,7 +512,7 @@ public class Navigation {
 	 * @param y
 	 * @return: returns angles in radians
 	 */
-	private double calculateAngle(double x, double y) {
+	public double calculateAngle(double x, double y) {
 		double angle;
 		angle = Math.atan2(x - odometer.getX(), y - odometer.getY());
 		return (angle < 0) ? (angle + Math.PI * 2) % (Math.PI * 2) : angle

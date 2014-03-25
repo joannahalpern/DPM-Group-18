@@ -30,6 +30,31 @@ public class ObjectDetectIdentify {
 		this.usLeft = this.robot.getLeftUSSensor();
 		this.usRight = this.robot.getRightUSSensor();
 	}
+	
+	public boolean search(double x0, double y0, double x1, double y1){
+		double angle = nav.calculateAngle(x0 + 15, y0);
+		nav.turnTo(angle, true, false);
+		travelDistance(y1 - y0);
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	//this method will do the object detection
 	public void doDetection(){
 		

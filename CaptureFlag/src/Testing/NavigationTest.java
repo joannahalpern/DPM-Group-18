@@ -37,27 +37,31 @@ public class NavigationTest {
 		//
 		// LightPoller csPollerLineReader = new LightPoller(csLineReader,
 		// Colour.BLUE);
-		// LightPoller colourDetector = new LightPoller(csFlagReader,
-		// Colour.BLUE);
+		LightPoller colourDetector = new LightPoller(csFlagReader,Colour.BLUE);
 		//
 		TwoWheeledRobot fuzzyPinkRobot = new TwoWheeledRobot(Motor.A, Motor.C,
 				Motor.B, usLeft, usRight, csFlagReader, csLineReader);
 		Odometer odo = new Odometer(fuzzyPinkRobot, true);
-		Navigation nav = new Navigation(odo, fuzzyPinkRobot);
+		ObjectDisplacement objectDisplacement = new ObjectDisplacement(fuzzyPinkRobot);
+		Navigation nav = new Navigation(odo, fuzzyPinkRobot, objectDisplacement, colourDetector);
 		// OdometryCorrection odoCorection = new OdometryCorrection(odo,
 		// csPollerLineReader);
 		//
 		// Localization localizer = new Localization(odo, nav, usPollerLeft,
 		// usPollerRight, csPollerLineReader);
-		//
-		// ObjectDisplacement objectDisplacement = new
-		// ObjectDisplacement(fuzzyPinkRobot, nav);
+
 		// ObjectDetectIdentify objectDetection = new
 		// ObjectDetectIdentify(fuzzyPinkRobot, nav, objectDisplacement);
 
-		// initializeRConsole();
-		// RConsoleDisplay rcd = new RConsoleDisplay(odo, colourDetector,
 		// usPollerLeft);
+		
+		
+		
+		//initializeRConsole();
+		//RConsoleDisplay rcd = new RConsoleDisplay(odo, fuzzyPinkRobot);
+		
+		
+		
 		LCDInfo lcd = new LCDInfo(odo, fuzzyPinkRobot);
 
 		int option = 0;
@@ -72,7 +76,10 @@ public class NavigationTest {
 			//Turning Testing
 			//nav.turnTo(360, true, true); // pass
 			
-			nav.travelDistance(30);
+			nav.travelTo(0,90, false, false, false);
+			nav.travelTo(30, 90, false, false, false);
+			nav.travelTo(30, 0 , false,  false, false);
+			
 			
 			//nav.turnTo(90, true); // fail- Poorly coded to radians loop, loop was if > 90. 
 			//nav.travelTo(0, 90, false, false); // pass
