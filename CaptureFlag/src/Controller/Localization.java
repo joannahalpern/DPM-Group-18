@@ -3,7 +3,7 @@ package Controller;
 import Robot.*;
 
 /**
- * Does both ultrasonic and light localization
+ * Does both ultrasonic and light localization 
  */
 public class Localization {
 	private final double BTWN_LINES = 1;
