@@ -42,14 +42,22 @@ public class Navigation{
 	//Constructor
 	public Navigation(Odometer odo, TwoWheeledRobot robot) {
 		this.odometer = odo;
+		this.robot = robot;
 
-		NXTRegulatedMotor[] motors = this.robot.getWheelMotors();
-		this.leftMotor = motors[0];
-		this.rightMotor = motors[1];
+		this.leftMotor = this.robot.getLeftMotor();
+		this.rightMotor = this.robot.getRightMotor();
 		
-		UltrasonicSensor[] usSensors = this.robot.getusSensors();
-		this.usLeft = usSensors[0];
-		this.usRight = usSensors[1];
+		this.usLeft = this.robot.getLeftUSSensor();
+		this.usRight = this.robot.getRightUSSensor();
+		
+//		NXTRegulatedMotor[] motors = new NXTRegulatedMotor[2];
+//		motors = this.robot.getWheelMotors();
+//		this.leftMotor = motors[0];
+//		this.rightMotor = motors[1];
+//		
+//		UltrasonicSensor[] usSensors = this.robot.getusSensors();
+//		this.usLeft = usSensors[0];
+//		this.usRight = usSensors[1];
 	}
 	
 

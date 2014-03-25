@@ -42,14 +42,20 @@ public class TwoWheeledRobot {
 	}
 
 	// accessors
-	public NXTRegulatedMotor[] getWheelMotors() {
-		return new NXTRegulatedMotor[] {leftMotor, rightMotor};
+	public NXTRegulatedMotor getLeftMotor() {
+		return leftMotor;
+	}
+	public NXTRegulatedMotor getRightMotor() {
+		return rightMotor;
 	}
 	public NXTRegulatedMotor getBlockGrabber() {
 		return clawMotor;
 	}
-	public UltrasonicSensor[] getusSensors() {
-		return new UltrasonicSensor[] {usLeft, usRight};
+	public UltrasonicSensor getLeftUSSensor() {
+		return usLeft;
+	}
+	public UltrasonicSensor getRightUSSensor() {
+		return usLeft;
 	}
 	public ColorSensor getColourSensorFlag(){
 		return csFlagReader;

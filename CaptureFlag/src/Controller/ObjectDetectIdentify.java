@@ -22,13 +22,13 @@ public class ObjectDetectIdentify {
 
 	//Constructor
 	public ObjectDetectIdentify(TwoWheeledRobot robot, Navigation nav, ObjectDisplacement od){
+		this.robot = robot;
 		this.nav = nav;
 		this.cs = robot.getColourSensorFlag();
 		this.od = od;
 
-		UltrasonicSensor[] usSensors = this.robot.getusSensors();
-		this.usLeft = usSensors[0];
-		this.usRight = usSensors[1];
+		this.usLeft = this.robot.getLeftUSSensor();
+		this.usRight = this.robot.getRightUSSensor();
 	}
 	//this method will do the object detection
 	public void doDetection(){
