@@ -59,6 +59,7 @@ public class NavigationTest {
 		switch(option) {
 			case Button.ID_LEFT:
 				
+			//PUT MAIN CODE HERE
 				nav.turnTo(180, true); //pass
 				nav.turnTo(90, true);  //fail
 				nav.travelTo(0, 90, false, false); //pass
