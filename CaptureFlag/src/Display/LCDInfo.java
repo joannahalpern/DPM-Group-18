@@ -31,9 +31,8 @@ public class LCDInfo implements TimerListener{
 		this.csFlagReader = robot.getColourSensorFlag();
 		this.csLineReader = robot.getColourSensorLineReader();
 		
-		UltrasonicSensor[] usSensors = this.robot.getusSensors();
-		this.usLeft = usSensors[0];
-		this.usRight = usSensors[1];	
+		this.usLeft = this.robot.getLeftUSSensor();
+		this.usRight = this.robot.getRightUSSensor();	
 		
 		this.lcdTimer = new Timer(LCD_REFRESH, this);
 
