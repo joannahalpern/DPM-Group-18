@@ -4,6 +4,7 @@ import java.util.Queue;
 
 import Controller.*;
 import lejos.nxt.ColorSensor;
+import lejos.nxt.LCD;
 
 
 public class LightPoller extends Thread{
@@ -54,10 +55,31 @@ public class LightPoller extends Thread{
 				break;
 		}
 	}
-	public boolean search(){
+	public void run(Colour input) {
 		
 		
-	}
+	
+		while(true){
+			if(input == Colour.GREEN){
+				colourVal = ls.getRawColor().getGreen();
+			}	
+			if(input == Colour.BLUE){
+				colourVal = ls.getRawColor().getBlue();
+			}	
+			if(input == Colour.RED){
+				colourVal = ls.getRawColor().getRed();
+			}	
+			else{
+				colourVal = ls.getRawColor().getBackground();
+			}
+			LCD.clear(); 
+			LCD.drawString("colourVal" + colourVal, 0, 4);
+			
+			coloursQueue.push(colourVal);
+			coloursQueue.pop();
+			try { Thread.sleep(POLLING_PERIOD); } catch(Exception e){}
+			}
+		}
 	
 	public double getColourVal() {
 		return colourVal;

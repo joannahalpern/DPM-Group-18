@@ -58,14 +58,16 @@ public class Controller {
 
 		TwoWheeledRobot fuzzyPinkRobot = new TwoWheeledRobot(Motor.A, Motor.C, Motor.B, usLeft, usRight, csFlagReader, csLineReader);
 		Odometer odo = new Odometer(fuzzyPinkRobot, true);
+		
 		Navigation nav = new Navigation(odo, fuzzyPinkRobot);
 		OdometryCorrection odoCorection = new OdometryCorrection(odo, csPollerLineReader);
-		
+		ObstacleAvoidance ostacleAvoidance = new ObstacleAvoidance(fuzzyPinkRobot, nav, odo);
 		Localization localizer = new Localization(odo, nav, usPollerLeft, usPollerRight, csPollerLineReader);
-		
 		ObjectDisplacement objectDisplacement = new ObjectDisplacement(fuzzyPinkRobot, nav);
-//		ObjectDetectIdentify objectDetection = new ObjectDetectIdentify(fuzzyPinkRobot, nav, objectDisplacement);
+		ObjectDetectIdentify objectDetection = new ObjectDetectIdentify(fuzzyPinkRobot, nav, objectDisplacement, colourDetector);
 		
+		
+		NavController navController = new NavController(odo, fuzzyPinkRobot,objectDisplacement, colourDetector, nav, objectDetection);
 		
 //		initializeRConsole();
 //		RConsoleDisplay rcd = new RConsoleDisplay(odo, fuzzyPinkRobot);

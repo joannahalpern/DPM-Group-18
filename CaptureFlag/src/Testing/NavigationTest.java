@@ -39,19 +39,20 @@ public class NavigationTest {
 		// Colour.BLUE);
 		LightPoller colourDetector = new LightPoller(csFlagReader,Colour.BLUE);
 		//
-		TwoWheeledRobot fuzzyPinkRobot = new TwoWheeledRobot(Motor.A, Motor.C,
-				Motor.B, usLeft, usRight, csFlagReader, csLineReader);
+		TwoWheeledRobot fuzzyPinkRobot = new TwoWheeledRobot(Motor.A, Motor.C,Motor.B, usLeft, usRight, csFlagReader, csLineReader);
 		Odometer odo = new Odometer(fuzzyPinkRobot, true);
-		ObjectDisplacement objectDisplacement = new ObjectDisplacement(fuzzyPinkRobot);
-		Navigation nav = new Navigation(odo, fuzzyPinkRobot, objectDisplacement, colourDetector);
+		Navigation nav = new Navigation(odo, fuzzyPinkRobot);
+
+		ObjectDisplacement objectDisplacement = new ObjectDisplacement(fuzzyPinkRobot,nav);
+		ObjectDetectIdentify objectDetection = new ObjectDetectIdentify(fuzzyPinkRobot, nav, objectDisplacement, colourDetector);
+
+		NavController navController = new NavController(odo, fuzzyPinkRobot,objectDisplacement, colourDetector, nav, objectDetection);
 		// OdometryCorrection odoCorection = new OdometryCorrection(odo,
 		// csPollerLineReader);
 		//
 		// Localization localizer = new Localization(odo, nav, usPollerLeft,
 		// usPollerRight, csPollerLineReader);
 
-		// ObjectDetectIdentify objectDetection = new
-		// ObjectDetectIdentify(fuzzyPinkRobot, nav, objectDisplacement);
 
 		// usPollerLeft);
 		
@@ -63,7 +64,7 @@ public class NavigationTest {
 		
 		
 		LCDInfo lcd = new LCDInfo(odo, fuzzyPinkRobot);
-
+		
 		int option = 0;
 		while (option == 0)
 			option = Button.waitForAnyPress();
@@ -72,14 +73,21 @@ public class NavigationTest {
 		case Button.ID_LEFT:
 
 			// PUT MAIN CODE HERE
-			
+			LCD.clear();
+			LCD.drawString("Starts Travel ", 0, 4);
 			//Turning Testing
-			//nav.turnTo(360, true, true); // pass
+			//nav.turnTo(180, true, true); // pass
 			
-			nav.travelTo(0,90, false, false, false);
-			nav.travelTo(30, 90, false, false, false);
-			nav.travelTo(30, 0 , false,  false, false);
-			
+			//Travel in a sqaure
+			/*
+			navController.travelTo(0,30, false, false, false);
+			navController.travelTo(30, 30, false, false, false);
+			navController.travelTo(30, 0 , false,  false, false);
+			navController.travelTo(0, 0 , false,  false, false);
+			nav.turnTo(0,true,true);
+			*/
+
+			navController.search(0, 0, 60,  30);
 			
 			//nav.turnTo(90, true); // fail- Poorly coded to radians loop, loop was if > 90. 
 			//nav.travelTo(0, 90, false, false); // pass

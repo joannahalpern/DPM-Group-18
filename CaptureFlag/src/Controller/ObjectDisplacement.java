@@ -13,7 +13,7 @@ public class ObjectDisplacement {
 	
 	private final int CLAMP_SPEED = 300;
 	
-	public ObjectDisplacement(TwoWheeledRobot robot) {
+	public ObjectDisplacement(TwoWheeledRobot robot, Navigation nav) {
 		this.robot = robot;
 		this.clamp = robot.getBlockGrabber();
 
@@ -25,6 +25,7 @@ public class ObjectDisplacement {
 		clamp.backward();
 		clamp.rotate(180);
 		clamp.stop();
+		return;
 		
 	}
 }
