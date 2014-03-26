@@ -12,7 +12,6 @@ public class Odometer implements TimerListener {
 	private TwoWheeledRobot robot;
 	private Timer odometerTimer;
 	// position data
-	private Object lock;
 	private double x, y, theta;
 	private double [] oldDH, dDH;
 	
@@ -25,7 +24,6 @@ public class Odometer implements TimerListener {
 		theta = 0.0;
 		oldDH = new double [2];
 		dDH = new double [2];
-		lock = new Object();
 		
 		// start the odometer immediately, if necessary
 		if (start)
@@ -38,7 +36,7 @@ public class Odometer implements TimerListener {
 		dDH[1] -= oldDH[1];
 		
 		// update the position in a critical region
-		synchronized (lock) {
+		synchronized (Controller.lock) {
 			theta += dDH[1];
 			theta = fixDegAngle(theta);
 			
@@ -52,7 +50,7 @@ public class Odometer implements TimerListener {
 	
 	// accessors
 	public void getPosition(double [] pos) {
-		synchronized (lock) {
+		synchronized (Controller.lock) {
 			pos[0] = x;
 			pos[1] = y;
 			pos[2] = theta;
@@ -61,7 +59,7 @@ public class Odometer implements TimerListener {
 	public double getX() {
 		double result;
 
-		synchronized (lock) {
+		synchronized (Controller.lock) {
 			result = x;
 		}
 
@@ -71,7 +69,7 @@ public class Odometer implements TimerListener {
 	public double getY() {
 		double result;
 
-		synchronized (lock) {
+		synchronized (Controller.lock) {
 			result = y;
 		}
 
@@ -82,7 +80,7 @@ public class Odometer implements TimerListener {
 	public double getAngle() {
 		double result;
 
-		synchronized (lock) {
+		synchronized (Controller.lock) {
 			result = theta;
 		}
 
@@ -91,7 +89,7 @@ public class Odometer implements TimerListener {
 	public double getAngleRadians() {
 		double result;
 
-		synchronized (lock) {
+		synchronized (Controller.lock) {
 			result = Math.toRadians(theta);
 		}
 
@@ -103,7 +101,7 @@ public class Odometer implements TimerListener {
 	
 	// mutators
 	public void setPosition(double [] pos, boolean [] update) {
-		synchronized (lock) {
+		synchronized (Controller.lock) {
 			if (update[0]) x = pos[0];
 			if (update[1]) y = pos[1];
 			if (update[2]) theta = pos[2];

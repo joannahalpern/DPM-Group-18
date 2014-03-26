@@ -60,6 +60,9 @@ public class OdometryCorrectionTest {
 			case Button.ID_LEFT:
 				
 			//PUT MAIN CODE HERE
+				nav.travelTo(0,90, false, false);
+				nav.travelTo(30, 90, false, false);
+				nav.travelTo(30, 0 , false,  false);
 				
 				break;
 			default:

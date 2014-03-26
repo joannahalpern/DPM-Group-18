@@ -48,8 +48,8 @@ public class ObjectDetectionTest {
 		ObjectDetectIdentify objectDetection = new ObjectDetectIdentify(fuzzyPinkRobot, nav, objectDisplacement);
 		
 		
-//		initializeRConsole();
-//		RConsoleDisplay rcd = new RConsoleDisplay(odo, colourDetector, usPollerLeft);
+		initializeRConsole();
+		RConsoleDisplay rcd = new RConsoleDisplay(odo, colourDetector, usPollerLeft);
 		LCDInfo lcd = new LCDInfo(odo, fuzzyPinkRobot);
 
 		int option = 0;
