@@ -1,3 +1,5 @@
+//Odo correction works
+//possible thing to add is to not do correction while the robot is turning
 package Controller;
 
 import Robot.*;
@@ -9,8 +11,8 @@ public class OdometryCorrection extends Thread {
 	
 	private static double lightVal = 0;
 	private static final double LIGHT_THRESHOLD = 350;
-	private static double gridOffsetY = 8.0;
-	private static double gridOffsetX = 9.75;
+	private static double SENSOR_POS_X = 9.75;
+	private static double SENSOR_POS_Y = 8.0;
 	
 
 	// constructor
@@ -92,46 +94,38 @@ public class OdometryCorrection extends Thread {
 	 * rotation of the robot (theta)
 	 */
 	public double centerPositionX(double x, double theta) {
-		x -= gridOffsetX;
-		double centerCorrection = 4.5;
 		if (theta > 45 && theta < 135) { // x is changing positively
-			x -= centerCorrection;
+			x -= SENSOR_POS_X;
 		} else { // x is changing negatively
-			x += centerCorrection;
+			x += SENSOR_POS_X;
 		}
 		return x;
 	}
 
 	public double inversePositionX(double x, double theta) {
-		double centerCorrection = 4.5;
 		if (theta > 45 && theta < 135) { // x is changing positively
-			x += centerCorrection;
+			x += SENSOR_POS_X;
 		} else { // x is changing negatively
-			x -= centerCorrection;
+			x -= SENSOR_POS_X;
 		}
-		x += gridOffsetX;
 		return x;
 	}
 
 	public double centerPositionY(double y, double theta) {
-		y -= gridOffsetY;
-		double centerCorrection = 4.5;
 		if (theta > 315 || theta < 45) { // x is changing positively
-			y -= centerCorrection;
+			y -= SENSOR_POS_Y;
 		} else { // x is changing negatively
-			y += centerCorrection;
+			y += SENSOR_POS_Y;
 		}
 		return y;
 	}
 
 	public double inversePositionY(double y, double theta) {
-		double centerCorrection = 4.5;
 		if (theta > 315 || theta < 45) { // x is changing positively
-			y += centerCorrection;
+			y += SENSOR_POS_Y;
 		} else { // x is changing negatively
-			y -= centerCorrection;
+			y -= SENSOR_POS_Y;
 		}
-		y += gridOffsetY;
 		return y;
 	}
 
