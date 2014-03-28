@@ -1,4 +1,4 @@
-package Robot;
+ package Robot;
 
 import java.util.Queue;
 
@@ -7,8 +7,10 @@ import lejos.nxt.ColorSensor;
 
 
 public class LightPoller extends Thread{
-	public static final int QUEUE_SIZE = 9;
-	public static final long POLLING_PERIOD = 50; // (1 poll per 50ms)
+	public static final int LINE_THRESHOLD = 260;
+	public static final int QUEUE_SIZE = 5;
+	public static long POLLING_PERIOD = 20; // (1 poll per 50ms) THIS IS CHANGED FOR ACCURACY IN LOCALIZATION
+	public boolean lineSeen;
 	private ColorSensor ls;
 	private double colourVal = 99999;
 	private Colour colour;
@@ -17,16 +19,20 @@ public class LightPoller extends Thread{
 	public LightPoller(ColorSensor ls, Colour colour) {
 		this.ls = ls;
 		this.colour = colour;
-		
+		this.start();
 		initializeQueue();
 	}
 
 	public void run() {
-		setFloodLight(colour);
+//		setFloodLight(colour);
 		while(true){
 			colourVal = ls.getRawLightValue();
 			coloursQueue.push(colourVal);
 			coloursQueue.pop();
+			if (ls.getRawLightValue()<LINE_THRESHOLD){
+				lineSeen = true;
+			}
+			else { lineSeen = false; }
 			try { Thread.sleep(POLLING_PERIOD); } catch(Exception e){}
 			}
 		}
@@ -45,7 +51,6 @@ public class LightPoller extends Thread{
 				break;
 				
 			case BLUE:
-				ls.setFloodlight(false);
 				ls.setFloodlight(ColorSensor.Color.BLUE);
 				break;
 			

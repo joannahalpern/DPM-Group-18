@@ -214,7 +214,7 @@ public class NavController {
 			flagColour = flagInput; 
 		}
 		else{
-			flagColour = Bluetooth.getOurFlagType();
+			flagColour = Colour.YELLOW;
 		}
 		
 		searching = true;

@@ -20,14 +20,20 @@ public class LCDInfo implements TimerListener{
 	private Odometer odo;
 	private TwoWheeledRobot robot;
 	private ColorSensor csFlagReader, csLineReader;
+	private UltrasonicPoller usPollerLeft, usPollerRight;
 	private UltrasonicSensor usLeft, usRight;
+	private Localization loc;
 	
 	
 	// arrays for displaying data
 	
-	public LCDInfo(Odometer odo, TwoWheeledRobot robot) {
+	public LCDInfo(Odometer odo, TwoWheeledRobot robot, Localization loc, UltrasonicPoller usPollerLeft, UltrasonicPoller usPollerRight, ColorSensor csLineReader) {
+		this.loc = loc;
+		this.csLineReader = csLineReader;
 		this.odo = odo;
 		this.robot = robot;
+		this.usPollerLeft = usPollerLeft;
+		this.usPollerRight = usPollerRight;
 		this.csFlagReader = robot.getColourSensorFlag();
 		this.csLineReader = robot.getColourSensorLineReader();
 		
@@ -41,9 +47,13 @@ public class LCDInfo implements TimerListener{
 	}
 	
 	public void timedOut() { 
-
 		LCD.drawString("X: " + (int)odo.getX(), 0, 0);
 		LCD.drawString("Y: " + (int)odo.getY(), 0, 1);
 		LCD.drawString("H: " + (int)odo.getAngle(), 0, 2);
+//		LCD.drawString("L us: " + usPollerLeft.getMedianDistance(), 0, 3);	
+//		LCD.drawString("R us: " + usPollerRight.getMedianDistance(), 0, 4);	
+//		LCD.drawString("diff: " + (usPollerLeft.getMedianDistance()-usPollerRight.getMedianDistance()), 0, 5);	
+//		LCD.drawString("orthogonal: " + loc.isOrthogonal(), 0, 6);
+//		LCD.drawString("CS: " + csLineReader.getRawLightValue(), 0, 3);	
 	}
 }

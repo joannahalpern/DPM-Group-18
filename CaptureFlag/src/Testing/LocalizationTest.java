@@ -7,6 +7,7 @@ import lejos.nxt.Motor;
 import lejos.nxt.SensorPort;
 import lejos.nxt.UltrasonicSensor;
 import lejos.nxt.comm.RConsole;
+import lejos.robotics.Color;
 import Controller.*;
 import Robot.*;
 import Display.*;
@@ -42,7 +43,7 @@ public class LocalizationTest {
 		Navigation nav = new Navigation(odo, fuzzyPinkRobot);
 //		OdometryCorrection odoCorection = new OdometryCorrection(odo, csPollerLineReader);
 //		
-		Localization localizer = new Localization(odo, nav, usPollerLeft, usPollerRight, csPollerLineReader);
+		Localization localizer = new Localization(odo, nav, usPollerLeft, usPollerRight, csPollerLineReader, fuzzyPinkRobot);
 //		
 //		ObjectDisplacement objectDisplacement = new ObjectDisplacement(fuzzyPinkRobot, nav);
 //		ObjectDetectIdentify objectDetection = new ObjectDetectIdentify(fuzzyPinkRobot, nav, objectDisplacement);
@@ -50,7 +51,7 @@ public class LocalizationTest {
 		
 //		initializeRConsole();
 //		RConsoleDisplay rcd = new RConsoleDisplay(odo, colourDetector, usPollerLeft);
-		LCDInfo lcd = new LCDInfo(odo, fuzzyPinkRobot);
+		LCDInfo lcd = new LCDInfo(odo, fuzzyPinkRobot, localizer, usPollerLeft, usPollerRight, csLineReader);
 
 		int option = 0;
 		while (option == 0)
@@ -59,7 +60,9 @@ public class LocalizationTest {
 		switch(option) {
 			case Button.ID_LEFT:
 				
-			//PUT MAIN CODE HERE
+			localizer.doUSLocalization();
+			csLineReader.setFloodlight(Color.BLUE);
+			//localizer.doLSLocalization();
 				
 				break;
 			default:

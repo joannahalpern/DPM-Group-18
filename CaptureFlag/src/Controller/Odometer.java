@@ -1,4 +1,4 @@
-package Controller;
+ package Controller;
 
 
 import Display.*;
@@ -12,6 +12,9 @@ public class Odometer implements TimerListener {
 	private TwoWheeledRobot robot;
 	private Timer odometerTimer;
 	// position data
+
+	public Object lock;
+
 	private double x, y, theta;
 	private double [] oldDH, dDH;
 	
@@ -76,7 +79,13 @@ public class Odometer implements TimerListener {
 		return result;
 	}
 
-	
+	public void setAngle(double input) {
+
+		synchronized (lock) {
+			theta = fixDegAngle(input);
+		}
+
+	}
 	public double getAngle() {
 		double result;
 

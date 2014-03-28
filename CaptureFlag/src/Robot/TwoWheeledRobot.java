@@ -7,9 +7,11 @@ public class TwoWheeledRobot {
 	public static final double DEFAULT_LEFT_RADIUS = 1.6;
 	public static final double DEFAULT_RIGHT_RADIUS = 1.6;
 	public static final double DEFAULT_WIDTH = 26.0;
+	public static final double GROUND_LS_X_OFFSET = -9.4;
+	public static final double GROUND_LS_Y_OFFSET = -7.5;
 	
 	private NXTRegulatedMotor leftMotor, rightMotor, clawMotor;
-	private UltrasonicSensor usLeft, usRight;
+	public UltrasonicSensor usLeft, usRight;
 	private ColorSensor csFlagReader, csLineReader;
 	
 	private double leftRadius, rightRadius, width;
@@ -24,7 +26,7 @@ public class TwoWheeledRobot {
 		this.rightMotor = rightMotor;
 		this.clawMotor = clawMotor;
 		this.usLeft = usLeft;
-		this.usLeft = usRight;
+		this.usRight = usRight;
 		this.csFlagReader = csFlagReader;
 		this.csLineReader = csLineReader;
 		
@@ -55,7 +57,7 @@ public class TwoWheeledRobot {
 		return usLeft;
 	}
 	public UltrasonicSensor getRightUSSensor() {
-		return usLeft;
+		return usRight;
 	}
 	public ColorSensor getColourSensorFlag(){
 		return csFlagReader;
