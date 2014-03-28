@@ -14,6 +14,7 @@
 
 package Controller;
 
+import bluetooth.*;
 import lejos.geom.Point;
 import lejos.nxt.Button;
 import lejos.nxt.ColorSensor;
@@ -31,6 +32,24 @@ import Robot.*;
  *
  */
 public class Controller {
+	public static StartCorner corner;
+	public static int ourZoneLL_X;
+	public static int ourZoneLL_Y;
+	public static int ourZoneUR_X;
+	public static int ourZoneUR_Y;
+	public static int opponentZoneLL_X;
+	public static int opponentZoneLL_Y;
+	public static int opponentZoneUR_X;
+	public static int opponentZoneUR_Y;
+	public static int ourDZone_X;
+	public static int ourDZone_Y;
+	public static int opponentDZone_X;
+	public static int opponentDZone_Y;
+	public static int ourFlag;
+	public static int opponentFlag;
+	
+	//our flag
+	static Colour ourFlagColour;
 	
 	/* Create an object that can be used for synchronization across threads. */
 	static class theLock extends Object {//this is a lock
@@ -38,11 +57,86 @@ public class Controller {
 	static public theLock lock = new theLock();
 	
 	public static void main(String[] args) {
-		
+		BluetoothConnection conn = new BluetoothConnection();
+
+		Transmission t = conn.getTransmission();
 		LCD.clear();
-		LCD.drawString("   Controller   ", 0, 0);
-		LCD.drawString("   Press left   ", 0, 2);
-		LCD.drawString("    to begin    ", 0, 3);
+		if (t == null) {
+			LCD.drawString("Failed to read transmission", 0, 0);
+		} 
+		else{
+			switch (t.role) {
+				case RED: 
+					ourZoneLL_X = t.redZoneLL_X;
+					ourZoneLL_Y = t.redZoneLL_Y;
+					ourZoneUR_X = t.redZoneUR_X;
+					ourZoneUR_Y = t.redZoneUR_Y;
+					opponentZoneLL_X = t.greenZoneLL_X;
+					opponentZoneLL_Y = t.greenZoneLL_Y;
+					opponentZoneUR_X = t.greenZoneUR_X;
+					opponentZoneUR_Y = t.greenZoneUR_Y;
+					ourDZone_X = t.redDZone_X;
+					ourDZone_Y = t.redDZone_Y;
+					opponentDZone_X = t.greenDZone_X;
+					opponentDZone_Y = t.greenDZone_Y;
+					ourFlag = t.redFlag;
+					opponentFlag = t.greenFlag;
+					break;
+				case GREEN:
+					ourZoneLL_X = t.greenZoneLL_X;
+					ourZoneLL_Y = t.greenZoneLL_Y;
+					ourZoneUR_X = t.greenZoneUR_X;
+					ourZoneUR_Y = t.greenZoneUR_Y;
+					opponentZoneLL_X = t.redZoneLL_X;
+					opponentZoneLL_Y = t.redZoneLL_Y;
+					opponentZoneUR_X = t.redZoneUR_X;
+					opponentZoneUR_Y = t.redZoneUR_Y;
+					ourDZone_X = t.greenDZone_X;
+					ourDZone_Y = t.greenDZone_Y;
+					opponentDZone_X = t.redDZone_X;
+					opponentDZone_Y = t.redDZone_Y;
+					ourFlag = t.greenFlag;
+					opponentFlag = t.redFlag;
+					break;
+				default:
+					ourZoneLL_X = t.redZoneLL_X;
+					ourZoneLL_Y = t.redZoneLL_Y;
+					ourZoneUR_X = t.redZoneUR_X;
+					ourZoneUR_Y = t.redZoneUR_Y;
+					opponentZoneLL_X = t.greenZoneLL_X;
+					opponentZoneLL_Y = t.greenZoneLL_Y;
+					opponentZoneUR_X = t.greenZoneUR_X;
+					opponentZoneUR_Y = t.greenZoneUR_Y;
+					ourDZone_X = t.redDZone_X;
+					ourDZone_Y = t.redDZone_Y;
+					opponentDZone_X = t.greenDZone_X;
+					opponentDZone_Y = t.greenDZone_Y;
+					ourFlag = t.redFlag;
+					opponentFlag = t.greenFlag;
+					break;
+			}
+		}
+			
+		if (ourFlag == 1){
+			ourFlagColour = Colour.LIGHT_BLUE;
+		}
+		else if (ourFlag == 2){
+			ourFlagColour = Colour.RED;
+		}
+		else if (ourFlag == 3){
+			ourFlagColour = Colour.YELLOW;
+		}
+		else if (ourFlag == 4){
+			ourFlagColour = Colour.WHITE;
+		}
+		else{
+			ourFlagColour = Colour.DARK_BLUE;
+		}
+
+		LCD.drawString("   Controller   ", 0, 1);
+		LCD.drawString("   Press left   ", 0, 3);
+		LCD.drawString("    to begin    ", 0, 4);
+		LCD.drawString("redflag: " + ourFlagColour.toString(), 0, 5);
 		
 		// setup everything
 		UltrasonicSensor usLeft = new UltrasonicSensor(SensorPort.S1);
@@ -82,9 +176,6 @@ public class Controller {
 		case Button.ID_LEFT:
 			
 			
-			//change this accoridngly
-			Colour flagColour = Colour.YELLOW;
-			
 			
 			
 			
@@ -99,8 +190,20 @@ public class Controller {
 			navController.setY((120));
 			navController.setAxis(false);
 			
-			navController.travelTo(odo.getX(),120, true, false, false);
-			navController.search(4*30.48, 4*30.48, 6*30.48, 6*30.48, false, flagColour);
+//			navController.travelTo(odo.getX(),120, true, false, false);
+//			navController.search(4*30.48, 4*30.48, 6*30.48, 6*30.48, false, ourFlagColour);
+			
+			//This for loop has the robot search through all of the columns in the zone
+			int columns = Math.abs(ourZoneUR_X - ourZoneLL_X);
+			int i = (int) Math.ceil((double)columns/2.0); //or: int i = columns/2 + 1;
+			double x0 = ourZoneUR_X;
+			double x1 = x0 + 1;
+			for (int j=0; j<i; j++){
+				navController.search(x0*30.48 + 15.24, ourZoneLL_Y*30.48, x1*30.48, ourZoneUR_Y*30.48, false, ourFlagColour);
+				x0 += 2;
+				x1 += 2;
+			}
+
 			
 			break;
 		default:

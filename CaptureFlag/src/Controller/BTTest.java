@@ -1,7 +1,12 @@
+package Controller;
 /*
 * @author Sean Lawlor
 * @date November 3, 2011
 * @class ECSE 211 - Design Principle and Methods
+* 
+* Modified by F.P. Ferrie
+* February 28, 2014
+* Changed parameters for W2014 competition
 */
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
@@ -14,6 +19,7 @@ public class BTTest {
 	@SuppressWarnings("unused")
 	public static void main(String [] args) {
 		BluetoothConnection conn = new BluetoothConnection();
+		
 		// as of this point the bluetooth connection is closed again, and you can pair to another NXT (or PC) if you wish
 		
 		// example usage of Tranmission class
@@ -21,18 +27,23 @@ public class BTTest {
 		if (t == null) {
 			LCD.drawString("Failed to read transmission", 0, 5);
 		} else {
-			StartCorner corner = t.startingCorner;
 			PlayerRole role = t.role;
-			int w1 = t.w1;
-			int w2 = t.w2;
-			int bx = t.bx;
-			int by = t.by;
-			BallDispenserFace bsigma = t.bsigma;
-			
+			StartCorner corner = t.startingCorner;
+			int greenZoneLL_X = t.greenZoneLL_X;
+			int greenZoneLL_Y = t.greenZoneLL_Y;
+			int redZoneLL_X = t.redZoneLL_X;
+			int redZoneLL_Y = t.redZoneLL_Y;
+			int greenDZone_X = t.greenDZone_X;
+			int greenDZone_Y = t.greenDZone_Y;
+			int redDZone_X = t.redDZone_X;
+			int redDZone_Y = t.redDZone_Y;
+			int greenFlag = t.greenFlag;
+			int	redFlag = t.redFlag;
+		
 			// print out the transmission information
 			conn.printTransmission();
 		}
 		// stall until user decides to end program
-		Button.waitForPress();
+		Button.ESCAPE.waitForPress();
 	}
 }
