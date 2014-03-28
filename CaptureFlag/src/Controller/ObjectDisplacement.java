@@ -9,12 +9,23 @@ import Robot.*;
  */
 public class ObjectDisplacement {
 	private TwoWheeledRobot robot;
-	private NXTRegulatedMotor blockGrabber;
-	private Navigation nav;
+	private NXTRegulatedMotor clamp;
+	
+	private final int CLAMP_SPEED = 300;
 	
 	public ObjectDisplacement(TwoWheeledRobot robot, Navigation nav) {
 		this.robot = robot;
-		this.blockGrabber = robot.getBlockGrabber();
-		this.nav = nav;
+		this.clamp = robot.getBlockGrabber();
+
+	}
+	
+	public void run(){
+		
+		clamp.setSpeed(CLAMP_SPEED);
+		clamp.backward();
+		clamp.rotate(180);
+		clamp.stop();
+		return;
+		
 	}
 }

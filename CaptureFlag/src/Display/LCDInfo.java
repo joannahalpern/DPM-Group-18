@@ -41,9 +41,9 @@ public class LCDInfo implements TimerListener{
 	}
 	
 	public void timedOut() { 
-		LCD.clear();
-		LCD.drawString("X: " + odo.getX(), 0, 0);
-		LCD.drawString("Y: " + odo.getY(), 0, 1);
-		LCD.drawString("H: " + odo.getAngle(), 0, 2);
+
+		LCD.drawString("X: " + (int)odo.getX(), 0, 0);
+		LCD.drawString("Y: " + (int)odo.getY(), 0, 1);
+		LCD.drawString("H: " + (int)odo.getAngle(), 0, 2);
 	}
 }

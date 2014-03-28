@@ -37,29 +37,35 @@ public class NavigationTest {
 		//
 		// LightPoller csPollerLineReader = new LightPoller(csLineReader,
 		// Colour.BLUE);
-		// LightPoller colourDetector = new LightPoller(csFlagReader,
-		// Colour.BLUE);
+		LightPoller colourDetector = new LightPoller(csFlagReader,Colour.BLUE);
 		//
-		TwoWheeledRobot fuzzyPinkRobot = new TwoWheeledRobot(Motor.A, Motor.C,
-				Motor.B, usLeft, usRight, csFlagReader, csLineReader);
+		TwoWheeledRobot fuzzyPinkRobot = new TwoWheeledRobot(Motor.A, Motor.C,Motor.B, usLeft, usRight, csFlagReader, csLineReader);
 		Odometer odo = new Odometer(fuzzyPinkRobot, true);
 		Navigation nav = new Navigation(odo, fuzzyPinkRobot);
+		
+		ObstacleAvoidance obstacleAvoidance =  new ObstacleAvoidance(fuzzyPinkRobot, nav, odo);
+		ObjectDisplacement objectDisplacement = new ObjectDisplacement(fuzzyPinkRobot,nav);
+		ObjectDetectIdentify objectDetection = new ObjectDetectIdentify(fuzzyPinkRobot, nav, objectDisplacement, colourDetector);
+
+		NavController navController = new NavController(odo, fuzzyPinkRobot,objectDisplacement, colourDetector, nav, objectDetection, obstacleAvoidance);
 		// OdometryCorrection odoCorection = new OdometryCorrection(odo,
 		// csPollerLineReader);
 		//
 		// Localization localizer = new Localization(odo, nav, usPollerLeft,
 		// usPollerRight, csPollerLineReader);
-		//
-		// ObjectDisplacement objectDisplacement = new
-		// ObjectDisplacement(fuzzyPinkRobot, nav);
-		// ObjectDetectIdentify objectDetection = new
-		// ObjectDetectIdentify(fuzzyPinkRobot, nav, objectDisplacement);
 
-		// initializeRConsole();
-		// RConsoleDisplay rcd = new RConsoleDisplay(odo, colourDetector,
+
 		// usPollerLeft);
+		
+		
+		
+		//initializeRConsole();
+		//RConsoleDisplay rcd = new RConsoleDisplay(odo, fuzzyPinkRobot);
+		
+		
+		
 		LCDInfo lcd = new LCDInfo(odo, fuzzyPinkRobot);
-
+		
 		int option = 0;
 		while (option == 0)
 			option = Button.waitForAnyPress();
@@ -68,11 +74,32 @@ public class NavigationTest {
 		case Button.ID_LEFT:
 
 			// PUT MAIN CODE HERE
-			
+			LCD.clear();
+			LCD.drawString("Starts Travel ", 0, 4);
 			//Turning Testing
-			//nav.turnTo(360, true, true); // pass
+			//nav.turnTo(180, true, true); // pass
 			
-			nav.travelDistance(30);
+			
+		
+			
+			
+			//Travel in a sqaure
+			/*
+			navController.travelTo(0,30, false, false, false);
+			navController.travelTo(30, 30, false, false, false);
+			navController.travelTo(30, 0 , false,  false, false);
+			navController.travelTo(0, 0 , false,  false, false);
+			nav.turnTo(0,true,true);
+			*/
+			navController.setX(120);
+			navController.setY((120));
+			navController.setAxis(false);
+			navController.travelTo(0, 120, true, false, false);
+			LCD.drawString("here", 0, 7);
+			 
+			navController.travelTo(0,120, true, false, false);
+			navController.search(4*30.48, 4*30.48, 6*30.48, 6*30.48, false, Colour.RED);
+
 			
 			//nav.turnTo(90, true); // fail- Poorly coded to radians loop, loop was if > 90. 
 			//nav.travelTo(0, 90, false, false); // pass

@@ -1,6 +1,3 @@
-//To open RConsole, goto: C:\Program Files (x86)\leJOS NXJ\bin\nxjconsoleviewer
-//For more info checkout https://www.youtube.com/watch?v=iKFnqk2eQM8
-
 package Display;
 
 import Controller.*;

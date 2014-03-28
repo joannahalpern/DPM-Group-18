@@ -1,4 +1,13 @@
 /*
+ * To change:
+ * 	-make and TestNav___ for each thing and replace folder for each
+ *  -check that no more arrays
+ *  
+ * 	-email Connor to test nav on TestNav
+ *  email team to name well and alt-shift-r and ctrl-d
+ *  email team about RConsole
+ *  email Ben about detection and that we pollers
+ *  
  *  RConsole
  *  	-goto C:\Program Files (x86)\leJOS NXJ\bin\nxjconsoleviewer
  */
@@ -49,14 +58,17 @@ public class Controller {
 
 		TwoWheeledRobot fuzzyPinkRobot = new TwoWheeledRobot(Motor.A, Motor.C, Motor.B, usLeft, usRight, csFlagReader, csLineReader);
 		Odometer odo = new Odometer(fuzzyPinkRobot, true);
+		
 		Navigation nav = new Navigation(odo, fuzzyPinkRobot);
 		OdometryCorrection odoCorection = new OdometryCorrection(odo, csPollerLineReader);
-		
 		Localization localizer = new Localization(odo, nav, usPollerLeft, usPollerRight, csPollerLineReader);
-		
+
+		ObstacleAvoidance ostacleAvoidance = new ObstacleAvoidance(fuzzyPinkRobot, nav, odo);
 		ObjectDisplacement objectDisplacement = new ObjectDisplacement(fuzzyPinkRobot, nav);
-//		ObjectDetectIdentify objectDetection = new ObjectDetectIdentify(fuzzyPinkRobot, nav, objectDisplacement);
+		ObjectDetectIdentify objectDetection = new ObjectDetectIdentify(fuzzyPinkRobot, nav, objectDisplacement, colourDetector);
 		
+		
+		NavController navController = new NavController(odo, fuzzyPinkRobot,objectDisplacement, colourDetector, nav, objectDetection, ostacleAvoidance);
 		
 //		initializeRConsole();
 //		RConsoleDisplay rcd = new RConsoleDisplay(odo, fuzzyPinkRobot);
@@ -69,8 +81,26 @@ public class Controller {
 		switch(option) {
 		case Button.ID_LEFT:
 			
-			//PUT MAIN CODE HERE  
 			
+			//change this accoridngly
+			Colour flagColour = Colour.YELLOW;
+			
+			
+			
+			
+			
+			//PUT MAIN CODE HERE
+			
+			//Localization
+			
+			
+			
+			navController.setX(120);
+			navController.setY((120));
+			navController.setAxis(false);
+			
+			navController.travelTo(odo.getX(),120, true, false, false);
+			navController.search(4*30.48, 4*30.48, 6*30.48, 6*30.48, false, flagColour);
 			
 			break;
 		default:
