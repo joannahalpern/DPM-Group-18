@@ -26,12 +26,16 @@ public class ObjectDetectIdentify {
 	private double[] values = new double[3];
 	
 	
-	//Constructor
-	public ObjectDetectIdentify(TwoWheeledRobot robot, Navigation nav, ObjectDisplacement od){
+
+	// Constructor
+	public ObjectDetectIdentify(TwoWheeledRobot robot, Navigation nav,
+			ObjectDisplacement od, LightPoller csFlagPoller) {
+		this.csFlagPoller = csFlagPoller;
 		this.robot = robot;
 		this.nav = nav;
 		this.cs = robot.getColourSensorFlag();
 		this.od = od;
+
 		this.usLeft = this.robot.getLeftUSSensor();
 		this.usRight = this.robot.getRightUSSensor();
 	}
@@ -52,7 +56,7 @@ public class ObjectDetectIdentify {
 		LCD.drawString("BaseGreen  " + baseGreen, 0, 6);
 		if( baseRed > lowValue || baseBlue > lowValue || baseGreen > lowValue){
 			csCount++;
-			if(csCount > 5){
+			if(csCount > 3){
 				csCount = 0;
 				LCD.drawString("True", 0, 3);
 				return true;

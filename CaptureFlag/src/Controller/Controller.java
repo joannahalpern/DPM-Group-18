@@ -1,3 +1,17 @@
+/*
+ * To change:
+ * 	-make and TestNav___ for each thing and replace folder for each
+ *  -check that no more arrays
+ *  
+ * 	-email Connor to test nav on TestNav
+ *  email team to name well and alt-shift-r and ctrl-d
+ *  email team about RConsole
+ *  email Ben about detection and that we pollers
+ *  
+ *  RConsole
+ *  	-goto C:\Program Files (x86)\leJOS NXJ\bin\nxjconsoleviewer
+ */
+
 package Controller;
 
 import bluetooth.*;
@@ -47,7 +61,6 @@ public class Controller {
 
 		Transmission t = conn.getTransmission();
 		LCD.clear();
-
 		if (t == null) {
 			LCD.drawString("Failed to read transmission", 0, 0);
 		} 
@@ -127,9 +140,9 @@ public class Controller {
 		
 		// setup everything
 		UltrasonicSensor usLeft = new UltrasonicSensor(SensorPort.S1);
-		UltrasonicSensor usRight = new UltrasonicSensor(SensorPort.S4);
-		ColorSensor csFlagReader = new ColorSensor(SensorPort.S2);
-		ColorSensor csLineReader = new ColorSensor(SensorPort.S3);
+		UltrasonicSensor usRight = new UltrasonicSensor(SensorPort.S2);
+		ColorSensor csFlagReader = new ColorSensor(SensorPort.S3);
+		ColorSensor csLineReader = new ColorSensor(SensorPort.S4);
 		
 		UltrasonicPoller usPollerLeft = new UltrasonicPoller(usLeft);
 		UltrasonicPoller usPollerRight = new UltrasonicPoller(usRight);
@@ -137,22 +150,23 @@ public class Controller {
 		LightPoller csPollerLineReader = new LightPoller(csLineReader, Colour.BLUE);
 		LightPoller colourDetector = new LightPoller(csFlagReader, Colour.BLUE);
 
-		TwoWheeledRobot fuzzyPinkRobot = new TwoWheeledRobot(Motor.A, Motor.B, Motor.C, usLeft, usRight, csFlagReader, csLineReader);
+		TwoWheeledRobot fuzzyPinkRobot = new TwoWheeledRobot(Motor.A, Motor.C, Motor.B, usLeft, usRight, csFlagReader, csLineReader);
 		Odometer odo = new Odometer(fuzzyPinkRobot, true);
 		
 		Navigation nav = new Navigation(odo, fuzzyPinkRobot);
 		OdometryCorrection odoCorection = new OdometryCorrection(odo, csPollerLineReader);
 		Localization localizer = new Localization(odo, nav, usPollerLeft, usPollerRight, csPollerLineReader, fuzzyPinkRobot);
 
-		ObjectDisplacement objectDisplacement = new ObjectDisplacement(fuzzyPinkRobot, nav);
-		ObjectDetectIdentify objectDetection = new ObjectDetectIdentify(fuzzyPinkRobot, nav, objectDisplacement);
 		ObstacleAvoidance ostacleAvoidance = new ObstacleAvoidance(fuzzyPinkRobot, nav, odo);
+		ObjectDisplacement objectDisplacement = new ObjectDisplacement(fuzzyPinkRobot, nav);
+		ObjectDetectIdentify objectDetection = new ObjectDetectIdentify(fuzzyPinkRobot, nav, objectDisplacement, colourDetector);
+		
 		
 		NavController navController = new NavController(odo, fuzzyPinkRobot,objectDisplacement, colourDetector, nav, objectDetection, ostacleAvoidance);
 		
 //		initializeRConsole();
-//		RConsoleDisplay rcd = new RConsoleDisplay(odo, colourDetector, usPollerLeft);
-//		LCDInfo lcd = new LCDInfo(odo, lsPoller, usPoller, usLocalizer);
+//		RConsoleDisplay rcd = new RConsoleDisplay(odo, fuzzyPinkRobot);
+		LCDInfo lcd = new LCDInfo(odo, fuzzyPinkRobot, localizer, usPollerRight, usPollerRight, csLineReader);
 
 		int option = 0;
 		while (option == 0)
@@ -167,13 +181,18 @@ public class Controller {
 
 			
 			//testing conditions
-			ourZoneLL_X = 120;
-			ourZoneLL_Y = 120; 
+			ourZoneLL_X = 0;
+			ourZoneLL_Y = 0; 
 			ourZoneUR_X = 150;
 			ourZoneUR_Y = 150;
-			ourFlagColour = Colour.DARK_BLUE;
+			ourFlagColour = Colour.RED;
 			
-			navController.avoidanceSetter(ourZoneLL_X, ourZoneLL_Y, false);
+			
+			
+			//Search Test
+			navController.travelTo(0, 90, false, false, true);
+			
+			//navController.avoidanceSetter(ourZoneLL_X, ourZoneLL_Y, false);
 			navController.travelTo(odo.getX(),ourZoneLL_Y, true, false, false);		
 			navController.search(ourZoneLL_X, ourZoneLL_Y, ourZoneUR_X, ourZoneUR_Y, ourFlagColour);
 			
@@ -188,9 +207,6 @@ public class Controller {
 				navController.search(x0*30.48 + 15.24, ourZoneLL_Y*30.48, x1*30.48, ourZoneUR_Y*30.48, false, ourFlagColour);
 				x0 += 2;
 				x1 += 2;
-<<<<<<< HEAD
-			}
-=======
 			}*/
 
 			

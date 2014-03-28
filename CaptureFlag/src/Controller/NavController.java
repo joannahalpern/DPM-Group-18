@@ -165,7 +165,7 @@ public class NavController {
 					}
 				}
 			}
-				LCD.drawString("HERE", 0, 4);
+			
 			// Code for avoidance
 			if (avoid) {
 				LCD.drawString("avoiding", 0, 6);
