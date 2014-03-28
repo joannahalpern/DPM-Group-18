@@ -1,4 +1,4 @@
- package Robot;
+package Robot;
 
 import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.*;
@@ -7,11 +7,11 @@ public class TwoWheeledRobot {
 	public static final double DEFAULT_LEFT_RADIUS = 1.6;
 	public static final double DEFAULT_RIGHT_RADIUS = 1.6;
 	public static final double DEFAULT_WIDTH = 26.0;
-	public static final double GROUND_LS_X_OFFSET = -8;
-	public static final double GROUND_LS_Y_OFFSET = -9.75;
+	public static final double GROUND_LS_X_OFFSET = -9.4;
+	public static final double GROUND_LS_Y_OFFSET = -7.5;
 	
 	private NXTRegulatedMotor leftMotor, rightMotor, clawMotor;
-	private UltrasonicSensor usLeft, usRight;
+	public UltrasonicSensor usLeft, usRight;
 	private ColorSensor csFlagReader, csLineReader;
 	
 	private double leftRadius, rightRadius, width;
@@ -26,7 +26,7 @@ public class TwoWheeledRobot {
 		this.rightMotor = rightMotor;
 		this.clawMotor = clawMotor;
 		this.usLeft = usLeft;
-		this.usLeft = usRight;
+		this.usRight = usRight;
 		this.csFlagReader = csFlagReader;
 		this.csLineReader = csLineReader;
 		
@@ -44,20 +44,29 @@ public class TwoWheeledRobot {
 	}
 
 	// accessors
-	public NXTRegulatedMotor[] getWheelMotors() {
-		return new NXTRegulatedMotor[] {leftMotor, rightMotor};
+	public NXTRegulatedMotor getLeftMotor() {
+		return leftMotor;
+	}
+	public NXTRegulatedMotor getRightMotor() {
+		return rightMotor;
 	}
 	public NXTRegulatedMotor getBlockGrabber() {
 		return clawMotor;
 	}
-	public UltrasonicSensor[] getusSensors() {
-		return new UltrasonicSensor[] {usLeft, usRight};
+	public UltrasonicSensor getLeftUSSensor() {
+		return usLeft;
+	}
+	public UltrasonicSensor getRightUSSensor() {
+		return usRight;
 	}
 	public ColorSensor getColourSensorFlag(){
 		return csFlagReader;
 	}
 	public ColorSensor getColourSensorLineReader(){
 		return csLineReader;
+	}
+	public double getRadius(){
+		return DEFAULT_RIGHT_RADIUS;
 	}
 	public double getDisplacement() {
 		return (leftMotor.getTachoCount() * leftRadius + rightMotor.getTachoCount() * rightRadius) * Math.PI / (180.0*2);
