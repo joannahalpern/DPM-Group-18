@@ -57,7 +57,7 @@ public class Controller {
 	static public theLock lock = new theLock();
 	
 	public static void main(String[] args) {
-		BluetoothConnection conn = new BluetoothConnection();
+	/*	BluetoothConnection conn = new BluetoothConnection();
 
 		Transmission t = conn.getTransmission();
 		LCD.clear();
@@ -116,7 +116,7 @@ public class Controller {
 					break;
 			}
 		}
-			
+			*/
 		if (ourFlag == 1){
 			ourFlagColour = Colour.LIGHT_BLUE;
 		}
@@ -174,27 +174,27 @@ public class Controller {
 			
 		switch(option) {
 		case Button.ID_LEFT:
-			
-			
-			
-			
-			
-			
+			LCD.clear();
 			//PUT MAIN CODE HERE
 			
 			//Localization
+
+			
+			//testing conditions
+			ourZoneLL_X = 120;
+			ourZoneLL_Y = 120; 
+			ourZoneUR_X = 150;
+			ourZoneUR_Y = 150;
+			ourFlagColour = Colour.DARK_BLUE;
+			
+			navController.avoidanceSetter(ourZoneLL_X, ourZoneLL_Y, false);
+			navController.travelTo(odo.getX(),ourZoneLL_Y, true, false, false);		
+			navController.search(ourZoneLL_X, ourZoneLL_Y, ourZoneUR_X, ourZoneUR_Y, ourFlagColour);
 			
 			
-			
-			navController.setX(120);
-			navController.setY((120));
-			navController.setAxis(false);
-			
-//			navController.travelTo(odo.getX(),120, true, false, false);
-//			navController.search(4*30.48, 4*30.48, 6*30.48, 6*30.48, false, ourFlagColour);
 			
 			//This for loop has the robot search through all of the columns in the zone
-			int columns = Math.abs(ourZoneUR_X - ourZoneLL_X);
+			/*int columns = Math.abs(ourZoneUR_X - ourZoneLL_X);
 			int i = (int) Math.ceil((double)columns/2.0); //or: int i = columns/2 + 1;
 			double x0 = ourZoneUR_X;
 			double x1 = x0 + 1;
@@ -202,7 +202,7 @@ public class Controller {
 				navController.search(x0*30.48 + 15.24, ourZoneLL_Y*30.48, x1*30.48, ourZoneUR_Y*30.48, false, ourFlagColour);
 				x0 += 2;
 				x1 += 2;
-			}
+			}*/
 
 			
 			break;

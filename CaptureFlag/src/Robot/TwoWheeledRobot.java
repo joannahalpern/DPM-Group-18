@@ -24,7 +24,7 @@ public class TwoWheeledRobot {
 		this.rightMotor = rightMotor;
 		this.clawMotor = clawMotor;
 		this.usLeft = usLeft;
-		this.usLeft = usRight;
+		this.usRight = usRight;
 		this.csFlagReader = csFlagReader;
 		this.csLineReader = csLineReader;
 		
@@ -55,7 +55,7 @@ public class TwoWheeledRobot {
 		return usLeft;
 	}
 	public UltrasonicSensor getRightUSSensor() {
-		return usLeft;
+		return usRight;
 	}
 	public ColorSensor getColourSensorFlag(){
 		return csFlagReader;

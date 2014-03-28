@@ -101,8 +101,9 @@ public class NavController {
 
 		// Concave L Obstacle avoidance and corner avoid
 		if (avoid) {
+			LCD.drawString("First avoid loop", 0, 5);
 			if (concaveAvoidance()) {
-				LCD.clear();
+
 				LCD.drawString("Concave Return ", 0, 6);
 				return;
 			} 
@@ -111,7 +112,7 @@ public class NavController {
 
 		// MAIN LOOP
 		while (Math.abs(x - odometer.getX()) > ACCEPTABLE_DISTANCE_ERROR || Math.abs(y - odometer.getY()) > ACCEPTABLE_DISTANCE_ERROR) {
-
+			
 			// exits original call when y coord is reached
 			if ((Math.abs(y0 - odometer.getY())) <= ACCEPTABLE_DISTANCE_ERROR && avoid && !yReached) {
 				yReached = true;
@@ -130,12 +131,12 @@ public class NavController {
 			}
 			
 			if (exit) {
-				LCD.clear();
+
 				LCD.drawString("Exit Return ", 0, 6);
 				return;
 			}
 			if (!searching) {
-				LCD.clear();
+
 				LCD.drawString("Search Return ", 0, 6);
 				leftMotor.setSpeed(0);
 				rightMotor.setSpeed(0);
@@ -144,8 +145,6 @@ public class NavController {
 			// Main code for navigation
 			desiredAngle = nav.calculateAngle(x, y);
 			if (!nav.isAcceptableTrajectory(desiredAngle)) {
-				LCD.clear();
-				LCD.drawString("Is HERE" , 0, 6);
 				nav.turnTo(desiredAngle, false, false);
 			}
 
@@ -163,13 +162,13 @@ public class NavController {
 						Sound.beepSequence();
 						searching = false;
 						//					displacer.run();
+					}
 				}
 			}
-			
-			
+				LCD.drawString("HERE", 0, 4);
 			// Code for avoidance
 			if (avoid) {
-
+				LCD.drawString("avoiding", 0, 6);
 				if (avoider.avoidObstacle(false, false)) {
 					if (axisAvoidance()) {
 						return;
@@ -186,11 +185,11 @@ public class NavController {
 				}
 			}
 		}
-	}
+	
 		// stop at destination
 		leftMotor.setSpeed(0);
 		rightMotor.setSpeed(0);
-		LCD.clear();
+
 		LCD.drawString("Finish Return ", 0, 6);
 		return;
 
@@ -205,40 +204,32 @@ public class NavController {
 	
 	
 	// SEARCH Methods
-	public void search(double x0, double y0, double x1, double y1,boolean setFlag,  Colour flagInput){
+	public void search(double x0, double y0, double x1, double y1,  Colour flagInput){
 		
 		
 		//Search Initializaers
-		
-		if( setFlag ){
-			flagColour = flagInput; 
-		}
-		else{
-			flagColour = Bluetooth.getOurFlagType();
-		}
-		
+		flagColour = flagInput; 
 		searching = true;
 		
-
-			LCD.clear();
-			LCD.drawString("Searching" , 0, 7);
-			while(searching){
-				travelTo(x0, y1, false, false, true);
-				if(searching){
-					travelTo( x1 , y1, false, false, true);
-				}
-				if(searching){
-					travelTo(x1, y0, false, false, true);
-				}
-				if(searching){
-					travelTo(x0 + 30,y0, false, false, true);
-				}
-				if(searching){
-					travelTo(x0 + 30,y1, false, false, true);
-				}
+		travelTo(x0 + 10, y0,false,false,false);
+		
+		while(searching){
+			travelTo(x0 + 10, y1+5, false, false, true);
+			if(searching){
+				travelTo( x1-10 , y1+5, false, false, true);				
 			}
-			LCD.clear();
-			LCD.drawString("Found" , 0, 7);
+			if(searching){
+				travelTo(x1-10, y0-5, false, false, true);
+			}				
+			if(searching){
+				travelTo(x0 + 30,y0-5, false, false, true);
+			}
+			if(searching){
+				travelTo(x0 + 30,y1+5, false, false, true);
+			}
+		}
+
+		LCD.drawString("Found" , 0, 7);
 		return;
 	}
 
@@ -257,7 +248,9 @@ public class NavController {
 	 * @return
 	 */
 	private boolean concaveAvoidance() {
+		
 		if (avoider.avoidObstacle(false, true)) {
+			
 			if (xAxis) {
 				xAxis = false;
 				if (((y0 - odometer.getY()) >= 0)) {
