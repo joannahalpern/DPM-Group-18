@@ -23,7 +23,7 @@ public class ObjectDetectIdentify {
 	
 	//Search variables
 	private int csCount = 0;
-	private double lowValue = 300;	// Needs yto be calibrated for upstairs
+	private double lowValue = 300;	// Needs to be calibrated for upstairs
 	private double csValue;
 	private Colour flagColour;
 	public boolean block = false;

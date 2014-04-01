@@ -1,5 +1,6 @@
 /*
  * To change:
+
  * 	-make and TestNav___ for each thing and replace folder for each
  *  -check that no more arrays
  *  
@@ -15,6 +16,7 @@
 package Controller;
 
 import bluetooth.*;
+
 import lejos.geom.Point;
 import lejos.nxt.Button;
 import lejos.nxt.ColorSensor;

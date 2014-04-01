@@ -101,6 +101,7 @@ public class NavController {
 
 		// Concave L Obstacle avoidance and corner avoid
 		if (avoid) {
+			
 			if (concaveAvoidance()) {
 				LCD.clear();
 				LCD.drawString("Concave Return ", 0, 6);
@@ -134,7 +135,7 @@ public class NavController {
 				LCD.drawString("Exit Return ", 0, 6);
 				return;
 			}
-			if (!searching) {
+			if (!searching && !avoid) {
 				LCD.clear();
 				LCD.drawString("Search Return ", 0, 6);
 				leftMotor.setSpeed(0);
@@ -162,10 +163,10 @@ public class NavController {
 					if(detector.getColour() == flagColour){
 						Sound.beepSequence();
 						searching = false;
-						//					displacer.run();
+						displacer.run();
+					}
 				}
 			}
-			
 			
 			// Code for avoidance
 			if (avoid) {
@@ -186,7 +187,7 @@ public class NavController {
 				}
 			}
 		}
-	}
+
 		// stop at destination
 		leftMotor.setSpeed(0);
 		rightMotor.setSpeed(0);
@@ -214,27 +215,38 @@ public class NavController {
 			flagColour = flagInput; 
 		}
 		else{
-			flagColour = Bluetooth.getOurFlagType();
+//			flagColour = Bluetooth.getOurFlagType();
 		}
 		
 		searching = true;
 		
-
+			nav.travelTo(x0 +10, y0 - 10);
+			
 			LCD.clear();
 			LCD.drawString("Searching" , 0, 7);
 			while(searching){
-				travelTo(x0, y1, false, false, true);
+				travelTo(odometer.getX(), y1, false, false, true);
+				Sound.beep();
 				if(searching){
-					travelTo( x1 , y1, false, false, true);
+					travelTo( x1 , odometer.getY(), false, false, true);
+				}
+				Sound.beep();
+				if(searching){
+					travelTo(odometer.getX(), y0, false, false, true);
+				}
+				Sound.beep();
+				if(searching){
+					travelTo(x0 + 30,odometer.getY(), false, false, true);
+				}
+				Sound.beep();
+				if(searching){
+					travelTo(odometer.getX(),y1, false, false, true);
 				}
 				if(searching){
-					travelTo(x1, y0, false, false, true);
+					travelTo(x0 - 15,odometer.getY(), false, false, true);
 				}
 				if(searching){
-					travelTo(x0 + 30,y0, false, false, true);
-				}
-				if(searching){
-					travelTo(x0 + 30,y1, false, false, true);
+					travelTo(odometer.getX(),y0-10, false, false, true);
 				}
 			}
 			LCD.clear();
