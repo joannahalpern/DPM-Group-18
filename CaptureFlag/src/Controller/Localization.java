@@ -98,7 +98,7 @@ public class Localization extends Thread{
 		T2 = accurateLineDetection();
 		Sound.beep();
 		
-		robot.setSpeeds(0,30);
+		robot.setSpeeds(0,30);	
 		while(!csPoller.lineSeen){
 		}
 		T3 = accurateLineDetection();
