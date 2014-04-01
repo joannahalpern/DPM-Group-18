@@ -80,7 +80,7 @@ public class LightPoller extends Thread{
 		Double temp = 0.0;
 		
 		for (int i = 0; i<QUEUE_SIZE; i++){
-			temp = ((Double) coloursQueue.pop());
+			temp = ((Double) coloursQueue.pop()); 
 			sum = sum + temp; //sum everything in queue
 			coloursQueue.push(temp); //put values back in queue afterwards
 		}
@@ -91,7 +91,7 @@ public class LightPoller extends Thread{
 	/**
 	 * computes median of all the values in the coloursQueue
 	 * by putting queue into array, sorting the array with QuickSort,
-	 * then returning the middle value of that array.
+	 * then re  the middle value of that array.
 	 * 
 	 * If the array is an even number size, it will return the larger
 	 * of the two middle numbers

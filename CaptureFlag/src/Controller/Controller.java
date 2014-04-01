@@ -21,7 +21,7 @@ public class Controller {
 	/* Create an object that can be used for synchronization across threads. */
 	static class theLock extends Object {//this is a lock
 	}
-	static public theLock lock = new theLock();
+	static public theLock lock = new theLock(); 
 	
 	public static void main(String[] args) {
 		

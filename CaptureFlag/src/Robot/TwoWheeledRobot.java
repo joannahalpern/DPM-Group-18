@@ -9,7 +9,7 @@ public class TwoWheeledRobot {
 	public static final double DEFAULT_WIDTH = 26.0;
 	public static final double GROUND_LS_X_OFFSET = -9.4;
 	public static final double GROUND_LS_Y_OFFSET = -7.5;
-	public static final double SENSOR_WIDTH = 14.88;
+	public static final double SENSOR_WIDTH = 14.88; 
 	
 	private NXTRegulatedMotor leftMotor, rightMotor, clawMotor;
 	public UltrasonicSensor usLeft, usRight;

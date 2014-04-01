@@ -13,7 +13,7 @@ public class UltrasonicPoller extends Thread{
 	private double distance = 99999;
 	private Queue<Double> distancesQueue;
 	
-	public UltrasonicPoller(UltrasonicSensor us) {
+	public UltrasonicPoller(UltrasonicSensor us) { 
 		this.us = us;
 		
 		this.start();

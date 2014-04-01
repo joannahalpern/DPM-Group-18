@@ -71,7 +71,7 @@ public class Navigation {
      * @param theta: absolute angle to turn to (less than 360)
      * @param stop
      *            : true to stop rotation when angle is reached
-     * @param degrees
+     * @param degrees 
      *            : true if input angle is in degrees
      */
   

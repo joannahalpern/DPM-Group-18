@@ -41,7 +41,7 @@ public class LCDInfo implements TimerListener{
 		this.usRight = this.robot.getRightUSSensor();	
 		
 		this.lcdTimer = new Timer(LCD_REFRESH, this);
-
+ 
 		// start the timer
 		lcdTimer.start();
 	}

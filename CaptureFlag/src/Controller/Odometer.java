@@ -94,7 +94,7 @@ public class Odometer implements TimerListener {
 
 		return result;
 	}
-	public double getAngleRadians() {
+	public double getAngleRadians() { 
 		double result;
 
 		synchronized (lock) {

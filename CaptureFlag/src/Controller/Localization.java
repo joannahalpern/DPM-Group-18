@@ -26,7 +26,7 @@ public class Localization extends Thread{
 	private UltrasonicPoller usPollerLeft;
 	private UltrasonicPoller usPollerRight;
 	private LightPoller csPoller;
-
+ 
 	public Localization(Odometer odo, Navigation nav, UltrasonicPoller usPollerLeft, UltrasonicPoller usPollerRight, 
 						LightPoller csPoller, TwoWheeledRobot robot) {
 		this.robot = robot;

@@ -35,7 +35,7 @@ public class LocalizationTest {
 		UltrasonicPoller usPollerLeft = new UltrasonicPoller(usLeft);
 		UltrasonicPoller usPollerRight = new UltrasonicPoller(usRight);
 //		
-		LightPoller csPollerLineReader = new LightPoller(csLineReader, Colour.BLUE);
+		LightPoller csPollerLineReader = new LightPoller(csLineReader, Colour.BLUE); 
 //		LightPoller colourDetector = new LightPoller(csFlagReader, Colour.BLUE);
 //
 		TwoWheeledRobot fuzzyPinkRobot = new TwoWheeledRobot(Motor.A, Motor.C, Motor.B, usLeft, usRight, csFlagReader, csLineReader);
