@@ -51,10 +51,11 @@ public class LCDInfo implements TimerListener{
 		LCD.drawString("X: " + odo.getX(), 0, 0);
 		LCD.drawString("Y: " + odo.getY(), 0, 1);
 		LCD.drawString("H: " + odo.getAngle(), 0, 2);
-//		LCD.drawString("wall: " + loc.wallFound, 0, 3);
-		LCD.drawString("usL: " + usPollerLeft.getMedianDistance(), 0, 4);
-		LCD.drawString("usR: " + usPollerRight.getMedianDistance(), 0, 5);
-//		LCD.drawString("angle: " + loc.angle, 0, 6);	
+		LCD.drawString("usL: " + usPollerLeft.getMedianDistance(), 0, 3);
+		LCD.drawString("usR: " + usPollerRight.getMedianDistance(), 0, 4);
+		LCD.drawString("A: " + loc.usA, 0, 5);
+		LCD.drawString("B: " + loc.usB, 0, 6);
+		LCD.drawString("turns: " + loc.turns.getAngle(), 0, 7);	
 //		LCD.drawString("R us: " + usPollerRight.getMedianDistance(), 0, 4);	
 //		LCD.drawString("diff: " + (usPollerLeft.getMedianDistance()-usPollerRight.getMedianDistance()), 0, 5);	
 //		LCD.drawString("orthogonal: " + loc.isOrthogonal(), 0, 6);

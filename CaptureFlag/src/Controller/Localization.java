@@ -11,7 +11,7 @@ import Robot.*;
 public class Localization extends Thread{
 	public static final int CLOSE_THRESHOLD = 40;
 	
-	private double usA, usB;
+	public double usA, usB;
 	private double Tstart, Trange, Tfinal;
 	private double T1,T2,T3,T4;
 	private double distL, distR;
@@ -22,7 +22,8 @@ public class Localization extends Thread{
 	 
 	private TwoWheeledRobot robot;
 	private Navigation nav;
-	private Odometer odo, turns; //turns used to simplify getting angle measurements
+	private Odometer odo; 
+	public Odometer turns; //turns used to simplify getting angle measurements
 	private UltrasonicPoller usPollerLeft;
 	private UltrasonicPoller usPollerRight;
 	private LightPoller csPoller;
@@ -42,6 +43,37 @@ public class Localization extends Thread{
 	
 	public void doUSLocalization(){
 		
+		try{Thread.sleep(250);} catch (Exception e){}; //give the poller some time to get values
+		
+		robot.setSpeeds(0, 40);
+		while(usPollerLeft.getMedianDistance() <= CLOSE_THRESHOLD || usPollerRight.getMedianDistance() <= CLOSE_THRESHOLD){
+		}
+		try{Thread.sleep(50);} catch (Exception e){};
+		while(usPollerLeft.getMedianDistance() >= CLOSE_THRESHOLD){
+		}
+		robot.setSpeeds(0, 0);
+		
+		Sound.beep();
+		turns.setAngle(0);
+		usA = turns.getAngle();
+		
+		try{Thread.sleep(50);} catch (Exception e){};
+		robot.setSpeeds(0,-40);
+
+		Sound.twoBeeps();
+		while(usPollerLeft.getMedianDistance() <= CLOSE_THRESHOLD || usPollerRight.getMedianDistance() <= CLOSE_THRESHOLD){
+		}
+		try{Thread.sleep(50);} catch (Exception e){};
+		while(usPollerRight.getMedianDistance() >= CLOSE_THRESHOLD){
+		}
+		robot.setSpeeds(0, 0);
+		
+		Sound.beep();
+		usB = turns.getAngle();
+		
+		angle = 45 - (360-(usB-usA))/2;
+				
+		odo.setAngle(angle);
 		
 //		double pos[] = new double[3];
 //		boolean update[] = {false,false,false};
