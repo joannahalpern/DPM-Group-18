@@ -14,7 +14,7 @@ import lejos.util.TimerListener;
  *
  */
 public class LCDInfo implements TimerListener{
-	public static final int LCD_REFRESH = 100;
+	public static final int LCD_REFRESH = 50;
 	private Timer lcdTimer;
 
 	private Odometer odo;
@@ -50,12 +50,15 @@ public class LCDInfo implements TimerListener{
 		LCD.clear();
 		LCD.drawString("X: " + odo.getX(), 0, 0);
 		LCD.drawString("Y: " + odo.getY(), 0, 1);
-		LCD.drawString("H: " + odo.getAngle(), 0, 2);	
-//		LCD.drawString("L us: " + usPollerLeft.getMedianDistance(), 0, 3);	
+		LCD.drawString("H: " + odo.getAngle(), 0, 2);
+//		LCD.drawString("wall: " + loc.wallFound, 0, 3);
+		LCD.drawString("usL: " + usPollerLeft.getMedianDistance(), 0, 4);
+		LCD.drawString("usR: " + usPollerRight.getMedianDistance(), 0, 5);
+//		LCD.drawString("angle: " + loc.angle, 0, 6);	
 //		LCD.drawString("R us: " + usPollerRight.getMedianDistance(), 0, 4);	
 //		LCD.drawString("diff: " + (usPollerLeft.getMedianDistance()-usPollerRight.getMedianDistance()), 0, 5);	
 //		LCD.drawString("orthogonal: " + loc.isOrthogonal(), 0, 6);
-		LCD.drawString("CS: " + csLineReader.getRawLightValue(), 0, 3);	
+//		LCD.drawString("CS: " + csLineReader.getRawLightValue(), 0, 3);	
 
 	}
 }

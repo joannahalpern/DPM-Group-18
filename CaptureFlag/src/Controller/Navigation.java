@@ -76,9 +76,11 @@ public class Navigation {
      */
   
     public void turnTo(double theta, boolean stop, boolean degrees) {
+    	
   
         // Changes degrees to radians
         if (degrees) {
+        	theta = Odometer.fixDegAngle(theta);
             theta = Math.toRadians(theta);
         }
         double err = theta - odometer.getAngleRadians();

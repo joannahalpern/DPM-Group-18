@@ -60,9 +60,9 @@ public class LocalizationTest {
 		switch(option) {
 			case Button.ID_LEFT:
 				
-			localizer.doUSLocalization();
+//			localizer.doUSLocalization();
 			csLineReader.setFloodlight(Color.BLUE);
-			//localizer.doLSLocalization();
+			localizer.doLSLocalization();
 				
 				break;
 			default:

@@ -9,7 +9,7 @@ import Robot.*;
  * Does both ultrasonic and light localization 
  */
 public class Localization extends Thread{
-	public static final int CLOSE_THRESHOLD = 50;
+	public static final int CLOSE_THRESHOLD = 40;
 	
 	private double usA, usB;
 	private double Tstart, Trange, Tfinal;
@@ -17,7 +17,8 @@ public class Localization extends Thread{
 	private double distL, distR;
 	private double newDistL, newDistR;
 	private double lightSensorDist = Math.sqrt(TwoWheeledRobot.GROUND_LS_X_OFFSET*TwoWheeledRobot.GROUND_LS_X_OFFSET + TwoWheeledRobot.GROUND_LS_Y_OFFSET*TwoWheeledRobot.GROUND_LS_Y_OFFSET);
-	boolean wallFound = false;
+	public double angle = 0;
+	public boolean wallFound = false;
 	 
 	private TwoWheeledRobot robot;
 	private Navigation nav;
@@ -40,45 +41,144 @@ public class Localization extends Thread{
 	
 	
 	public void doUSLocalization(){
-		turns.setAngle(0);
-		Sound.beepSequenceUp();
 		
-		double [] pos = new double [3];
-			
-			//Robot turns clockwise until it see a wall
-			//if it already doesn't see a wall, it skips this first while loop
-		robot.setSpeeds(0, 30);
-		while (usPollerLeft.getMedianDistance()>30){}
-		while (usPollerLeft.getMedianDistance()<=30){
-			//Now the robot is facing a wall and it continues rotating clockwise until
-			//it no longer sees a wall
-			//It then stops and latches it's current angle
-		}
-		robot.setSpeeds(0, 0);
-			
-		turns.getPosition(pos);
-		usA = pos[2];
-			
-			//The robot then turns counter clockwise until is sees a wall
-		robot.setSpeeds(0, -30);
-		while (usPollerLeft.getMedianDistance()<30){
-		}
-			//Then the robot continues counter clockwise until it doesn't see a wall
-			//It will then latch that angle
-		robot.setSpeeds(0, 0);
-			
-		turns.getPosition(pos);
-		usB = pos[2];
-			
-			//Using the 2 latched angles, it calculates what it's current angle must be and puts that between 0 and 360 degrees
-		double currentAngle = Odometer.fixDegAngle(-calculateChangeAngleToZero(usA, usB));
-			
-		odo.setPosition(new double [] {0.0, 0.0, currentAngle}, new boolean [] {true, true, true});
-	
+		
+//		double pos[] = new double[3];
+//		boolean update[] = {false,false,false};
+//		double errorTheta = 99999;
+//		boolean orthogonal = false;
+//		turns.setAngle(0);
+//		Sound.beepSequenceUp();
+//		
+//		try{Thread.sleep(250);} catch (Exception e){}; //give the poller some time to get values
+//		
+//		robot.setSpeeds(0, 20);
+//		while(!wallFound){ //wallFound starts false
+//			angle = turns.getAngle();
+//			if (usPollerLeft.getMedianDistance()<= CLOSE_THRESHOLD || usPollerRight.getMedianDistance()<= CLOSE_THRESHOLD){
+//				wallFound = true;
+//			}
+//			else{ 
+//				wallFound = false; //this is here in case something changes wallFound from somewhere else
+//			}
+//		}
+//		robot.setSpeeds(0, 0);
+//		Sound.beepSequence();
+//		
+//		if (Math.abs(angle) <= 1 ){//there has been no turn
+//			Sound.twoBeeps();
+//			while(errorTheta >= 1){ //errorTheta starts at 9999
+//				errorTheta = calculateErrorTheta(usPollerLeft, usPollerRight);
+//				nav.turnTo((angle-errorTheta), true, true); //turn to orthogonal
+//			}
+//			//now the robot is orthogonal, we need to check which wall we are facing
+//			nav.turnTo(odo.getAngle()-90, true, true); //turn 90 degrees ccw
+//			//check to make sure the robot is facing either a wall (head on) or nothingness
+//			if ( 	(usPollerLeft.getMedianDistance()<= CLOSE_THRESHOLD && usPollerRight.getMedianDistance()<= CLOSE_THRESHOLD) 
+//					||
+//					(usPollerLeft.getMedianDistance()> CLOSE_THRESHOLD && usPollerRight.getMedianDistance()> CLOSE_THRESHOLD) 
+//				){
+//				orthogonal = true;
+//			}
+//			else{
+//				orthogonal = false;
+//			}
+//			if (orthogonal){
+//				if (usPollerLeft.getMedianDistance()<= CLOSE_THRESHOLD){//orthogonal, so pick one. case: facing a wall, still
+//					pos[0] = 999999;
+//					pos[1] = (usPollerLeft.getMedianDistance() + usPollerRight.getMedianDistance())/2; // just in case
+//					pos[2] = 180;
+//					update[0] = false;
+//					update[1] = true;
+//					update[2] = true;
+//					odo.setPosition(pos, update);
+//				}
+//				else { // case: facing openness
+//					pos[0] = 999999;
+//					pos[1] = 999999;
+//					pos[2] = 90;
+//					update[0] = false;
+//					update[1] = false;
+//					update[2] = true;
+//					odo.setPosition(pos, update);
+//				}
+//			}
+//			else{//not orthogonal, this is improbable. Deal with this later
+//				Sound.buzz();
+//				try{Thread.sleep(100);} catch (Exception e){};
+//				Sound.buzz(); //these are bad buzzes to hear
+//			}
+//		}
+//		else if (Math.abs(angle) > 2){// now facing the bottom wall
+//			Sound.beep();
+//			while(errorTheta >= 1){ //remember, errorTheta STARTS at 9999
+//				errorTheta = calculateErrorTheta(usPollerLeft, usPollerRight);
+//				nav.turnTo((angle-errorTheta), true, true); //turn to orthogonal
+//			}
+//			pos[0] = 999999;
+//			pos[1] = (usPollerLeft.getMedianDistance() + usPollerRight.getMedianDistance())/2; // just in case
+//			pos[2] = 180;
+//			update[0] = false;
+//			update[1] = true;
+//			update[2] = true;
+//			odo.setPosition(pos, update);
+//		}
 	}
 		
 	
 	
+	private double calculateErrorTheta(UltrasonicPoller left, UltrasonicPoller right){
+		try{Thread.sleep(100);} catch (Exception e){};
+		
+		double lengthL = left.getMedianDistance();
+		double lengthR = right.getMedianDistance();
+		
+		if (lengthL > 200){
+			return 70;
+		}
+		if (lengthR > 200){
+			return -70;
+		}
+
+		return Math.atan((lengthR-lengthL)/TwoWheeledRobot.SENSOR_WIDTH)*180/Math.PI; //returns pos or neg radians
+	}
+//			
+//			//Robot turns clockwise until it see a wall
+//			//if it already doesn't see a wall, it skips this first while loop
+//		robot.setSpeeds(0, 30);
+//		while (usPollerLeft.getMedianDistance()>30){}
+//		while (usPollerLeft.getMedianDistance()<=30){
+//			//Now the robot is facing a wall and it continues rotating clockwise until
+//			//it no longer sees a wall
+//			//It then stops and latches it's current angle
+//		}
+//		robot.setSpeeds(0, 0);
+//			
+//		turns.getPosition(pos);
+//		usA = pos[2];
+//			
+//			//The robot then turns counter clockwise until is sees a wall
+//		robot.setSpeeds(0, -30);
+//		while (usPollerLeft.getMedianDistance()>30){
+//		}
+//		while (usPollerLeft.getMedianDistance()<30){
+//		}
+//		robot.setSpeeds(0, 0);
+//			//Then the robot continues counter clockwise until it doesn't see a wall
+//			//It will then latch that angle
+//			
+//		turns.getPosition(pos);
+//		usB = pos[2];
+//			
+//			//Using the 2 latched angles, it calculates what it's current angle must be and puts that between 0 and 360 degrees
+//		double currentAngle = Odometer.fixDegAngle(-calculateChangeAngleToZero(usA, usB));
+//			
+//		odo.setPosition(new double [] {0.0, 0.0, currentAngle}, new boolean [] {true, true, true});
+//	
+//	}
+//		
+//	
+//	
 	public void doLSLocalization(){
 		
 		nav.turnTo(45, true, true);
@@ -114,13 +214,14 @@ public class Localization extends Thread{
 		robot.setSpeeds(0,0);
 		
 		calculateCurrentPosition();
+	}
 	
 //		nav.turnTo(90,true,true);
 //		nav.travelDistance(odo.getX());
 //		nav.turnTo(0, true, true);
 //		nav.travelDistance(odo.getY());
 
-	}
+	
 	
 	private double calculateChangeAngleToZero(double angleA, double angleB) {
 		double deltaTheta=999999; //this value will be changed in the cases
