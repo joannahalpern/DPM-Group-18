@@ -1,3 +1,5 @@
+//TODO: make light threshold variable, dependent on initial light readings.
+
 package Controller;
 
 import Controller.*;

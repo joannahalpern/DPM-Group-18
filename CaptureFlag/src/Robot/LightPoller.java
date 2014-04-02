@@ -22,7 +22,6 @@ public class LightPoller extends Thread{
 		start();
 		
 		initializeQueue();
-		start();
 	}
 
 	public void run() {

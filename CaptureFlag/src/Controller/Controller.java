@@ -16,8 +16,6 @@
 package Controller;
 
 import bluetooth.*;
-
-import bluetooth.*;
 import lejos.geom.Point;
 import lejos.nxt.Button;
 import lejos.nxt.ColorSensor;
@@ -187,12 +185,18 @@ public class Controller {
 			//PUT MAIN CODE HERE
 			
 			//Localization
-			odo.setPosition(new double[]{0.0, 0.0, 0.0}, new boolean[]{true, true, true});
+			localizer.doUSLocalization();
+			localizer.doLSLocalization();
+			
+			navController.travelTo(0,0, true, false, false);
+			nav.turnTo(0, true, true);
 			odoCorrection.start();
 			
-			navController.setX(120);
-			navController.setY((120));
-			navController.setAxis(false);
+			navController.travelTo(0,120, true, false, false);
+			navController.travelTo(120,120, true, false, false);
+//			navController.setX(120);
+//			navController.setY((120));
+//			navController.setAxis(false);
 			
 //			navController.travelTo(odo.getX(),120, true, false, false);
 //			navController.search(4*30.48, 4*30.48, 6*30.48, 6*30.48, false, ourFlagColour);
