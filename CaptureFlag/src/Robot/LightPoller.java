@@ -1,4 +1,4 @@
- package Robot;
+package Robot;
 
 import java.util.Queue;
 
@@ -7,35 +7,36 @@ import lejos.nxt.ColorSensor;
 
 
 public class LightPoller extends Thread{
-	public static final int LINE_THRESHOLD = 260;
-	public static final int QUEUE_SIZE = 5;
-	public static long POLLING_PERIOD = 20; // (1 poll per 50ms) THIS IS CHANGED FOR ACCURACY IN LOCALIZATION
-	public boolean lineSeen;
+	public static final int LINE_THRESHOLD = 300;
+	public static final int QUEUE_SIZE = 9;
+	public static long POLLING_PERIOD = 30; // (1 poll per 50ms)
 	private ColorSensor ls;
 	private double colourVal = 99999;
 	private Colour colour;
 	private Queue<Double> coloursQueue;
+	public boolean lineSeen = false;
 	
 	public LightPoller(ColorSensor ls, Colour colour) {
 		this.ls = ls;
 		this.colour = colour;
-		this.start();
+		start();
+		
 		initializeQueue();
 	}
 
 	public void run() {
-//		setFloodLight(colour);
+		setFloodLight(colour);
 		while(true){
 			colourVal = ls.getRawLightValue();
 			coloursQueue.push(colourVal);
 			coloursQueue.pop();
-			if (ls.getRawLightValue()<LINE_THRESHOLD){
+			if (ls.getRawLightValue()<=LINE_THRESHOLD){
 				lineSeen = true;
 			}
 			else { lineSeen = false; }
 			try { Thread.sleep(POLLING_PERIOD); } catch(Exception e){}
-			}
 		}
+	}
 
 	public void setFloodLight(Colour colour) {
 		ls.setFloodlight(true);
@@ -51,6 +52,7 @@ public class LightPoller extends Thread{
 				break;
 				
 			case BLUE:
+				ls.setFloodlight(false);
 				ls.setFloodlight(ColorSensor.Color.BLUE);
 				break;
 			
@@ -80,7 +82,7 @@ public class LightPoller extends Thread{
 		Double temp = 0.0;
 		
 		for (int i = 0; i<QUEUE_SIZE; i++){
-			temp = ((Double) coloursQueue.pop()); 
+			temp = ((Double) coloursQueue.pop());
 			sum = sum + temp; //sum everything in queue
 			coloursQueue.push(temp); //put values back in queue afterwards
 		}
@@ -91,7 +93,7 @@ public class LightPoller extends Thread{
 	/**
 	 * computes median of all the values in the coloursQueue
 	 * by putting queue into array, sorting the array with QuickSort,
-	 * then re  the middle value of that array.
+	 * then returning the middle value of that array.
 	 * 
 	 * If the array is an even number size, it will return the larger
 	 * of the two middle numbers

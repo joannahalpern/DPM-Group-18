@@ -5,14 +5,14 @@ import lejos.nxt.ColorSensor;
 import lejos.nxt.LCD;
 import lejos.nxt.Motor;
 import lejos.nxt.SensorPort;
+import lejos.nxt.Sound;
 import lejos.nxt.UltrasonicSensor;
 import lejos.nxt.comm.RConsole;
-import lejos.robotics.Color;
 import Controller.*;
 import Robot.*;
 import Display.*;
 
-public class LocalizationTest {
+public class ObjectDetectTest {
 	
 	/* Create an object that can be used for synchronization across threads. */
 	static class theLock extends Object {//this is a lock
@@ -22,7 +22,7 @@ public class LocalizationTest {
 	public static void main(String[] args) {
 		
 		LCD.clear();
-		LCD.drawString("   Navigation   ", 0, 0);
+		LCD.drawString("Object Detection", 0, 0);
 		LCD.drawString("   Press left   ", 0, 2);
 		LCD.drawString("    to begin    ", 0, 3);
 		
@@ -32,26 +32,26 @@ public class LocalizationTest {
 		ColorSensor csFlagReader = new ColorSensor(SensorPort.S3);
 		ColorSensor csLineReader = new ColorSensor(SensorPort.S4);
 		
-		UltrasonicPoller usPollerLeft = new UltrasonicPoller(usLeft);
-		UltrasonicPoller usPollerRight = new UltrasonicPoller(usRight);
+//		UltrasonicPoller usPollerLeft = new UltrasonicPoller(usLeft);
+//		UltrasonicPoller usPollerRight = new UltrasonicPoller(usRight);
 //		
-		LightPoller csPollerLineReader = new LightPoller(csLineReader, Colour.GREEN);
-//		LightPoller colourDetector = new LightPoller(csFlagReader, Colour.BLUE);
+//		LightPoller csPollerLineReader = new LightPoller(csLineReader, Colour.BLUE);
+		LightPoller colourDetector = new LightPoller(csFlagReader, Colour.BLUE);
 //
 		TwoWheeledRobot fuzzyPinkRobot = new TwoWheeledRobot(Motor.A, Motor.C, Motor.B, usLeft, usRight, csFlagReader, csLineReader);
 		Odometer odo = new Odometer(fuzzyPinkRobot, true);
 		Navigation nav = new Navigation(odo, fuzzyPinkRobot);
 //		OdometryCorrection odoCorection = new OdometryCorrection(odo, csPollerLineReader);
 //		
-		Localization localizer = new Localization(odo, nav, usPollerLeft, usPollerRight, csPollerLineReader, fuzzyPinkRobot);
+//		Localization localizer = new Localization(odo, nav, usPollerLeft, usPollerRight, csPollerLineReader);
 //		
-//		ObjectDisplacement objectDisplacement = new ObjectDisplacement(fuzzyPinkRobot, nav);
-//		ObjectDetectIdentify objectDetection = new ObjectDetectIdentify(fuzzyPinkRobot, nav, objectDisplacement);
+		ObjectDisplacement objectDisplacement = new ObjectDisplacement(fuzzyPinkRobot, nav);
+		ObjectDetectIdentify objectDetection = new ObjectDetectIdentify(fuzzyPinkRobot, nav, objectDisplacement, colourDetector);
 		
-		
+		NavController navController = new NavController(odo, fuzzyPinkRobot,objectDisplacement, colourDetector, nav, objectDetection);
 //		initializeRConsole();
 //		RConsoleDisplay rcd = new RConsoleDisplay(odo, colourDetector, usPollerLeft);
-		LCDInfo lcd = new LCDInfo(odo, fuzzyPinkRobot, csPollerLineReader);
+//		LCDInfo lcd = new LCDInfo(odo, fuzzyPinkRobot);
 
 		int option = 0;
 		while (option == 0)
@@ -59,12 +59,31 @@ public class LocalizationTest {
 			
 		switch(option) {
 			case Button.ID_LEFT:
-			LCD.clear();
-
-//			localizer.doUSLocalization();
-			localizer.doLSLocalization();
 				
-				break;
+			//PUT MAIN CODE HERE
+			
+			while(true){	
+				
+				if (option == Button.ID_LEFT){
+					
+					option = Button.ID_ENTER;
+//					fuzzyPinkRobot.setForwardSpeed(5);
+					
+					while(!objectDetection.isBlock()){
+
+					option = Button.ID_ENTER;
+//						objectDetection.isBlock();
+						navController.search(0,0,60,60);
+					
+					
+					}
+
+					Sound.beep();
+//					objectDetection.getColour();
+				}
+					option = Button.waitForAnyPress();
+			}	
+//				break;
 			default:
 				System.out.println("Error - invalid button");
 				System.exit(-1);

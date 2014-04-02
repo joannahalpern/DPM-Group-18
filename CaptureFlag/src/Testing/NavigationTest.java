@@ -5,6 +5,7 @@ import lejos.nxt.ColorSensor;
 import lejos.nxt.LCD;
 import lejos.nxt.Motor;
 import lejos.nxt.SensorPort;
+import lejos.nxt.Sound;
 import lejos.nxt.UltrasonicSensor;
 import lejos.nxt.comm.RConsole;
 import Controller.*;
@@ -34,32 +35,38 @@ public class NavigationTest {
 
 		// UltrasonicPoller usPollerLeft = new UltrasonicPoller(usLeft);
 		// UltrasonicPoller usPollerRight = new UltrasonicPoller(usRight);
-		//
-		// LightPoller csPollerLineReader = new LightPoller(csLineReader,
-		// Colour.BLUE);
-		// LightPoller colourDetector = new LightPoller(csFlagReader,
-		// Colour.BLUE);
-		//
-		TwoWheeledRobot fuzzyPinkRobot = new TwoWheeledRobot(Motor.A, Motor.C,
-				Motor.B, usLeft, usRight, csFlagReader, csLineReader);
+
+		
+		LightPoller csPollerLineReader = new LightPoller(csLineReader, Colour.BLUE);
+		LightPoller colourDetector = new LightPoller(csFlagReader,Colour.BLUE);
+
+		
+		TwoWheeledRobot fuzzyPinkRobot = new TwoWheeledRobot(Motor.A, Motor.C,Motor.B, usLeft, usRight, csFlagReader, csLineReader);
 		Odometer odo = new Odometer(fuzzyPinkRobot, true);
 		Navigation nav = new Navigation(odo, fuzzyPinkRobot);
-		// OdometryCorrection odoCorection = new OdometryCorrection(odo,
-		// csPollerLineReader);
+		
+		ObstacleAvoidance obstacleAvoidance =  new ObstacleAvoidance(fuzzyPinkRobot, nav, odo);
+		ObjectDisplacement objectDisplacement = new ObjectDisplacement(fuzzyPinkRobot,nav);
+		ObjectDetectIdentify objectDetection = new ObjectDetectIdentify(fuzzyPinkRobot, nav, objectDisplacement, colourDetector);
+
+		NavController navController = new NavController(odo, fuzzyPinkRobot,objectDisplacement, colourDetector, nav, objectDetection, obstacleAvoidance);
+		OdometryCorrection odoCorection = new OdometryCorrection(odo, csPollerLineReader);
 		//
 		// Localization localizer = new Localization(odo, nav, usPollerLeft,
 		// usPollerRight, csPollerLineReader);
-		//
-		// ObjectDisplacement objectDisplacement = new
-		// ObjectDisplacement(fuzzyPinkRobot, nav);
-		// ObjectDetectIdentify objectDetection = new
-		// ObjectDetectIdentify(fuzzyPinkRobot, nav, objectDisplacement);
 
-		// initializeRConsole();
-		// RConsoleDisplay rcd = new RConsoleDisplay(odo, colourDetector,
+
 		// usPollerLeft);
+		
+		
+		
+		//initializeRConsole();
+		//RConsoleDisplay rcd = new RConsoleDisplay(odo, fuzzyPinkRobot);
+		
+		
+		
 		LCDInfo lcd = new LCDInfo(odo, fuzzyPinkRobot);
-
+		
 		int option = 0;
 		while (option == 0)
 			option = Button.waitForAnyPress();
@@ -67,17 +74,58 @@ public class NavigationTest {
 		switch (option) {
 		case Button.ID_LEFT:
 
-			// PUT MAIN CODE HERE
+			while(true){
+				
+				if(option == Button.ID_LEFT ){
+					
+					option = Button.ID_ENTER;
+					
+					// PUT MAIN CODE HERE
+					LCD.clear();
+					LCD.drawString("Starts Travel ", 0, 4);
+					
+					//Navigation
+//					navController.travelTo(0,120,false,false,false);
+//					navController.travelTo(120,120,false,false,false);
+//					navController.travelTo(120,240,false,false,false);
+//					nav.turnTo(0,true,true);
+					
+				
+					
+					
+					//Travel in a sqaure
+					/*
+					navController.travelTo(0,30, false, false, false);
+					navController.travelTo(30, 30, false, false, false);
+					navController.travelTo(30, 0 , false,  false, false);
+					navController.travelTo(0, 0 , false,  false, false);
+					nav.turnTo(0,true,true);
+					*/
+				
+//					navController.setX(120);
+//					navController.setY((120));
+//					navController.setAxis(false);
+//					LCD.drawString("here", 0, 7);
+//					 
+//					navController.travelTo(0,120, true, false, false);
+//					navController.search(4*30.48, 4*30.48, 6*30.48, 6*30.48, true, Colour.LIGHT_BLUE);
+//					navController.avoidanceSetter(120, 240, false);
+//					navController.travelTo(0, 240, true, false, false);
+		
+					//Searching and moving
+					navController.search(1*30.48, 1*30.48, 3*30.48, 3*30.48, true, Colour.RED);
+					Sound.beep();
+					navController.avoidanceSetter(120, 120, false);
+					navController.travelTo(odo.getX(), 120, true, false, false);
+					Sound.beep();
+					
+				}
+				if( option == Button.ID_RIGHT){
+					break;
+				}
+			}
 			
-			//Turning Testing
-			//nav.turnTo(360, true, true); // pass
 			
-			nav.travelDistance(30);
-			
-			//nav.turnTo(90, true); // fail- Poorly coded to radians loop, loop was if > 90. 
-			//nav.travelTo(0, 90, false, false); // pass
-			//nav.travelTo(30, 60, false, false); // pass
-
 			break;
 			default:
 			System.out.println("Error - invalid button");
