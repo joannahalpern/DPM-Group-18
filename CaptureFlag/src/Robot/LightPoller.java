@@ -19,6 +19,7 @@ public class LightPoller extends Thread{
 		this.colour = colour;
 		
 		initializeQueue();
+		start();
 	}
 
 	public void run() {

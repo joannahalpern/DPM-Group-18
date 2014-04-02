@@ -7,6 +7,8 @@ public class TwoWheeledRobot {
 	public static final double DEFAULT_LEFT_RADIUS = 1.6;
 	public static final double DEFAULT_RIGHT_RADIUS = 1.6;
 	public static final double DEFAULT_WIDTH = 26.0;
+	public static final double SENSOR_POS_X = 9.4;
+	public static final double SENSOR_POS_Y = 7.5;
 	
 	private NXTRegulatedMotor leftMotor, rightMotor, clawMotor;
 	private UltrasonicSensor usLeft, usRight;

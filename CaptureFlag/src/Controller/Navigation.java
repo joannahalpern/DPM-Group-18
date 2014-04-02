@@ -17,7 +17,7 @@ public class Navigation {
 	// private final int ACCELERATION = 3000;
 
 	//Status variables
-	public boolean isTurning = false;
+	public static boolean isTurning = false;
 	
 	// Constructor
 	public Navigation(Odometer odo, TwoWheeledRobot robot) {
@@ -200,7 +200,7 @@ public class Navigation {
 	}
 	
 	
-	public boolean getTurning(){
+	public static boolean isTurning(){
 		return isTurning;
 		
 	}
