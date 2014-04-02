@@ -17,7 +17,7 @@ public class Navigation {
 	// private final int ACCELERATION = 3000;
 
 	//Status variables
-	public boolean isTurning = false;
+	public static boolean isTurning = false;
 	
 	// Constructor
 	public Navigation(Odometer odo, TwoWheeledRobot robot) {
@@ -204,8 +204,7 @@ public class Navigation {
 		return convertDistance(radius, Math.PI * width * angle / 360.0);
 	}
 	
-	
-	public boolean getTurning(){
+	public static boolean isTurning(){
 		return isTurning;
 		
 	}

@@ -17,6 +17,7 @@ package Controller;
 
 import bluetooth.*;
 
+import bluetooth.*;
 import lejos.geom.Point;
 import lejos.nxt.Button;
 import lejos.nxt.ColorSensor;
@@ -34,11 +35,13 @@ import Robot.*;
  *
  */
 public class Controller {
+
+	private static boolean bluetoothEnabled = false;
 	public static StartCorner corner;
-	public static int ourZoneLL_X;
-	public static int ourZoneLL_Y;
-	public static int ourZoneUR_X;
-	public static int ourZoneUR_Y;
+	public static int ourZoneLL_X = 4;
+	public static int ourZoneLL_Y = 4;
+	public static int ourZoneUR_X = 6;
+	public static int ourZoneUR_Y = 6;
 	public static int opponentZoneLL_X;
 	public static int opponentZoneLL_Y;
 	public static int opponentZoneUR_X;
@@ -47,7 +50,7 @@ public class Controller {
 	public static int ourDZone_Y;
 	public static int opponentDZone_X;
 	public static int opponentDZone_Y;
-	public static int ourFlag;
+	public static int ourFlag = 1;
 	public static int opponentFlag;
 	
 	//our flag
@@ -59,63 +62,66 @@ public class Controller {
 	static public theLock lock = new theLock();
 	
 	public static void main(String[] args) {
-		BluetoothConnection conn = new BluetoothConnection();
 
-		Transmission t = conn.getTransmission();
-		LCD.clear();
-		if (t == null) {
-			LCD.drawString("Failed to read transmission", 0, 0);
-		} 
-		else{
-			switch (t.role) {
-				case RED: 
-					ourZoneLL_X = t.redZoneLL_X;
-					ourZoneLL_Y = t.redZoneLL_Y;
-					ourZoneUR_X = t.redZoneUR_X;
-					ourZoneUR_Y = t.redZoneUR_Y;
-					opponentZoneLL_X = t.greenZoneLL_X;
-					opponentZoneLL_Y = t.greenZoneLL_Y;
-					opponentZoneUR_X = t.greenZoneUR_X;
-					opponentZoneUR_Y = t.greenZoneUR_Y;
-					ourDZone_X = t.redDZone_X;
-					ourDZone_Y = t.redDZone_Y;
-					opponentDZone_X = t.greenDZone_X;
-					opponentDZone_Y = t.greenDZone_Y;
-					ourFlag = t.redFlag;
-					opponentFlag = t.greenFlag;
-					break;
-				case GREEN:
-					ourZoneLL_X = t.greenZoneLL_X;
-					ourZoneLL_Y = t.greenZoneLL_Y;
-					ourZoneUR_X = t.greenZoneUR_X;
-					ourZoneUR_Y = t.greenZoneUR_Y;
-					opponentZoneLL_X = t.redZoneLL_X;
-					opponentZoneLL_Y = t.redZoneLL_Y;
-					opponentZoneUR_X = t.redZoneUR_X;
-					opponentZoneUR_Y = t.redZoneUR_Y;
-					ourDZone_X = t.greenDZone_X;
-					ourDZone_Y = t.greenDZone_Y;
-					opponentDZone_X = t.redDZone_X;
-					opponentDZone_Y = t.redDZone_Y;
-					ourFlag = t.greenFlag;
-					opponentFlag = t.redFlag;
-					break;
-				default:
-					ourZoneLL_X = t.redZoneLL_X;
-					ourZoneLL_Y = t.redZoneLL_Y;
-					ourZoneUR_X = t.redZoneUR_X;
-					ourZoneUR_Y = t.redZoneUR_Y;
-					opponentZoneLL_X = t.greenZoneLL_X;
-					opponentZoneLL_Y = t.greenZoneLL_Y;
-					opponentZoneUR_X = t.greenZoneUR_X;
-					opponentZoneUR_Y = t.greenZoneUR_Y;
-					ourDZone_X = t.redDZone_X;
-					ourDZone_Y = t.redDZone_Y;
-					opponentDZone_X = t.greenDZone_X;
-					opponentDZone_Y = t.greenDZone_Y;
-					ourFlag = t.redFlag;
-					opponentFlag = t.greenFlag;
-					break;
+		if (bluetoothEnabled){
+			BluetoothConnection conn = new BluetoothConnection();
+	
+			Transmission t = conn.getTransmission();
+			LCD.clear();
+			if (t == null) {
+				LCD.drawString("Failed to read transmission", 0, 0);
+			} 
+			else{
+				switch (t.role) {
+					case RED: 
+						ourZoneLL_X = t.redZoneLL_X;
+						ourZoneLL_Y = t.redZoneLL_Y;
+						ourZoneUR_X = t.redZoneUR_X;
+						ourZoneUR_Y = t.redZoneUR_Y;
+						opponentZoneLL_X = t.greenZoneLL_X;
+						opponentZoneLL_Y = t.greenZoneLL_Y;
+						opponentZoneUR_X = t.greenZoneUR_X;
+						opponentZoneUR_Y = t.greenZoneUR_Y;
+						ourDZone_X = t.redDZone_X;
+						ourDZone_Y = t.redDZone_Y;
+						opponentDZone_X = t.greenDZone_X;
+						opponentDZone_Y = t.greenDZone_Y;
+						ourFlag = t.redFlag;
+						opponentFlag = t.greenFlag;
+						break;
+					case GREEN:
+						ourZoneLL_X = t.greenZoneLL_X;
+						ourZoneLL_Y = t.greenZoneLL_Y;
+						ourZoneUR_X = t.greenZoneUR_X;
+						ourZoneUR_Y = t.greenZoneUR_Y;
+						opponentZoneLL_X = t.redZoneLL_X;
+						opponentZoneLL_Y = t.redZoneLL_Y;
+						opponentZoneUR_X = t.redZoneUR_X;
+						opponentZoneUR_Y = t.redZoneUR_Y;
+						ourDZone_X = t.greenDZone_X;
+						ourDZone_Y = t.greenDZone_Y;
+						opponentDZone_X = t.redDZone_X;
+						opponentDZone_Y = t.redDZone_Y;
+						ourFlag = t.greenFlag;
+						opponentFlag = t.redFlag;
+						break;
+					default:
+						ourZoneLL_X = t.redZoneLL_X;
+						ourZoneLL_Y = t.redZoneLL_Y;
+						ourZoneUR_X = t.redZoneUR_X;
+						ourZoneUR_Y = t.redZoneUR_Y;
+						opponentZoneLL_X = t.greenZoneLL_X;
+						opponentZoneLL_Y = t.greenZoneLL_Y;
+						opponentZoneUR_X = t.greenZoneUR_X;
+						opponentZoneUR_Y = t.greenZoneUR_Y;
+						ourDZone_X = t.redDZone_X;
+						ourDZone_Y = t.redDZone_Y;
+						opponentDZone_X = t.greenDZone_X;
+						opponentDZone_Y = t.greenDZone_Y;
+						ourFlag = t.redFlag;
+						opponentFlag = t.greenFlag;
+						break;
+				}
 			}
 		}
 			
@@ -156,7 +162,7 @@ public class Controller {
 		Odometer odo = new Odometer(fuzzyPinkRobot, true);
 		
 		Navigation nav = new Navigation(odo, fuzzyPinkRobot);
-		OdometryCorrection odoCorection = new OdometryCorrection(odo, csPollerLineReader);
+		OdometryCorrection odoCorrection = new OdometryCorrection(odo, csPollerLineReader);
 		Localization localizer = new Localization(odo, nav, usPollerLeft, usPollerRight, csPollerLineReader, fuzzyPinkRobot);
 
 		ObstacleAvoidance ostacleAvoidance = new ObstacleAvoidance(fuzzyPinkRobot, nav, odo);
@@ -168,7 +174,6 @@ public class Controller {
 		
 //		initializeRConsole();
 //		RConsoleDisplay rcd = new RConsoleDisplay(odo, fuzzyPinkRobot);
-		LCDInfo lcd = new LCDInfo(odo, fuzzyPinkRobot);
 
 		int option = 0;
 		while (option == 0)
@@ -177,16 +182,13 @@ public class Controller {
 		switch(option) {
 		case Button.ID_LEFT:
 			
-			
-			
-			
-			
+			LCDInfo lcd = new LCDInfo(odo, fuzzyPinkRobot, csPollerLineReader);
 			
 			//PUT MAIN CODE HERE
 			
 			//Localization
-			
-			
+			odo.setPosition(new double[]{0.0, 0.0, 0.0}, new boolean[]{true, true, true});
+			odoCorrection.start();
 			
 			navController.setX(120);
 			navController.setY((120));
@@ -205,8 +207,6 @@ public class Controller {
 				x0 += 2;
 				x1 += 2;
 			}
-
-			
 			break;
 		default:
 			System.out.println("Error - invalid button");
