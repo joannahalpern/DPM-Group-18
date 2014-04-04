@@ -82,14 +82,14 @@ public class OdoCorTest {
 					LCDInfo lcd = new LCDInfo(odo, fuzzyPinkRobot, csPollerLineReader);
 					
 					// PUT MAIN CODE HERE
-					odoCorection.start();
+//					odoCorection.start();
 					
 					//Navigation
-					navController.travelTo(0,100,false,false,false);
-					navController.travelTo(100,70,false,false,false);
-					navController.travelTo(70,0,false,false,false);
-					navController.travelTo(0,0,false,false,false);
-					nav.turnTo(0,true,true);
+//					navController.travelTo(0,100,false,false,false);
+//					navController.travelTo(100,70,false,false,false);
+//					navController.travelTo(70,0,false,false,false);
+//					navController.travelTo(0,0,false,false,false);
+//					nav.turnTo(0,true,true);
 			
 				
 				}

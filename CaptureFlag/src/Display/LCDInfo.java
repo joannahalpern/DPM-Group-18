@@ -48,7 +48,6 @@ public class LCDInfo implements TimerListener{
 		LCD.drawString("Y: " + (int)odo.getY(), 0, 1);
 		LCD.drawString("H: " + (int)odo.getAngle(), 0, 2);
 		
-		LCD.drawString("H: " + (int)linePoller.getColourVal(), 0, 2);
-		LCD.drawString("H: " + (int)linePoller.getColourVal(), 0, 2);
+		LCD.drawString("LineVal: " + (int)linePoller.getColourVal(), 0, 4);
 	}
 }
