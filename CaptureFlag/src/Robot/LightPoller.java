@@ -22,7 +22,7 @@ public class LightPoller extends Thread{
 		start();
 		
 		initializeQueue();
-	} //HI
+	} //BLAHBLAHBLAH
 
 	public void run() {
 		setFloodLight(colour);
