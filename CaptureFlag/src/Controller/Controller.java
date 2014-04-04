@@ -22,6 +22,7 @@ import Robot.*;
  * This is the main controller. Everything is controlled from here
  *
  */
+//HELLO!!!
 public class Controller {
 
 	private static boolean bluetoothEnabled = false;
