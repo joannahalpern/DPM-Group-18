@@ -12,6 +12,7 @@ import Robot.*;
 public class Localization extends Thread{
 	public static final int CLOSE_THRESHOLD = 40;
 	
+	public static double intlReading = 350; //tentative value, will be as soon as light localization starts
 	public static double usA, usB;
 	private double Tstart, Trange, Tfinal;
 	private double T1,T2,T3,T4;
@@ -50,6 +51,8 @@ public class Localization extends Thread{
 		turns.setAngle(0);
 		usA = turns.getAngle();
 		
+		try{Thread.sleep(100);} catch (Exception e){};
+		
 		nav.setSpeeds(0, 40);
 		while(usPollerLeft.getMedianDistance()<CLOSE_THRESHOLD || usPollerRight.getMedianDistance()<CLOSE_THRESHOLD){		}
 		while(usPollerLeft.getMedianDistance()>=CLOSE_THRESHOLD){	}
@@ -65,39 +68,49 @@ public class Localization extends Thread{
 	public void doLSLocalization(){
 		
 		nav.turnTo(45, true, true);
-		nav.travelDistance(8);
+		nav.travelDistance(9);
+		
+		try{Thread.sleep(250);} catch (Exception e){};
+		intlReading = getINTLReading();
 		
 		turns.setAngle(0);		
 		nav.setSpeeds(0,30);
 		while(!csPoller.lineSeen){
 		}
-//		double angle1 = odo.getAngleRadians() - Trange/2;
 		T1 = accurateLineDetection();
-		Sound.beep();
+//		Sound.beep();
 	
 		nav.setSpeeds(0,30);
 		while(!csPoller.lineSeen){
 		}
 		T2 = accurateLineDetection();
-		Sound.beep();
+//		Sound.beep();
 		
 		nav.setSpeeds(0,30);
 		while(!csPoller.lineSeen){
 		}
 		T3 = accurateLineDetection();
 		odo.setAngle( (-1*Math.atan(TwoWheeledRobot.GROUND_LS_X_OFFSET/TwoWheeledRobot.GROUND_LS_Y_OFFSET) + ((T2-T1)+(T3-T2))/2 + Math.PI*3 )*180/Math.PI);
-		Sound.beep();
+//		Sound.beep();
 		
 		nav.setSpeeds(0,30);
 		while(!csPoller.lineSeen){
 		}
 		T4 = accurateLineDetection();
-		Sound.beep();
+//		Sound.beep();
 		
 		nav.setSpeeds(0,0);
 		
 		calculateCurrentPosition();
 	}
+	private double getINTLReading() {
+		return csPoller.getMean();
+	}
+	
+	public void calibratePosition(){ //takes the starting zone into account to adjust position and heading accordingly
+		
+	}
+
 	//when a line is found, go back and get the exact range of angles where the line exists
 	private double accurateLineDetection(){
 		double tend;
@@ -110,7 +123,7 @@ public class Localization extends Thread{
 		}
 		Tstart = turns.getAngleRadians();
 		
-		try{Thread.sleep(100);} catch (Exception e){};
+		try{Thread.sleep(150);} catch (Exception e){};
 		nav.setSpeeds(0,20);
 		while(!csPoller.lineSeen){
 		}
@@ -130,7 +143,7 @@ public class Localization extends Thread{
 	private void calculateCurrentPosition(){
 		double firstAngle = T2-T1;
 		double secondAngle = T3-T2;
-		double thirdAngle = T3-T2;
+		double thirdAngle = T4-T3;// this was corrected from T3-T2
 		
 		double thetaY = firstAngle+secondAngle;//(2*Math.PI - (firstAngle+secondAngle) );
 		double thetaX = secondAngle+thirdAngle;//(2*Math.PI- (secondAngle+thirdAngle) );
