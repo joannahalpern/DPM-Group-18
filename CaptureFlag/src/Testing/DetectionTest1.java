@@ -27,9 +27,9 @@ public class DetectionTest1 {
 
 	private static boolean bluetoothEnabled = false;
 	public static StartCorner corner;
-	public static int ourZoneLL_X = 4;
-	public static int ourZoneLL_Y = 4;
-	public static int ourZoneUR_X = 6;
+	public static int ourZoneLL_X = 0;
+	public static int ourZoneLL_Y = 0;
+	public static int ourZoneUR_X = 2;
 	public static int ourZoneUR_Y = 6;
 	public static int opponentZoneLL_X;
 	public static int opponentZoneLL_Y;
@@ -39,7 +39,7 @@ public class DetectionTest1 {
 	public static int ourDZone_Y;
 	public static int opponentDZone_X;
 	public static int opponentDZone_Y;
-	public static int ourFlag = 1;
+	public static int ourFlag = 2;
 	public static int opponentFlag;
 	
 	//our flag
@@ -145,21 +145,20 @@ public class DetectionTest1 {
 		UltrasonicPoller usPollerRight = new UltrasonicPoller(usRight);
 		
 		LightPoller csPollerLineReader = new LightPoller(csLineReader, Colour.BLUE);
-		LightPoller colourDetector = new LightPoller(csFlagReader, Colour.BLUE);
 
 		TwoWheeledRobot fuzzyPinkRobot = new TwoWheeledRobot(Motor.A, Motor.C, Motor.B, usLeft, usRight, csFlagReader, csLineReader);
 		Odometer odo = new Odometer(fuzzyPinkRobot, true);
 		
 		Navigation nav = new Navigation(odo, fuzzyPinkRobot);
-		OdometryCorrection odoCorrection = new OdometryCorrection(odo, csPollerLineReader);
-		Localization localizer = new Localization(odo, nav, usPollerLeft, usPollerRight, csPollerLineReader, fuzzyPinkRobot);
+//		OdometryCorrection odoCorrection = new OdometryCorrection(odo, csPollerLineReader);
+		//Localization localizer = new Localization(odo, nav, usPollerLeft, usPollerRight, csPollerLineReader, fuzzyPinkRobot);
 
 		ObstacleAvoidance ostacleAvoidance = new ObstacleAvoidance(fuzzyPinkRobot, nav, odo);
 		ObjectDisplacement objectDisplacement = new ObjectDisplacement(fuzzyPinkRobot, nav);
-		ObjectDetectIdentify objectDetection = new ObjectDetectIdentify(fuzzyPinkRobot, nav, objectDisplacement, colourDetector);
+		ObjectDetectIdentify objectDetection = new ObjectDetectIdentify(fuzzyPinkRobot, nav, objectDisplacement);
 		
 		
-		NavController navController = new NavController(odo, fuzzyPinkRobot,objectDisplacement, colourDetector, nav, objectDetection, ostacleAvoidance);
+		NavController navController = new NavController(odo, fuzzyPinkRobot,objectDisplacement, nav, objectDetection, ostacleAvoidance);
 		
 //		initializeRConsole();
 //		RConsoleDisplay rcd = new RConsoleDisplay(odo, fuzzyPinkRobot);
@@ -175,34 +174,15 @@ public class DetectionTest1 {
 			
 			//PUT MAIN CODE HERE
 			
-			//Localization
-//			localizer.doUSLocalization();
-//			localizer.doLSLocalization();
-			
-//			navController.travelTo(0,0, true, false, false);
-//			nav.turnTo(0, true, true);
+			//Position the robot at (0, 0) facing angle 0
 			odo.setPosition(new double[]{0, 0, 0}, new boolean[]{true, true, true});
-			odoCorrection.start();
-			
-			navController.travelTo(0,120, true, false, false);
-			navController.travelTo(120,120, true, false, false);
-//			navController.setX(120);
-//			navController.setY((120));
+//			odoCorrection.start();
 //			navController.setAxis(false);
 			
-//			navController.travelTo(odo.getX(),120, true, false, false);
-//			navController.search(4*30.48, 4*30.48, 6*30.48, 6*30.48, false, ourFlagColour);
 			
-			//This for loop has the robot search through all of the columns in the zone
-			int columns = Math.abs(ourZoneUR_X - ourZoneLL_X);
-			int i = (int) Math.ceil((double)columns/2.0); //or: int i = columns/2 + 1;
-			double x0 = ourZoneUR_X;
-			double x1 = x0 + 1;
-			for (int j=0; j<i; j++){
-				navController.search(x0*30.48 + 15.24, ourZoneLL_Y*30.48, x1*30.48, ourZoneUR_Y*30.48, false, ourFlagColour);
-				x0 += 2;
-				x1 += 2;
-			}
+			navController.search(ourZoneLL_X*30.48, ourZoneLL_Y*30.48, ourZoneUR_X*30.48, ourZoneUR_Y*30.48, false, ourFlagColour);
+			objectDetection.getColour();
+
 			break;
 		default:
 			System.out.println("Error - invalid button");

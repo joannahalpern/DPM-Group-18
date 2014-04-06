@@ -17,7 +17,6 @@ public class ObjectDetectIdentify {
 	private UltrasonicSensor usLeft, usRight;
 	private ObjectDisplacement od;
 
-	private LightPoller csFlagPoller;
 	private UltrasonicPoller usPollerLeft;
 	private UltrasonicPoller usPollerRight;
 	
@@ -33,8 +32,7 @@ public class ObjectDetectIdentify {
 
 	// Constructor
 	public ObjectDetectIdentify(TwoWheeledRobot robot, Navigation nav,
-			ObjectDisplacement od, LightPoller csFlagPoller) {
-		this.csFlagPoller = csFlagPoller;
+			ObjectDisplacement od) {
 		this.robot = robot;
 		this.nav = nav;
 		this.cs = robot.getColourSensorFlag();

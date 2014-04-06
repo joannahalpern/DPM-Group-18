@@ -16,7 +16,6 @@ public class NavController {
 	
 	private Odometer odometer;
 	private ColorSensor cs;
-	private LightPoller colourDetector;
 
 	
 
@@ -50,7 +49,7 @@ public class NavController {
 	
 	
 	// Constructor
-	public NavController(Odometer odo, TwoWheeledRobot robot, ObjectDisplacement displacer, LightPoller colourDetector, Navigation nav, ObjectDetectIdentify detector, ObstacleAvoidance avoider) {
+	public NavController(Odometer odo, TwoWheeledRobot robot, ObjectDisplacement displacer, Navigation nav, ObjectDetectIdentify detector, ObstacleAvoidance avoider) {
 		this.odometer = odo;
 		this.robot = robot;
 		this.nav = nav;
@@ -66,7 +65,6 @@ public class NavController {
 		this.detector = detector;
 		this.avoider = avoider;
 		
-		this.colourDetector = colourDetector;
 		// NXTRegulatedMotor[] motors = new NXTRegulatedMotor[2];
 		// motors = this.robot.getWheelMotors();
 		// this.leftMotor = motors[0];
@@ -206,6 +204,15 @@ public class NavController {
 	
 	
 	// SEARCH Methods
+	/**
+	 * 
+	 * @param x0 = ourZoneLL_X 
+	 * @param y0 = ourZoneLL_Y
+	 * @param x1 = ourZoneUR_X
+	 * @param y1 = ourZoneUR_Y
+	 * @param setFlag
+	 * @param flagInput = flag colour
+	 */
 	public void search(double x0, double y0, double x1, double y1,boolean setFlag,  Colour flagInput){
 		
 		
