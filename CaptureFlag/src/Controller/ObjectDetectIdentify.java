@@ -4,11 +4,7 @@ import Robot.*;
 import lejos.nxt.*;
 
 /**
- * This class is used to identify a block. If an object is detected with the
- * ultrasonic sensor within DETECTION_THRESHOLD, then the robot moves forward
- * until the object is within COLOUR_READING_THRESHOLD. At this point the robot
- * stops and does identifyBlock(). If the block is within foam limit, it is
- * identified as a styrofoam block and block=true. Otherwise block=false.
+ *
  */
 public class ObjectDetectIdentify {
 	private Navigation nav;
@@ -17,12 +13,13 @@ public class ObjectDetectIdentify {
 	private UltrasonicSensor usLeft, usRight;
 	private ObjectDisplacement od;
 
+	private LightPoller csFlagPoller;
 	private UltrasonicPoller usPollerLeft;
 	private UltrasonicPoller usPollerRight;
 	
 	//Search variables
 	private int csCount = 0;
-	private double lowValue = 300;	// Needs to be calibrated for upstairs
+	private double lowValue = 300;	// Needs yto be calibrated for upstairs
 	private double csValue;
 	private Colour flagColour;
 	public boolean block = false;
@@ -32,7 +29,8 @@ public class ObjectDetectIdentify {
 
 	// Constructor
 	public ObjectDetectIdentify(TwoWheeledRobot robot, Navigation nav,
-			ObjectDisplacement od) {
+			ObjectDisplacement od, LightPoller csFlagPoller) {
+		this.csFlagPoller = csFlagPoller;
 		this.robot = robot;
 		this.nav = nav;
 		this.cs = robot.getColourSensorFlag();
@@ -58,7 +56,7 @@ public class ObjectDetectIdentify {
 		LCD.drawString("BaseGreen  " + baseGreen, 0, 6);
 		if( baseRed > lowValue || baseBlue > lowValue || baseGreen > lowValue){
 			csCount++;
-			if(csCount > 5){
+			if(csCount > 3){
 				csCount = 0;
 				LCD.drawString("True", 0, 3);
 				return true;

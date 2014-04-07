@@ -1,6 +1,7 @@
 //Odo correction works
+//possible thing to add is to not do correction while the robot is turning
 package Controller;
-import lejos.nxt.Sound;
+
 import Robot.*;
 
 public class OdometryCorrection extends Thread {
@@ -9,17 +10,15 @@ public class OdometryCorrection extends Thread {
 	private LightPoller csPoller;
 	
 	private static double lightVal = 0;
-	private static final double LIGHT_THRESHOLD = 300;
-	private static double SENSOR_POS_X = 9.4;
-	private static double SENSOR_POS_Y = 7.5;
+	private static final double LIGHT_THRESHOLD = 350;
+	private static double SENSOR_POS_X = 9.75;
+	private static double SENSOR_POS_Y = 8.0;
 	
 
 	// constructor
 	public OdometryCorrection(Odometer odometer, LightPoller csPollerLineReader) {
 		this.odometer = odometer;
 		this.csPoller = csPollerLineReader;
-		SENSOR_POS_X = -1 * TwoWheeledRobot.GROUND_LS_X_OFFSET;
-		SENSOR_POS_Y = -1 * TwoWheeledRobot.GROUND_LS_Y_OFFSET;
 	}
 
 	public void run() {
@@ -33,26 +32,28 @@ public class OdometryCorrection extends Thread {
 			double x, y, theta;
 
 			lightVal = csPoller.getColourVal();
-			if (lightVal < LIGHT_THRESHOLD && (!Navigation.isTurning)) {
-				Sound.beep();
+			if (lightVal < LIGHT_THRESHOLD) {
 				theta = odometer.getAngle();
+				
+				if (!Navigation.isTurning){
 
-				if (theta > 315 || theta < 45 || (135 < theta && theta < 225)) { // affects y
-					y = odometer.getY();
-
-					y = inversePositionY(y, theta);
-					y = nearest30(y);
-					y = centerPositionY(y, theta);
-					odometer.setPosition(new double[]{0, y, 0}, new boolean[]{false, true, false});
-				} 
-				else { // affects x
-
-					x = odometer.getX();
-
-					x = inversePositionX(x, theta);
-					x = nearest30(x);
-					x = centerPositionX(x, theta);
-					odometer.setPosition(new double[]{x, 0, 0}, new boolean[]{true, false, false});
+					if ((theta > 315 || theta < 45 || (135 < theta && theta < 225))) { // affects y
+						y = odometer.getY();
+	
+						y = inversePositionY(y, theta);
+						y = nearest30(y);
+						y = centerPositionY(y, theta);
+						odometer.setPosition(new double[]{0, y, 0}, new boolean[]{false, true, false});
+					} 
+					else { // affects x
+	
+						x = odometer.getX();
+	
+						x = inversePositionX(x, theta);
+						x = nearest30(x);
+						x = centerPositionX(x, theta);
+						odometer.setPosition(new double[]{x, 0, 0}, new boolean[]{true, false, false});
+					}
 				}
 			}
 

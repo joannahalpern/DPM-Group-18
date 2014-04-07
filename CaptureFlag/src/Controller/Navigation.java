@@ -2,7 +2,7 @@ package Controller;
 
 import Robot.*;
 import lejos.nxt.*;
-
+  
 public class Navigation {
 	// Initializers
 	private NXTRegulatedMotor leftMotor, rightMotor;
@@ -76,7 +76,8 @@ public class Navigation {
 	 */
 
 	public void turnTo(double theta, boolean stop, boolean degrees) {
-
+		
+		
 		// Changes degrees to radians
 		if (degrees) {
 			theta = Math.toRadians(theta);
@@ -101,7 +102,7 @@ public class Navigation {
 		while (Math.abs(err) > ACCEPTABLE_THETA_ERROR) {
 			err = theta - odometer.getAngleRadians();
 																		
-																		LCD.drawString("turning to " + Math.toDegrees(theta), 0, 6);
+																		//LCD.drawString("turning to " + Math.toDegrees(theta), 0, 6);
 		}
 		if (stop) {
 			this.leftMotor.setSpeed(0);
@@ -109,11 +110,6 @@ public class Navigation {
 		}
 		isTurning = false; 
 	}
-    
-    public void setSpeeds (double forwardSpd, double turningSpd){
-    	robot.setSpeeds(forwardSpd, turningSpd);
-    }
-  
 
 	
 	/**
@@ -204,8 +200,10 @@ public class Navigation {
 		return convertDistance(radius, Math.PI * width * angle / 360.0);
 	}
 	
-	public static boolean isTurning(){
+	
+	public boolean getTurning(){
 		return isTurning;
 		
 	}
 }
+

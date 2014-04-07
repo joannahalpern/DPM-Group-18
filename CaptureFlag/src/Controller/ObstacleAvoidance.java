@@ -2,6 +2,7 @@ package Controller;
 
 import lejos.nxt.LCD;
 import lejos.nxt.NXTRegulatedMotor;
+import lejos.nxt.Sound;
 import lejos.nxt.UltrasonicSensor;
 import Display.*;
 import Robot.*;
@@ -73,11 +74,11 @@ public class ObstacleAvoidance {
 		 * @return
 		 */
 		public boolean avoidObstacle(boolean test, boolean checkObstacle) {
-
 			usLeftDistance = usLeft.getDistance();
 			usRightDistance = usRight.getDistance();
-			LCD.drawString("usLeft: " + usLeftDistance, 0, 5);
-			LCD.drawString("usRight: " + usRightDistance, 0, 6);
+			LCD.drawString("usLeft: " + usLeftDistance, 0, 3);
+			LCD.drawString("usRight: " + usRightDistance, 0, 4);
+			
 			if (checkObstacle) {
 				for (int i = 0; i < 3; i++) {
 					usLeftDistance = usLeft.getDistance();
@@ -115,9 +116,8 @@ public class ObstacleAvoidance {
 			while (test) {
 				usLeftDistance = usLeft.getDistance();
 				usRightDistance = usRight.getDistance();
-				LCD.clear();
-				LCD.drawString("usLeft: " + usLeftDistance, 0, 5);
-				LCD.drawString("usRight: " + usRightDistance, 0, 6);
+				LCD.drawString("usLeft: " + usLeftDistance, 0, 3);
+				LCD.drawString("usRight: " + usRightDistance, 0, 4);
 
 			}
 			return false;

@@ -16,6 +16,7 @@ public class NavController {
 	
 	private Odometer odometer;
 	private ColorSensor cs;
+	private LightPoller colourDetector;
 
 	
 
@@ -49,7 +50,7 @@ public class NavController {
 	
 	
 	// Constructor
-	public NavController(Odometer odo, TwoWheeledRobot robot, ObjectDisplacement displacer, Navigation nav, ObjectDetectIdentify detector, ObstacleAvoidance avoider) {
+	public NavController(Odometer odo, TwoWheeledRobot robot, ObjectDisplacement displacer, LightPoller colourDetector, Navigation nav, ObjectDetectIdentify detector, ObstacleAvoidance avoider) {
 		this.odometer = odo;
 		this.robot = robot;
 		this.nav = nav;
@@ -65,6 +66,7 @@ public class NavController {
 		this.detector = detector;
 		this.avoider = avoider;
 		
+		this.colourDetector = colourDetector;
 		// NXTRegulatedMotor[] motors = new NXTRegulatedMotor[2];
 		// motors = this.robot.getWheelMotors();
 		// this.leftMotor = motors[0];
@@ -99,9 +101,9 @@ public class NavController {
 
 		// Concave L Obstacle avoidance and corner avoid
 		if (avoid) {
-			
+			LCD.drawString("First avoid loop", 0, 5);
 			if (concaveAvoidance()) {
-				LCD.clear();
+
 				LCD.drawString("Concave Return ", 0, 6);
 				return;
 			} 
@@ -110,7 +112,7 @@ public class NavController {
 
 		// MAIN LOOP
 		while (Math.abs(x - odometer.getX()) > ACCEPTABLE_DISTANCE_ERROR || Math.abs(y - odometer.getY()) > ACCEPTABLE_DISTANCE_ERROR) {
-
+			
 			// exits original call when y coord is reached
 			if ((Math.abs(y0 - odometer.getY())) <= ACCEPTABLE_DISTANCE_ERROR && avoid && !yReached) {
 				yReached = true;
@@ -129,12 +131,12 @@ public class NavController {
 			}
 			
 			if (exit) {
-				LCD.clear();
+
 				LCD.drawString("Exit Return ", 0, 6);
 				return;
 			}
-			if (!searching && !avoid) {
-				LCD.clear();
+			if (!searching) {
+
 				LCD.drawString("Search Return ", 0, 6);
 				leftMotor.setSpeed(0);
 				rightMotor.setSpeed(0);
@@ -143,8 +145,6 @@ public class NavController {
 			// Main code for navigation
 			desiredAngle = nav.calculateAngle(x, y);
 			if (!nav.isAcceptableTrajectory(desiredAngle)) {
-				LCD.clear();
-				LCD.drawString("Is HERE" , 0, 6);
 				nav.turnTo(desiredAngle, false, false);
 			}
 
@@ -161,14 +161,14 @@ public class NavController {
 					if(detector.getColour() == flagColour){
 						Sound.beepSequence();
 						searching = false;
-						displacer.run();
+						//					displacer.run();
 					}
 				}
 			}
 			
 			// Code for avoidance
 			if (avoid) {
-
+				LCD.drawString("avoiding", 0, 6);
 				if (avoider.avoidObstacle(false, false)) {
 					if (axisAvoidance()) {
 						return;
@@ -185,11 +185,11 @@ public class NavController {
 				}
 			}
 		}
-
+	
 		// stop at destination
 		leftMotor.setSpeed(0);
 		rightMotor.setSpeed(0);
-		LCD.clear();
+
 		LCD.drawString("Finish Return ", 0, 6);
 		return;
 
@@ -204,60 +204,33 @@ public class NavController {
 	
 	
 	// SEARCH Methods
-	/**
-	 * 
-	 * @param x0 = ourZoneLL_X 
-	 * @param y0 = ourZoneLL_Y
-	 * @param x1 = ourZoneUR_X
-	 * @param y1 = ourZoneUR_Y
-	 * @param setFlag
-	 * @param flagInput = flag colour
-	 */
-	public void search(double x0, double y0, double x1, double y1,boolean setFlag,  Colour flagInput){
+	public void search(double x0, double y0, double x1, double y1,  Colour flagInput){
 		
 		
 		//Search Initializaers
-		
-		if( setFlag ){
-			flagColour = flagInput; 
-		}
-		else{
-//			flagColour = Bluetooth.getOurFlagType();
-		}
-		
+		flagColour = flagInput; 
+
 		searching = true;
 		
-			nav.travelTo(x0 +10, y0 - 10);
-			
-			LCD.clear();
-			LCD.drawString("Searching" , 0, 7);
-			while(searching){
-				travelTo(odometer.getX(), y1, false, false, true);
-				Sound.beep();
-				if(searching){
-					travelTo( x1 , odometer.getY(), false, false, true);
-				}
-				Sound.beep();
-				if(searching){
-					travelTo(odometer.getX(), y0, false, false, true);
-				}
-				Sound.beep();
-				if(searching){
-					travelTo(x0 + 30,odometer.getY(), false, false, true);
-				}
-				Sound.beep();
-				if(searching){
-					travelTo(odometer.getX(),y1, false, false, true);
-				}
-				if(searching){
-					travelTo(x0 - 15,odometer.getY(), false, false, true);
-				}
-				if(searching){
-					travelTo(odometer.getX(),y0-10, false, false, true);
-				}
+		travelTo(x0 + 10, y0,false,false,false);
+		
+		while(searching){
+			travelTo(x0 + 10, y1+5, false, false, true);
+			if(searching){
+				travelTo( x1-10 , y1+5, false, false, true);				
 			}
-			LCD.clear();
-			LCD.drawString("Found" , 0, 7);
+			if(searching){
+				travelTo(x1-10, y0-5, false, false, true);
+			}				
+			if(searching){
+				travelTo(x0 + 30,y0-5, false, false, true);
+			}
+			if(searching){
+				travelTo(x0 + 30,y1+5, false, false, true);
+			}
+		}
+
+		LCD.drawString("Found" , 0, 7);
 		return;
 	}
 
@@ -276,7 +249,9 @@ public class NavController {
 	 * @return
 	 */
 	private boolean concaveAvoidance() {
+		
 		if (avoider.avoidObstacle(false, true)) {
+			
 			if (xAxis) {
 				xAxis = false;
 				if (((y0 - odometer.getY()) >= 0)) {

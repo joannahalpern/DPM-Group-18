@@ -1,4 +1,13 @@
 /*
+ * To change:
+ * 	-make and TestNav___ for each thing and replace folder for each
+ *  -check that no more arrays
+ *  
+ * 	-email Connor to test nav on TestNav
+ *  email team to name well and alt-shift-r and ctrl-d
+ *  email team about RConsole
+ *  email Ben about detection and that we pollers
+ *  
  *  RConsole
  *  	-goto C:\Program Files (x86)\leJOS NXJ\bin\nxjconsoleviewer
  */
@@ -15,6 +24,7 @@ import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.SensorPort;
 import lejos.nxt.UltrasonicSensor;
 import lejos.nxt.comm.RConsole;
+import lejos.robotics.Color;
 import Display.*;
 import Robot.*;
 
@@ -22,15 +32,12 @@ import Robot.*;
  * This is the main controller. Everything is controlled from here
  *
  */
-//HELLO!!!
 public class Controller {
-
-	private static boolean bluetoothEnabled = false;
 	public static StartCorner corner;
-	public static int ourZoneLL_X = 4;
-	public static int ourZoneLL_Y = 4;
-	public static int ourZoneUR_X = 6;
-	public static int ourZoneUR_Y = 6;
+	public static int ourZoneLL_X;
+	public static int ourZoneLL_Y;
+	public static int ourZoneUR_X;
+	public static int ourZoneUR_Y;
 	public static int opponentZoneLL_X;
 	public static int opponentZoneLL_Y;
 	public static int opponentZoneUR_X;
@@ -39,7 +46,7 @@ public class Controller {
 	public static int ourDZone_Y;
 	public static int opponentDZone_X;
 	public static int opponentDZone_Y;
-	public static int ourFlag = 1;
+	public static int ourFlag;
 	public static int opponentFlag;
 	
 	//our flag
@@ -51,66 +58,63 @@ public class Controller {
 	static public theLock lock = new theLock();
 	
 	public static void main(String[] args) {
+		BluetoothConnection conn = new BluetoothConnection();
 
-		if (bluetoothEnabled){
-			BluetoothConnection conn = new BluetoothConnection();
-	
-			Transmission t = conn.getTransmission();
-			LCD.clear();
-			if (t == null) {
-				LCD.drawString("Failed to read transmission", 0, 0);
-			} 
-			else{
-				switch (t.role) {
-					case RED: 
-						ourZoneLL_X = t.redZoneLL_X;
-						ourZoneLL_Y = t.redZoneLL_Y;
-						ourZoneUR_X = t.redZoneUR_X;
-						ourZoneUR_Y = t.redZoneUR_Y;
-						opponentZoneLL_X = t.greenZoneLL_X;
-						opponentZoneLL_Y = t.greenZoneLL_Y;
-						opponentZoneUR_X = t.greenZoneUR_X;
-						opponentZoneUR_Y = t.greenZoneUR_Y;
-						ourDZone_X = t.redDZone_X;
-						ourDZone_Y = t.redDZone_Y;
-						opponentDZone_X = t.greenDZone_X;
-						opponentDZone_Y = t.greenDZone_Y;
-						ourFlag = t.redFlag;
-						opponentFlag = t.greenFlag;
-						break;
-					case GREEN:
-						ourZoneLL_X = t.greenZoneLL_X;
-						ourZoneLL_Y = t.greenZoneLL_Y;
-						ourZoneUR_X = t.greenZoneUR_X;
-						ourZoneUR_Y = t.greenZoneUR_Y;
-						opponentZoneLL_X = t.redZoneLL_X;
-						opponentZoneLL_Y = t.redZoneLL_Y;
-						opponentZoneUR_X = t.redZoneUR_X;
-						opponentZoneUR_Y = t.redZoneUR_Y;
-						ourDZone_X = t.greenDZone_X;
-						ourDZone_Y = t.greenDZone_Y;
-						opponentDZone_X = t.redDZone_X;
-						opponentDZone_Y = t.redDZone_Y;
-						ourFlag = t.greenFlag;
-						opponentFlag = t.redFlag;
-						break;
-					default:
-						ourZoneLL_X = t.redZoneLL_X;
-						ourZoneLL_Y = t.redZoneLL_Y;
-						ourZoneUR_X = t.redZoneUR_X;
-						ourZoneUR_Y = t.redZoneUR_Y;
-						opponentZoneLL_X = t.greenZoneLL_X;
-						opponentZoneLL_Y = t.greenZoneLL_Y;
-						opponentZoneUR_X = t.greenZoneUR_X;
-						opponentZoneUR_Y = t.greenZoneUR_Y;
-						ourDZone_X = t.redDZone_X;
-						ourDZone_Y = t.redDZone_Y;
-						opponentDZone_X = t.greenDZone_X;
-						opponentDZone_Y = t.greenDZone_Y;
-						ourFlag = t.redFlag;
-						opponentFlag = t.greenFlag;
-						break;
-				}
+		Transmission t = conn.getTransmission();
+		LCD.clear();
+		if (t == null) {
+			LCD.drawString("Failed to read transmission", 0, 0);
+		} 
+		else{
+			switch (t.role) {
+				case RED: 
+					ourZoneLL_X = t.redZoneLL_X;
+					ourZoneLL_Y = t.redZoneLL_Y;
+					ourZoneUR_X = t.redZoneUR_X;
+					ourZoneUR_Y = t.redZoneUR_Y;
+					opponentZoneLL_X = t.greenZoneLL_X;
+					opponentZoneLL_Y = t.greenZoneLL_Y;
+					opponentZoneUR_X = t.greenZoneUR_X;
+					opponentZoneUR_Y = t.greenZoneUR_Y;
+					ourDZone_X = t.redDZone_X;
+					ourDZone_Y = t.redDZone_Y;
+					opponentDZone_X = t.greenDZone_X;
+					opponentDZone_Y = t.greenDZone_Y;
+					ourFlag = t.redFlag;
+					opponentFlag = t.greenFlag;
+					break;
+				case GREEN:
+					ourZoneLL_X = t.greenZoneLL_X;
+					ourZoneLL_Y = t.greenZoneLL_Y;
+					ourZoneUR_X = t.greenZoneUR_X;
+					ourZoneUR_Y = t.greenZoneUR_Y;
+					opponentZoneLL_X = t.redZoneLL_X;
+					opponentZoneLL_Y = t.redZoneLL_Y;
+					opponentZoneUR_X = t.redZoneUR_X;
+					opponentZoneUR_Y = t.redZoneUR_Y;
+					ourDZone_X = t.greenDZone_X;
+					ourDZone_Y = t.greenDZone_Y;
+					opponentDZone_X = t.redDZone_X;
+					opponentDZone_Y = t.redDZone_Y;
+					ourFlag = t.greenFlag;
+					opponentFlag = t.redFlag;
+					break;
+				default:
+					ourZoneLL_X = t.redZoneLL_X;
+					ourZoneLL_Y = t.redZoneLL_Y;
+					ourZoneUR_X = t.redZoneUR_X;
+					ourZoneUR_Y = t.redZoneUR_Y;
+					opponentZoneLL_X = t.greenZoneLL_X;
+					opponentZoneLL_Y = t.greenZoneLL_Y;
+					opponentZoneUR_X = t.greenZoneUR_X;
+					opponentZoneUR_Y = t.greenZoneUR_Y;
+					ourDZone_X = t.redDZone_X;
+					ourDZone_Y = t.redDZone_Y;
+					opponentDZone_X = t.greenDZone_X;
+					opponentDZone_Y = t.greenDZone_Y;
+					ourFlag = t.redFlag;
+					opponentFlag = t.greenFlag;
+					break;
 			}
 		}
 			
@@ -151,18 +155,19 @@ public class Controller {
 		Odometer odo = new Odometer(fuzzyPinkRobot, true);
 		
 		Navigation nav = new Navigation(odo, fuzzyPinkRobot);
-		OdometryCorrection odoCorrection = new OdometryCorrection(odo, csPollerLineReader);
+		OdometryCorrection odoCorection = new OdometryCorrection(odo, csPollerLineReader);
 		Localization localizer = new Localization(odo, nav, usPollerLeft, usPollerRight, csPollerLineReader, fuzzyPinkRobot);
 
 		ObstacleAvoidance ostacleAvoidance = new ObstacleAvoidance(fuzzyPinkRobot, nav, odo);
 		ObjectDisplacement objectDisplacement = new ObjectDisplacement(fuzzyPinkRobot, nav);
-		ObjectDetectIdentify objectDetection = new ObjectDetectIdentify(fuzzyPinkRobot, nav, objectDisplacement);
+		ObjectDetectIdentify objectDetection = new ObjectDetectIdentify(fuzzyPinkRobot, nav, objectDisplacement, colourDetector);
 		
 		
-		NavController navController = new NavController(odo, fuzzyPinkRobot,objectDisplacement, nav, objectDetection, ostacleAvoidance);
+		NavController navController = new NavController(odo, fuzzyPinkRobot,objectDisplacement, colourDetector, nav, objectDetection, ostacleAvoidance);
 		
 //		initializeRConsole();
 //		RConsoleDisplay rcd = new RConsoleDisplay(odo, fuzzyPinkRobot);
+		LCDInfo lcd = new LCDInfo(odo, fuzzyPinkRobot, localizer, usPollerRight, usPollerRight, csLineReader);
 
 		int option = 0;
 		while (option == 0)
@@ -170,30 +175,34 @@ public class Controller {
 			
 		switch(option) {
 		case Button.ID_LEFT:
-			
-			LCDInfo lcd = new LCDInfo(odo, fuzzyPinkRobot, csPollerLineReader);
-			
+			LCD.clear();
 			//PUT MAIN CODE HERE
 			
 			//Localization
-			localizer.doUSLocalization();
-			localizer.doLSLocalization();
+//			csLineReader.setFloodlight(Color.BLUE);
+//			localizer.doLSLocalization();
 			
-			navController.travelTo(0,0, true, false, false);
-			nav.turnTo(0, true, true);
-			odoCorrection.start();
+			//testing conditions
+//			ourZoneLL_X = 90;
+//			ourZoneLL_Y = 90; 
+//			ourZoneUR_X = 150;
+//			ourZoneUR_Y = 150;
+//			ourFlagColour = Colour.WHITE;
 			
-			navController.travelTo(0,120, true, false, false);
-			navController.travelTo(120,120, true, false, false);
-//			navController.setX(120);
-//			navController.setY((120));
-//			navController.setAxis(false);
 			
-//			navController.travelTo(odo.getX(),120, true, false, false);
-//			navController.search(4*30.48, 4*30.48, 6*30.48, 6*30.48, false, ourFlagColour);
+			
+			//Search Test
+			//navController.travelTo(0, 90, false, false, true);
+			
+			navController.avoidanceSetter(ourZoneLL_X*30.48, ourZoneLL_Y*30.48, true);
+			navController.travelTo(ourZoneLL_X * 30.48 ,odo.getY(), true, false, false);	
+			
+			navController.search(ourZoneLL_X * 30.48, ourZoneLL_Y * 30.48, ourZoneUR_X* 30.48, ourZoneUR_Y * 30.48, ourFlagColour);
+			
+			
 			
 			//This for loop has the robot search through all of the columns in the zone
-			int columns = Math.abs(ourZoneUR_X - ourZoneLL_X);
+			/*int columns = Math.abs(ourZoneUR_X - ourZoneLL_X);
 			int i = (int) Math.ceil((double)columns/2.0); //or: int i = columns/2 + 1;
 			double x0 = ourZoneUR_X;
 			double x1 = x0 + 1;
@@ -201,7 +210,9 @@ public class Controller {
 				navController.search(x0*30.48 + 15.24, ourZoneLL_Y*30.48, x1*30.48, ourZoneUR_Y*30.48, false, ourFlagColour);
 				x0 += 2;
 				x1 += 2;
-			}
+			}*/
+
+			
 			break;
 		default:
 			System.out.println("Error - invalid button");

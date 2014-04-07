@@ -11,7 +11,7 @@ import Controller.*;
 import Robot.*;
 import Display.*;
 
-public class OdoCorTest {
+public class ObjectDisplacementTest {
 	
 	/* Create an object that can be used for synchronization across threads. */
 	static class theLock extends Object {//this is a lock
@@ -21,7 +21,7 @@ public class OdoCorTest {
 	public static void main(String[] args) {
 		
 		LCD.clear();
-		LCD.drawString(" Odo Correction ", 0, 0);
+		LCD.drawString(" Displace Object", 0, 0);
 		LCD.drawString("   Press left   ", 0, 2);
 		LCD.drawString("    to begin    ", 0, 3);
 		
@@ -34,22 +34,23 @@ public class OdoCorTest {
 //		UltrasonicPoller usPollerLeft = new UltrasonicPoller(usLeft);
 //		UltrasonicPoller usPollerRight = new UltrasonicPoller(usRight);
 //		
-		LightPoller csPollerLineReader = new LightPoller(csLineReader, Colour.BLUE);
+//		LightPoller csPollerLineReader = new LightPoller(csLineReader, Colour.BLUE);
 //		LightPoller colourDetector = new LightPoller(csFlagReader, Colour.BLUE);
 //
 		TwoWheeledRobot fuzzyPinkRobot = new TwoWheeledRobot(Motor.A, Motor.C, Motor.B, usLeft, usRight, csFlagReader, csLineReader);
 		Odometer odo = new Odometer(fuzzyPinkRobot, true);
 		Navigation nav = new Navigation(odo, fuzzyPinkRobot);
-		OdometryCorrection odoCorection = new OdometryCorrection(odo, csPollerLineReader);
+//		OdometryCorrection odoCorection = new OdometryCorrection(odo, csPollerLineReader);
 //		
 //		Localization localizer = new Localization(odo, nav, usPollerLeft, usPollerRight, csPollerLineReader);
 //		
-//		ObjectDisplacement objectDisplacement = new ObjectDisplacement(fuzzyPinkRobot, nav);
+		ObjectDisplacement objectDisplacement = new ObjectDisplacement(fuzzyPinkRobot, nav);
 //		ObjectDetectIdentify objectDetection = new ObjectDetectIdentify(fuzzyPinkRobot, nav, objectDisplacement);
 		
 		
 //		initializeRConsole();
 //		RConsoleDisplay rcd = new RConsoleDisplay(odo, colourDetector, usPollerLeft);
+		LCDInfo lcd = new LCDInfo(odo, fuzzyPinkRobot);
 
 		int option = 0;
 		while (option == 0)
@@ -57,13 +58,8 @@ public class OdoCorTest {
 			
 		switch(option) {
 			case Button.ID_LEFT:
-				LCDInfo lcd = new LCDInfo(odo, fuzzyPinkRobot);
 				
 			//PUT MAIN CODE HERE
-				nav.travelTo(0,90, false, false);
-				nav.travelTo(30, 90, false, false);
-				nav.travelTo(30, 0 , false,  false);
-				nav.travelTo(0, 0 , false,  false);
 				
 				break;
 			default:

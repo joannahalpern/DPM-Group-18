@@ -5,13 +5,14 @@ import lejos.nxt.ColorSensor;
 import lejos.nxt.LCD;
 import lejos.nxt.Motor;
 import lejos.nxt.SensorPort;
+import lejos.nxt.Sound;
 import lejos.nxt.UltrasonicSensor;
 import lejos.nxt.comm.RConsole;
 import Controller.*;
 import Robot.*;
 import Display.*;
 
-public class OdoCorTest {
+public class ObjectDetectTest {
 	
 	/* Create an object that can be used for synchronization across threads. */
 	static class theLock extends Object {//this is a lock
@@ -21,7 +22,7 @@ public class OdoCorTest {
 	public static void main(String[] args) {
 		
 		LCD.clear();
-		LCD.drawString(" Odo Correction ", 0, 0);
+		LCD.drawString("Object Detection", 0, 0);
 		LCD.drawString("   Press left   ", 0, 2);
 		LCD.drawString("    to begin    ", 0, 3);
 		
@@ -34,22 +35,23 @@ public class OdoCorTest {
 //		UltrasonicPoller usPollerLeft = new UltrasonicPoller(usLeft);
 //		UltrasonicPoller usPollerRight = new UltrasonicPoller(usRight);
 //		
-		LightPoller csPollerLineReader = new LightPoller(csLineReader, Colour.BLUE);
-//		LightPoller colourDetector = new LightPoller(csFlagReader, Colour.BLUE);
+//		LightPoller csPollerLineReader = new LightPoller(csLineReader, Colour.BLUE);
+		LightPoller colourDetector = new LightPoller(csFlagReader, Colour.BLUE);
 //
 		TwoWheeledRobot fuzzyPinkRobot = new TwoWheeledRobot(Motor.A, Motor.C, Motor.B, usLeft, usRight, csFlagReader, csLineReader);
 		Odometer odo = new Odometer(fuzzyPinkRobot, true);
 		Navigation nav = new Navigation(odo, fuzzyPinkRobot);
-		OdometryCorrection odoCorection = new OdometryCorrection(odo, csPollerLineReader);
+//		OdometryCorrection odoCorection = new OdometryCorrection(odo, csPollerLineReader);
 //		
 //		Localization localizer = new Localization(odo, nav, usPollerLeft, usPollerRight, csPollerLineReader);
 //		
-//		ObjectDisplacement objectDisplacement = new ObjectDisplacement(fuzzyPinkRobot, nav);
-//		ObjectDetectIdentify objectDetection = new ObjectDetectIdentify(fuzzyPinkRobot, nav, objectDisplacement);
+		ObjectDisplacement objectDisplacement = new ObjectDisplacement(fuzzyPinkRobot, nav);
+		ObjectDetectIdentify objectDetection = new ObjectDetectIdentify(fuzzyPinkRobot, nav, objectDisplacement, colourDetector);
 		
-		
+		NavController navController = new NavController(odo, fuzzyPinkRobot,objectDisplacement, colourDetector, nav, objectDetection);
 //		initializeRConsole();
 //		RConsoleDisplay rcd = new RConsoleDisplay(odo, colourDetector, usPollerLeft);
+//		LCDInfo lcd = new LCDInfo(odo, fuzzyPinkRobot);
 
 		int option = 0;
 		while (option == 0)
@@ -57,15 +59,31 @@ public class OdoCorTest {
 			
 		switch(option) {
 			case Button.ID_LEFT:
-				LCDInfo lcd = new LCDInfo(odo, fuzzyPinkRobot);
 				
 			//PUT MAIN CODE HERE
-				nav.travelTo(0,90, false, false);
-				nav.travelTo(30, 90, false, false);
-				nav.travelTo(30, 0 , false,  false);
-				nav.travelTo(0, 0 , false,  false);
+			
+			while(true){	
 				
-				break;
+				if (option == Button.ID_LEFT){
+					
+					option = Button.ID_ENTER;
+//					fuzzyPinkRobot.setForwardSpeed(5);
+					
+					while(!objectDetection.isBlock()){
+
+					option = Button.ID_ENTER;
+//						objectDetection.isBlock();
+						navController.search(0,0,60,60);
+					
+					
+					}
+
+					Sound.beep();
+//					objectDetection.getColour();
+				}
+					option = Button.waitForAnyPress();
+			}	
+//				break;
 			default:
 				System.out.println("Error - invalid button");
 				System.exit(-1);

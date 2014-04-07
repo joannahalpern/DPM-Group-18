@@ -1,4 +1,4 @@
-package Robot;
+ package Robot;
 
 
 import java.util.Queue;
@@ -7,7 +7,7 @@ import lejos.nxt.UltrasonicSensor;
 //This code is what was given in lab 1 except that we added myMutex
 public class UltrasonicPoller extends Thread{
 	public static final int QUEUE_SIZE = 5;
-	public static final long POLLING_PERIOD = 28;
+	public static final long POLLING_PERIOD = 25;
 	public static final double SENSOR_OFFSET = 1;
 	private UltrasonicSensor us;
 	private double distance = 99999;
@@ -16,8 +16,9 @@ public class UltrasonicPoller extends Thread{
 	public UltrasonicPoller(UltrasonicSensor us) {
 		this.us = us;
 		
+		this.start();
+		
 		initializeQueue();
-		start();
 	}
 	
 	public void run() {
@@ -30,6 +31,9 @@ public class UltrasonicPoller extends Thread{
 	}
 	
 	private void putDistanceInQueue(double distance) {
+//		if (distance == 255){
+//			distance = 60;
+//		}
 		distancesQueue.push(distance);
 		distancesQueue.pop();
 	}
