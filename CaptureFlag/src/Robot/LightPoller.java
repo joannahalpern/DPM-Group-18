@@ -10,7 +10,7 @@ public class LightPoller extends Thread{
 	public static final int LINE_THRESHOLD_DIFFERENCE = 90;
 	public static final double LINE_THRESHOLD = Localization.intlReading-LINE_THRESHOLD_DIFFERENCE;
 	public static final int QUEUE_SIZE = 9;
-	public static long POLLING_PERIOD = 30; // (1 poll per 50ms)
+	public static long POLLING_PERIOD = 0; // (1 poll per 50ms)
 	private ColorSensor ls;
 	private double colourVal = 99999;
 	private Colour colour;
@@ -26,8 +26,10 @@ public class LightPoller extends Thread{
 	} //BLAHBLAHBLAH
 
 	public void run() {
+		long correctionStart, correctionEnd;
 		setFloodLight(colour);
 		while(true){
+			correctionStart = System.currentTimeMillis();
 			colourVal = ls.getRawLightValue();
 			coloursQueue.push(colourVal);
 			coloursQueue.pop();
@@ -35,7 +37,17 @@ public class LightPoller extends Thread{
 				lineSeen = true;
 			}
 			else { lineSeen = false; }
-			try { Thread.sleep(POLLING_PERIOD); } catch(Exception e){}
+			correctionEnd = System.currentTimeMillis();
+			if (correctionEnd - correctionStart < POLLING_PERIOD) {
+				try {
+					Thread.sleep(POLLING_PERIOD
+							- (correctionEnd - correctionStart));
+				} catch (InterruptedException e) {
+					// there is nothing to be done here because it is not
+					// expected that the odometry correction will be
+					// interrupted by another thread
+				}
+			}
 		}
 	}
 
@@ -115,5 +127,9 @@ public class LightPoller extends Thread{
 		double median = array[(QUEUE_SIZE/2 + 1)]; //median is the middle number of the sorted array
 		
 		return median;
+	}
+
+	public static void setPOLLING_PERIOD(long pOLLING_PERIOD) {
+		POLLING_PERIOD = pOLLING_PERIOD;
 	}
 }
