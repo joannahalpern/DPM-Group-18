@@ -10,7 +10,7 @@ public class LightPoller extends Thread{
 	public static final int LINE_THRESHOLD_DIFFERENCE = 55;
 	public static final double LINE_THRESHOLD = Localization.intlReading-LINE_THRESHOLD_DIFFERENCE;
 	public static final int QUEUE_SIZE = 9;
-	public static long POLLING_PERIOD = 0; // (1 poll per 50ms)
+	public static long POLLING_PERIOD = 30; // (1 poll per 50ms)
 	private ColorSensor ls;
 	private double colourVal = 99999;
 	private Colour colour;
@@ -28,6 +28,7 @@ public class LightPoller extends Thread{
 		long correctionStart, correctionEnd;
 		setFloodLight(colour);
 		while(true){
+			correctionStart = System.currentTimeMillis();
 			value1 = value2;
 			value2 = value3;
 			
@@ -35,7 +36,17 @@ public class LightPoller extends Thread{
 			value3 = colourVal;
 			
 			lineSeen = isLine();
-			try { Thread.sleep(POLLING_PERIOD); } catch(Exception e){}
+			correctionEnd = System.currentTimeMillis();
+			if (correctionEnd - correctionStart < POLLING_PERIOD) {
+				try {
+					Thread.sleep(POLLING_PERIOD
+							- (correctionEnd - correctionStart));
+				} catch (InterruptedException e) {
+					// there is nothing to be done here because it is not
+					// expected that the odometry correction will be
+					// interrupted by another thread
+				}
+			}
 		}
 	}
 

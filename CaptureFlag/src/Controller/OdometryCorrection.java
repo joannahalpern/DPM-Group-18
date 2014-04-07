@@ -1,4 +1,5 @@
 //Odo correction works
+//Need to start odoCorecction.start(); in Controller
 package Controller;
 import lejos.nxt.Sound;
 import Robot.*;

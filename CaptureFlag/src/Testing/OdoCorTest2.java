@@ -143,7 +143,7 @@ public class OdoCorTest2 {
 		UltrasonicPoller usPollerLeft = new UltrasonicPoller(usLeft);
 		UltrasonicPoller usPollerRight = new UltrasonicPoller(usRight);
 		
-		LightPoller csPollerLineReader = new LightPoller(csLineReader, Colour.BLUE);
+		LightPoller csPollerLineReader = new LightPoller(csLineReader, Colour.GREEN);
 
 		TwoWheeledRobot fuzzyPinkRobot = new TwoWheeledRobot(Motor.A, Motor.C, Motor.B, usLeft, usRight, csFlagReader, csLineReader);
 		Odometer odo = new Odometer(fuzzyPinkRobot, true);
@@ -159,10 +159,10 @@ public class OdoCorTest2 {
 		
 		NavController navController = new NavController(odo, fuzzyPinkRobot,objectDisplacement, nav, objectDetection, ostacleAvoidance);
 		
-		initializeRConsole();
-		RConsoleDisplay rcd = new RConsoleDisplay(odo, fuzzyPinkRobot, csPollerLineReader);
+//		initializeRConsole();
+//		RConsoleDisplay rcd = new RConsoleDisplay(odo, fuzzyPinkRobot, csPollerLineReader);
 
-//		LCDInfo lcd = new LCDInfo(odo, fuzzyPinkRobot, csPollerLineReader);
+		LCDInfo lcd = new LCDInfo(odo, fuzzyPinkRobot, csPollerLineReader);
 
 		int option = 0;
 		while (option == 0)
@@ -170,10 +170,14 @@ public class OdoCorTest2 {
 			
 		switch(option) {
 		case Button.ID_LEFT:
-			odo.setPosition(new double[]{0, 0, 0}, new boolean[]{true, true, true});
-			csPollerLineReader.setFloodLight(Colour.GREEN);
-			navController.travelTo(0,(11*30.48), true, false, false);
 			
+			localizer.doUSLocalization();
+			localizer.doLSLocalization();
+			
+			
+//			odo.setPosition(new double[]{0, 0, 0}, new boolean[]{true, true, true});
+			odoCorrection.start();
+			nav.travelTo(30.48, 30*8);
 			break;
 
 		default:
