@@ -48,23 +48,15 @@ public class ColourTestingExperiment {
 		switch(option) {
 		case Button.ID_LEFT:
 			lsPoller.setFloodLight(Colour.RED);
-			lsPoller.start();
-			usPoller.start();
 			break;
 		case Button.ID_RIGHT:
 			lsPoller.setFloodLight(Colour.GREEN);
-			lsPoller.start();
-			usPoller.start();
 			break;
 		case Button.ID_ENTER:
 			lsPoller.setFloodLight(Colour.BLUE);
-			lsPoller.start();
-			usPoller.start();
 			break;
 		case Button.ID_ESCAPE:
 			lsPoller.setFloodLight(Colour.OFF);
-			lsPoller.start();
-			usPoller.start();
 			break;
 		default:
 			System.out.println("Error - invalid button");

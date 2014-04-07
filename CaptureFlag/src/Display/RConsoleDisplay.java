@@ -21,6 +21,7 @@ public class RConsoleDisplay implements TimerListener{
 	private TwoWheeledRobot robot;
 	private ColorSensor csFlagReader, csLineReader;
 	private UltrasonicSensor usLeft, usRight;
+	private LightPoller linePoller;
 	
 //	private UltrasonicPoller usPollerLeft;
 //	private UltrasonicPoller usPollerRight;
@@ -29,7 +30,7 @@ public class RConsoleDisplay implements TimerListener{
 	
 	// arrays for displaying data
 	
-	public RConsoleDisplay(Odometer odo, TwoWheeledRobot robot) {
+	public RConsoleDisplay(Odometer odo, TwoWheeledRobot robot, LightPoller linePoller) {
 		this.odo = odo;
 		this.robot = robot;
 		this.csFlagReader = robot.getColourSensorFlag();
@@ -38,6 +39,8 @@ public class RConsoleDisplay implements TimerListener{
 		this.usLeft = this.robot.getLeftUSSensor();
 		this.usRight = this.robot.getRightUSSensor();
 
+		this.linePoller = linePoller;
+		
 		this.lcdTimer = new Timer(LCD_REFRESH, this);
 		
 		// start the timer
