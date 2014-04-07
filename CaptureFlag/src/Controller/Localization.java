@@ -71,7 +71,6 @@ public class Localization extends Thread{
 		nav.travelDistance(9);
 		
 		try{Thread.sleep(250);} catch (Exception e){};
-		intlReading = getINTLReading();
 		
 		turns.setAngle(0);		
 		nav.setSpeeds(0,30);
@@ -102,9 +101,6 @@ public class Localization extends Thread{
 		nav.setSpeeds(0,0);
 		
 		calculateCurrentPosition();
-	}
-	private double getINTLReading() {
-		return csPoller.getMean();
 	}
 	
 	public void calibratePosition(){ //takes the starting zone into account to adjust position and heading accordingly
