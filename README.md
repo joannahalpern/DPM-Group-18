@@ -1,5 +1,14 @@
 DPM-Group-18
 ============
+
+The working tested and best version of Odometry Correction in in the branch "OdoCorrectionTesting"
+The master branch contains everything from Dropbox version 9.
+
+Right now, Dropbox version 10 is the same as version 9 except LightPoller, OdometerCorrection, and Localization have been updated.
+
+-Joanna 04/07/2014
+
+--------------------------------------
 To use the bluetooth, just start ProjectW14Server_2 which is located in CodeVersion8.
 Note that our NXT Name is TEAM18. You first need to turn on the robot and run the 
 Controller program. Then, input all of the values on the computer program, press start,
