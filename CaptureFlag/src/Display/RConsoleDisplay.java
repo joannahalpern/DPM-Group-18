@@ -45,10 +45,10 @@ public class RConsoleDisplay implements TimerListener{
 		
 		// start the timer
 		lcdTimer.start();
-		RConsole.println("X  | Y | Angle");
+		RConsole.println("Y | Value");
 	}
 	
 	public void timedOut() { 
-		RConsole.println("" + odo.getX() + ", " + odo.getY() + ", " + odo.getAngle());
+		RConsole.println("" + ", " + odo.getY() + ", " + linePoller.getColourVal());
 	}
 }
