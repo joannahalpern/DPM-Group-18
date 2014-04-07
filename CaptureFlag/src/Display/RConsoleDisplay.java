@@ -14,7 +14,7 @@ import lejos.util.TimerListener;
  *Display on the computer 
  */
 public class RConsoleDisplay implements TimerListener{
-	public static final int LCD_REFRESH = 143;
+	public static int LCD_REFRESH = 30;
 	private Timer lcdTimer;
 
 	private Odometer odo;
@@ -49,6 +49,10 @@ public class RConsoleDisplay implements TimerListener{
 	}
 	
 	public void timedOut() { 
-		RConsole.println("" + ", " + odo.getY() + ", " + linePoller.getColourVal());
+		RConsole.println(odo.getY() + ", " + linePoller.getColourVal());
+	}
+
+	public static void setLCD_REFRESH(int lCD_REFRESH) {
+		LCD_REFRESH = lCD_REFRESH;
 	}
 }

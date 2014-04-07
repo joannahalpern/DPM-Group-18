@@ -7,10 +7,10 @@ import lejos.nxt.ColorSensor;
 
 
 public class LightPoller extends Thread{
-	public static final int LINE_THRESHOLD_DIFFERENCE = 90;
+	public static final int LINE_THRESHOLD_DIFFERENCE = 55;
 	public static final double LINE_THRESHOLD = Localization.intlReading-LINE_THRESHOLD_DIFFERENCE;
 	public static final int QUEUE_SIZE = 9;
-	public static long POLLING_PERIOD = 30; // (1 poll per 50ms)
+	public static long POLLING_PERIOD = 0; // (1 poll per 50ms)
 	private ColorSensor ls;
 	private double colourVal = 99999;
 	private Colour colour;
@@ -25,6 +25,7 @@ public class LightPoller extends Thread{
 	}
 
 	public void run() {
+		long correctionStart, correctionEnd;
 		setFloodLight(colour);
 		while(true){
 			value1 = value2;
@@ -70,10 +71,14 @@ public class LightPoller extends Thread{
 		double negativeDiff = value2-value1;
 		double positiveDiff = value3-value2;
 		if ((negativeDiff<0) && (positiveDiff>0)){ //If it's a dip like \/
-			if( ((-1 * negativeDiff)>LINE_THRESHOLD) || (positiveDiff > LINE_THRESHOLD)){
+			if( ((-1 * negativeDiff)>LINE_THRESHOLD_DIFFERENCE) || (positiveDiff > LINE_THRESHOLD_DIFFERENCE)){
 				return true;
 			}
 		}
 		return false;
+	}
+
+	public static void setPOLLING_PERIOD(long POLLING_PERIOD) {
+		POLLING_PERIOD = POLLING_PERIOD;
 	}
 }

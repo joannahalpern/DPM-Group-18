@@ -22,7 +22,7 @@ import Controller.*;
  * This is the main controller. Everything is controlled from here
  *
  */
-public class OdoCorTest1 {
+public class PollingSpeedTest {
 
 	private static boolean bluetoothEnabled = false;
 	public static StartCorner corner;
@@ -129,9 +129,9 @@ public class OdoCorTest1 {
 			ourFlagColour = Colour.DARK_BLUE;
 		}
 
-		LCD.drawString("<--RED | GREEN->", 0, 0);
-		LCD.drawString("     |Blue|     ", 0, 1);
-		LCD.drawString("     | OFF|      ", 0, 2);
+		LCD.drawString("<-- 0  | 10  -->", 0, 0);
+		LCD.drawString("     | 20 |     ", 0, 1);
+		LCD.drawString("     | 30 |     ", 0, 2);
 		LCD.drawString("second push exits", 0, 5);
 		
 		// setup everything
@@ -170,25 +170,32 @@ public class OdoCorTest1 {
 			
 		switch(option) {
 		case Button.ID_LEFT:
+			rcd.setLCD_REFRESH(0);
 			odo.setPosition(new double[]{0, 1, 0}, new boolean[]{true, true, true});
-			csPollerLineReader.setFloodLight(Colour.RED);
-			nav.travelTo(0, 12*30.48-10);
-			
-			break;
-		case Button.ID_RIGHT:
-			odo.setPosition(new double[]{0, 1, 0}, new boolean[]{true, true, true});
+			csPollerLineReader.setPOLLING_PERIOD(0);
 			csPollerLineReader.setFloodLight(Colour.GREEN);
 			nav.travelTo(0, 12*30.48-10);
 			
 			break;
-		case Button.ID_ENTER:
+		case Button.ID_RIGHT:
+			rcd.setLCD_REFRESH(10);
 			odo.setPosition(new double[]{0, 1, 0}, new boolean[]{true, true, true});
-			csPollerLineReader.setFloodLight(Colour.BLUE);
+			csPollerLineReader.setPOLLING_PERIOD(10);
+			csPollerLineReader.setFloodLight(Colour.GREEN);
 			nav.travelTo(0, 12*30.48-10);
 			break;
+		case Button.ID_ENTER:
+			rcd.setLCD_REFRESH(20);
+			odo.setPosition(new double[]{0, 1, 0}, new boolean[]{true, true, true});
+			csPollerLineReader.setPOLLING_PERIOD(20);
+			csPollerLineReader.setFloodLight(Colour.GREEN);
+			nav.travelTo(0, 12*30.48-10);			
+			break;
 		case Button.ID_ESCAPE:
-			odo.setPosition(new double[]{0, 0, 0}, new boolean[]{true, true, true});
-			csPollerLineReader.setFloodLight(Colour.OFF);
+			rcd.setLCD_REFRESH(30);
+			odo.setPosition(new double[]{0, 1, 0}, new boolean[]{true, true, true});
+			csPollerLineReader.setPOLLING_PERIOD(30);
+			csPollerLineReader.setFloodLight(Colour.GREEN);
 			nav.travelTo(0, 12*30.48-10);
 			break;
 		default:
