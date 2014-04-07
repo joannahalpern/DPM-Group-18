@@ -33,7 +33,7 @@ public class OdometryCorrection extends Thread {
 			double x, y, theta;
 
 			lightVal = csPoller.getColourVal();
-			if (lightVal < LIGHT_THRESHOLD && (!Navigation.isTurning)) {
+			if (csPoller.lineSeen && (!Navigation.isTurning)) {
 				Sound.beep();
 				theta = odometer.getAngle();
 
