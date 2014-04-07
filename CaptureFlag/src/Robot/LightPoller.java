@@ -15,26 +15,25 @@ public class LightPoller extends Thread{
 	private double colourVal = 99999;
 	private Colour colour;
 	private Queue<Double> coloursQueue;
+	private double value1, value2, value3; 
 	public boolean lineSeen = false;
 	
 	public LightPoller(ColorSensor ls, Colour colour) {
 		this.ls = ls;
 		this.colour = colour;
 		start();
-		
-		initializeQueue();
-	} //BLAHBLAHBLAH
+	}
 
 	public void run() {
 		setFloodLight(colour);
 		while(true){
+			value1 = value2;
+			value2 = value3;
+			
 			colourVal = ls.getRawLightValue();
-			coloursQueue.push(colourVal);
-			coloursQueue.pop();
-			if (ls.getRawLightValue()<=LINE_THRESHOLD){
-				lineSeen = true;
-			}
-			else { lineSeen = false; }
+			value3 = colourVal;
+			
+			lineSeen = isLine();
 			try { Thread.sleep(POLLING_PERIOD); } catch(Exception e){}
 		}
 	}
@@ -67,53 +66,14 @@ public class LightPoller extends Thread{
 		return colourVal;
 	}
 
-	//initialize queue with 5 values
-	private void initializeQueue() {
-		coloursQueue = new Queue<Double>();
-		for (int i = 0; i<QUEUE_SIZE; i++){
-			coloursQueue.addElement(9999.9);
+	public boolean isLine(){
+		double negativeDiff = value2-value1;
+		double positiveDiff = value3-value2;
+		if ((negativeDiff<0) && (positiveDiff>0)){ //If it's a dip like \/
+			if( ((-1 * negativeDiff)>LINE_THRESHOLD) || (positiveDiff > LINE_THRESHOLD)){
+				return true;
+			}
 		}
-	}
-	
-	/**
-	 * computes mean of all the values in the coloursQueue
-	 */
-	public double getMean(){
-		Double sum = 0.0;
-		Double temp = 0.0;
-		
-		for (int i = 0; i<QUEUE_SIZE; i++){
-			temp = ((Double) coloursQueue.pop());
-			sum = sum + temp; //sum everything in queue
-			coloursQueue.push(temp); //put values back in queue afterwards
-		}
-		double mean = (double) (sum/QUEUE_SIZE); //mean formula
-		return mean;
-	}
-	
-	/**
-	 * computes median of all the values in the coloursQueue
-	 * by putting queue into array, sorting the array with QuickSort,
-	 * then returning the middle value of that array.
-	 * 
-	 * If the array is an even number size, it will return the larger
-	 * of the two middle numbers
-	 */
-	public double getMedian(){
-		double array[] = new double[QUEUE_SIZE];
-		Double temp;
-		
-		//put all colour values from the queue into an array
-		for (int i = 0; i<QUEUE_SIZE; i++){
-			temp = ((Double) coloursQueue.pop());
-			array[i] = temp; 
-			coloursQueue.push(temp); //put values back in queue afterwards
-		}
-		
-		//sort the array
-		QuickSort.quickSort(array, 0, (QUEUE_SIZE-1));
-		double median = array[(QUEUE_SIZE/2 + 1)]; //median is the middle number of the sorted array
-		
-		return median;
+		return false;
 	}
 }

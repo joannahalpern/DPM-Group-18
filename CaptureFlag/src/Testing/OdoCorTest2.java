@@ -126,7 +126,7 @@ public class OdoCorTest2 {
 			ourFlagColour = Colour.WHITE;
 		}
 		else{
-			ourFlagColour = Colour.DARK_BLUE;
+			ourFlagColour = Colour.DARK_BLUE; 
 		}
 
 		LCD.drawString("<--RED | GREEN->", 0, 0);
