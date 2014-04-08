@@ -212,6 +212,10 @@ public class Controller {
 				
 				navController.inv = -1;
 				
+				x0 = lower left
+				x1 top right
+				y0 bottome left
+				
 				//Find zone
 				navController.avoidanceSetter(x1*square -10, y1*square -10, false);
 				navController.travelTo(0, y1*square - 10, true,  false);
