@@ -194,12 +194,13 @@ public class Controller {
 			int xf, yf;
 			double square = 30.48;
 			Colour flag = Colour.RED;
-			x0 = 1;
-			y0 = 1;
-			x1 = 3;
-			y1 = 4;
-			xf = 1;
-			yf = 1;
+			
+			x0 = ourZoneLL_X;
+			y0 = ourZoneLL_Y;
+			x1 = ourZoneUR_X;
+			y1 = ourZoneUR_Y;
+			xf = ourDZone_X; 
+			yf = ourDZone_Y;
 			
 			//If top Right corner
 			if ((odo.getX() > x1 && odo.getY() > y1)){
@@ -211,10 +212,6 @@ public class Controller {
 				}
 				
 				navController.inv = -1;
-				
-				x0 = lower left
-				x1 top right
-				y0 bottome left
 				
 				//Find zone
 				navController.avoidanceSetter(x1*square -10, y1*square -10, false);
