@@ -8,10 +8,11 @@ public class TwoWheeledRobot {
 	public static final double DEFAULT_RIGHT_RADIUS = 1.6;
 	public static final double DEFAULT_WIDTH = 26.0;
 	public static final double GROUND_LS_X_OFFSET = -9.4;
-	public static final double GROUND_LS_Y_OFFSET = -7.5;
+	public static final double GROUND_LS_Y_OFFSET = -8;
+	public static final double SENSOR_WIDTH = 14.88; 
 	
 	private NXTRegulatedMotor leftMotor, rightMotor, clawMotor;
-	public UltrasonicSensor usLeft, usRight;
+	private UltrasonicSensor usLeft, usRight;
 	private ColorSensor csFlagReader, csLineReader;
 	
 	private double leftRadius, rightRadius, width;
@@ -95,7 +96,12 @@ public class TwoWheeledRobot {
 		rotationSpeed = speed;
 		setSpeeds(forwardSpeed, rotationSpeed);
 	}
-	
+	public void setForward(int speed){
+		leftMotor.forward();
+		rightMotor.forward();
+		leftMotor.setSpeed(speed);
+		rightMotor.setSpeed(speed);
+	}
 	public void setSpeeds(double forwardSpeed, double rotationalSpeed) {
 		double leftSpeed, rightSpeed;
 

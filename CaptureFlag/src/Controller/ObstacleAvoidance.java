@@ -2,7 +2,6 @@ package Controller;
 
 import lejos.nxt.LCD;
 import lejos.nxt.NXTRegulatedMotor;
-import lejos.nxt.Sound;
 import lejos.nxt.UltrasonicSensor;
 import Display.*;
 import Robot.*;
@@ -34,6 +33,7 @@ public class ObstacleAvoidance {
 	
 	// Sets whether or not you want to put p-turn on
 	private boolean turnON = false;
+	public boolean reverse = false;
 	
 	// Avoidance Status variables
 	private int sensorCount = 0;
@@ -74,11 +74,11 @@ public class ObstacleAvoidance {
 		 * @return
 		 */
 		public boolean avoidObstacle(boolean test, boolean checkObstacle) {
+
 			usLeftDistance = usLeft.getDistance();
 			usRightDistance = usRight.getDistance();
-			LCD.drawString("usLeft: " + usLeftDistance, 0, 3);
-			LCD.drawString("usRight: " + usRightDistance, 0, 4);
-			
+			LCD.drawString("usLeft: " + usLeftDistance, 0, 5);
+			LCD.drawString("usRight: " + usRightDistance, 0, 6);
 			if (checkObstacle) {
 				for (int i = 0; i < 3; i++) {
 					usLeftDistance = usLeft.getDistance();
@@ -92,6 +92,9 @@ public class ObstacleAvoidance {
 					if (usDistance <= AVOID_DISTANCE) {
 						sensorCount++;
 						if (sensorCount > 3) {
+							if(usDistance < 10){
+								reverse = true;
+							}
 							sensorCount = 0;
 							return true;
 						}
@@ -108,6 +111,9 @@ public class ObstacleAvoidance {
 			if (usDistance <= AVOID_DISTANCE) {
 				sensorCount++;
 				if (sensorCount > 3) {
+					if(usDistance < 10){
+						reverse = true;
+					}
 					sensorCount = 0;
 					return true;
 				}
@@ -116,8 +122,9 @@ public class ObstacleAvoidance {
 			while (test) {
 				usLeftDistance = usLeft.getDistance();
 				usRightDistance = usRight.getDistance();
-				LCD.drawString("usLeft: " + usLeftDistance, 0, 3);
-				LCD.drawString("usRight: " + usRightDistance, 0, 4);
+				LCD.clear();
+				LCD.drawString("usLeft: " + usLeftDistance, 0, 5);
+				LCD.drawString("usRight: " + usRightDistance, 0, 6);
 
 			}
 			return false;

@@ -4,7 +4,11 @@ import Robot.*;
 import lejos.nxt.*;
 
 /**
- *
+ * This class is used to identify a block. If an object is detected with the
+ * ultrasonic sensor within DETECTION_THRESHOLD, then the robot moves forward
+ * until the object is within COLOUR_READING_THRESHOLD. At this point the robot
+ * stops and does identifyBlock(). If the block is within foam limit, it is
+ * identified as a styrofoam block and block=true. Otherwise block=false.
  */
 public class ObjectDetectIdentify {
 	private Navigation nav;
@@ -19,7 +23,7 @@ public class ObjectDetectIdentify {
 	
 	//Search variables
 	private int csCount = 0;
-	private double lowValue = 300;	// Needs yto be calibrated for upstairs
+	private double lowValue = 300;	// Needs to be calibrated for upstairs
 	private double csValue;
 	private Colour flagColour;
 	public boolean block = false;
@@ -29,7 +33,7 @@ public class ObjectDetectIdentify {
 
 	// Constructor
 	public ObjectDetectIdentify(TwoWheeledRobot robot, Navigation nav,
-			ObjectDisplacement od, LightPoller csFlagPoller) {
+			ObjectDisplacement od) {
 		this.csFlagPoller = csFlagPoller;
 		this.robot = robot;
 		this.nav = nav;
@@ -56,7 +60,7 @@ public class ObjectDetectIdentify {
 		LCD.drawString("BaseGreen  " + baseGreen, 0, 6);
 		if( baseRed > lowValue || baseBlue > lowValue || baseGreen > lowValue){
 			csCount++;
-			if(csCount > 3){
+			if(csCount > 5){
 				csCount = 0;
 				LCD.drawString("True", 0, 3);
 				return true;
@@ -110,12 +114,12 @@ public class ObjectDetectIdentify {
 			// LCD.drawString("LCDred: " + red, 0, 5);
 			return Colour.DARK_BLUE;
 		} 
-		else if ( (red > green) && (green > blue) && (red > 300) && (green > 200)) {
+		else if ( (red > green) && (green > blue) && (red > 300) && (green > 200) && (blue < 200)) {
 			LCD.drawString("Yellow: ", 0, 3);
 			return Colour.YELLOW;
 
 		} 
-		else if ( ( (red > blue) && (red > green) && (red > 400) ) && (blue < 200) ) {
+		else if ( ( (red > blue) && (red > green) && (red > 400) ) && (blue < 200) && (green < 200)) {
 			LCD.drawString("Red: ", 0, 3);
 			return Colour.RED;
 

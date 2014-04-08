@@ -1,5 +1,6 @@
 /*
  * To change:
+
  * 	-make and TestNav___ for each thing and replace folder for each
  *  -check that no more arrays
  *  
@@ -22,9 +23,9 @@ import lejos.nxt.LCD;
 import lejos.nxt.Motor;
 import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.SensorPort;
+import lejos.nxt.Sound;
 import lejos.nxt.UltrasonicSensor;
 import lejos.nxt.comm.RConsole;
-import lejos.robotics.Color;
 import Display.*;
 import Robot.*;
 
@@ -33,11 +34,13 @@ import Robot.*;
  *
  */
 public class Controller {
-	public static StartCorner corner;
-	public static int ourZoneLL_X;
-	public static int ourZoneLL_Y;
-	public static int ourZoneUR_X;
-	public static int ourZoneUR_Y;
+
+	private static boolean bluetoothEnabled = false;
+	public static StartCorner corner = StartCorner.BOTTOM_LEFT;
+	public static int ourZoneLL_X = 4;
+	public static int ourZoneLL_Y = 4;
+	public static int ourZoneUR_X = 6;
+	public static int ourZoneUR_Y = 6;
 	public static int opponentZoneLL_X;
 	public static int opponentZoneLL_Y;
 	public static int opponentZoneUR_X;
@@ -46,7 +49,7 @@ public class Controller {
 	public static int ourDZone_Y;
 	public static int opponentDZone_X;
 	public static int opponentDZone_Y;
-	public static int ourFlag;
+	public static int ourFlag = 1;
 	public static int opponentFlag;
 	
 	//our flag
@@ -58,63 +61,66 @@ public class Controller {
 	static public theLock lock = new theLock();
 	
 	public static void main(String[] args) {
-		BluetoothConnection conn = new BluetoothConnection();
 
-		Transmission t = conn.getTransmission();
-		LCD.clear();
-		if (t == null) {
-			LCD.drawString("Failed to read transmission", 0, 0);
-		} 
-		else{
-			switch (t.role) {
-				case RED: 
-					ourZoneLL_X = t.redZoneLL_X;
-					ourZoneLL_Y = t.redZoneLL_Y;
-					ourZoneUR_X = t.redZoneUR_X;
-					ourZoneUR_Y = t.redZoneUR_Y;
-					opponentZoneLL_X = t.greenZoneLL_X;
-					opponentZoneLL_Y = t.greenZoneLL_Y;
-					opponentZoneUR_X = t.greenZoneUR_X;
-					opponentZoneUR_Y = t.greenZoneUR_Y;
-					ourDZone_X = t.redDZone_X;
-					ourDZone_Y = t.redDZone_Y;
-					opponentDZone_X = t.greenDZone_X;
-					opponentDZone_Y = t.greenDZone_Y;
-					ourFlag = t.redFlag;
-					opponentFlag = t.greenFlag;
-					break;
-				case GREEN:
-					ourZoneLL_X = t.greenZoneLL_X;
-					ourZoneLL_Y = t.greenZoneLL_Y;
-					ourZoneUR_X = t.greenZoneUR_X;
-					ourZoneUR_Y = t.greenZoneUR_Y;
-					opponentZoneLL_X = t.redZoneLL_X;
-					opponentZoneLL_Y = t.redZoneLL_Y;
-					opponentZoneUR_X = t.redZoneUR_X;
-					opponentZoneUR_Y = t.redZoneUR_Y;
-					ourDZone_X = t.greenDZone_X;
-					ourDZone_Y = t.greenDZone_Y;
-					opponentDZone_X = t.redDZone_X;
-					opponentDZone_Y = t.redDZone_Y;
-					ourFlag = t.greenFlag;
-					opponentFlag = t.redFlag;
-					break;
-				default:
-					ourZoneLL_X = t.redZoneLL_X;
-					ourZoneLL_Y = t.redZoneLL_Y;
-					ourZoneUR_X = t.redZoneUR_X;
-					ourZoneUR_Y = t.redZoneUR_Y;
-					opponentZoneLL_X = t.greenZoneLL_X;
-					opponentZoneLL_Y = t.greenZoneLL_Y;
-					opponentZoneUR_X = t.greenZoneUR_X;
-					opponentZoneUR_Y = t.greenZoneUR_Y;
-					ourDZone_X = t.redDZone_X;
-					ourDZone_Y = t.redDZone_Y;
-					opponentDZone_X = t.greenDZone_X;
-					opponentDZone_Y = t.greenDZone_Y;
-					ourFlag = t.redFlag;
-					opponentFlag = t.greenFlag;
-					break;
+		if (bluetoothEnabled){
+			BluetoothConnection conn = new BluetoothConnection();
+	
+			Transmission t = conn.getTransmission();
+			LCD.clear();
+			if (t == null) {
+				LCD.drawString("Failed to read transmission", 0, 0);
+			} 
+			else{
+				switch (t.role) {
+					case RED: 
+						ourZoneLL_X = t.redZoneLL_X;
+						ourZoneLL_Y = t.redZoneLL_Y;
+						ourZoneUR_X = t.redZoneUR_X;
+						ourZoneUR_Y = t.redZoneUR_Y;
+						opponentZoneLL_X = t.greenZoneLL_X;
+						opponentZoneLL_Y = t.greenZoneLL_Y;
+						opponentZoneUR_X = t.greenZoneUR_X;
+						opponentZoneUR_Y = t.greenZoneUR_Y;
+						ourDZone_X = t.redDZone_X;
+						ourDZone_Y = t.redDZone_Y;
+						opponentDZone_X = t.greenDZone_X;
+						opponentDZone_Y = t.greenDZone_Y;
+						ourFlag = t.redFlag;
+						opponentFlag = t.greenFlag;
+						break;
+					case GREEN:
+						ourZoneLL_X = t.greenZoneLL_X;
+						ourZoneLL_Y = t.greenZoneLL_Y;
+						ourZoneUR_X = t.greenZoneUR_X;
+						ourZoneUR_Y = t.greenZoneUR_Y;
+						opponentZoneLL_X = t.redZoneLL_X;
+						opponentZoneLL_Y = t.redZoneLL_Y;
+						opponentZoneUR_X = t.redZoneUR_X;
+						opponentZoneUR_Y = t.redZoneUR_Y;
+						ourDZone_X = t.greenDZone_X;
+						ourDZone_Y = t.greenDZone_Y;
+						opponentDZone_X = t.redDZone_X;
+						opponentDZone_Y = t.redDZone_Y;
+						ourFlag = t.greenFlag;
+						opponentFlag = t.redFlag;
+						break;
+					default:
+						ourZoneLL_X = t.redZoneLL_X;
+						ourZoneLL_Y = t.redZoneLL_Y;
+						ourZoneUR_X = t.redZoneUR_X;
+						ourZoneUR_Y = t.redZoneUR_Y;
+						opponentZoneLL_X = t.greenZoneLL_X;
+						opponentZoneLL_Y = t.greenZoneLL_Y;
+						opponentZoneUR_X = t.greenZoneUR_X;
+						opponentZoneUR_Y = t.greenZoneUR_Y;
+						ourDZone_X = t.redDZone_X;
+						ourDZone_Y = t.redDZone_Y;
+						opponentDZone_X = t.greenDZone_X;
+						opponentDZone_Y = t.greenDZone_Y;
+						ourFlag = t.redFlag;
+						opponentFlag = t.greenFlag;
+						break;
+				}
 			}
 		}
 			
@@ -149,25 +155,23 @@ public class Controller {
 		UltrasonicPoller usPollerRight = new UltrasonicPoller(usRight);
 		
 		LightPoller csPollerLineReader = new LightPoller(csLineReader, Colour.BLUE);
-		LightPoller colourDetector = new LightPoller(csFlagReader, Colour.BLUE);
 
 		TwoWheeledRobot fuzzyPinkRobot = new TwoWheeledRobot(Motor.A, Motor.C, Motor.B, usLeft, usRight, csFlagReader, csLineReader);
 		Odometer odo = new Odometer(fuzzyPinkRobot, true);
 		
 		Navigation nav = new Navigation(odo, fuzzyPinkRobot);
-		OdometryCorrection odoCorection = new OdometryCorrection(odo, csPollerLineReader);
+		OdometryCorrection odoCorrection = new OdometryCorrection(odo, csPollerLineReader);
 		Localization localizer = new Localization(odo, nav, usPollerLeft, usPollerRight, csPollerLineReader, fuzzyPinkRobot);
 
 		ObstacleAvoidance ostacleAvoidance = new ObstacleAvoidance(fuzzyPinkRobot, nav, odo);
 		ObjectDisplacement objectDisplacement = new ObjectDisplacement(fuzzyPinkRobot, nav);
-		ObjectDetectIdentify objectDetection = new ObjectDetectIdentify(fuzzyPinkRobot, nav, objectDisplacement, colourDetector);
+		ObjectDetectIdentify objectDetection = new ObjectDetectIdentify(fuzzyPinkRobot, nav, objectDisplacement);
 		
 		
-		NavController navController = new NavController(odo, fuzzyPinkRobot,objectDisplacement, colourDetector, nav, objectDetection, ostacleAvoidance);
+		NavController navController = new NavController(odo, fuzzyPinkRobot,objectDisplacement, nav, objectDetection, ostacleAvoidance);
 		
 //		initializeRConsole();
 //		RConsoleDisplay rcd = new RConsoleDisplay(odo, fuzzyPinkRobot);
-		LCDInfo lcd = new LCDInfo(odo, fuzzyPinkRobot, localizer, usPollerRight, usPollerRight, csLineReader);
 
 		int option = 0;
 		while (option == 0)
@@ -175,44 +179,84 @@ public class Controller {
 			
 		switch(option) {
 		case Button.ID_LEFT:
-			LCD.clear();
-			//PUT MAIN CODE HERE
+			
+			LCDInfo lcd = new LCDInfo(odo, fuzzyPinkRobot, csPollerLineReader);
 			
 			//Localization
-//			csLineReader.setFloodlight(Color.BLUE);
-//			localizer.doLSLocalization();
+			localizer.doUSLocalization();
+			localizer.doLSLocalization();
 			
-			//testing conditions
-//			ourZoneLL_X = 90;
-//			ourZoneLL_Y = 90; 
-//			ourZoneUR_X = 150;
-//			ourZoneUR_Y = 150;
-//			ourFlagColour = Colour.WHITE;
+			//Start OdoCorrection
+			odoCorrection.start();
 			
+			//Full Search and Nav
+			int x0,y0,x1,y1;
+			int xf, yf;
+			double square = 30.48;
+			Colour flag = Colour.RED;
+			x0 = 1;
+			y0 = 1;
+			x1 = 3;
+			y1 = 4;
+			xf = 1;
+			yf = 1;
 			
-			
-			//Search Test
-			//navController.travelTo(0, 90, false, false, true);
-			
-			navController.avoidanceSetter(ourZoneLL_X*30.48, ourZoneLL_Y*30.48, true);
-			navController.travelTo(ourZoneLL_X * 30.48 ,odo.getY(), true, false, false);	
-			
-			navController.search(ourZoneLL_X * 30.48, ourZoneLL_Y * 30.48, ourZoneUR_X* 30.48, ourZoneUR_Y * 30.48, ourFlagColour);
-			
-			
-			
-			//This for loop has the robot search through all of the columns in the zone
-			/*int columns = Math.abs(ourZoneUR_X - ourZoneLL_X);
-			int i = (int) Math.ceil((double)columns/2.0); //or: int i = columns/2 + 1;
-			double x0 = ourZoneUR_X;
-			double x1 = x0 + 1;
-			for (int j=0; j<i; j++){
-				navController.search(x0*30.48 + 15.24, ourZoneLL_Y*30.48, x1*30.48, ourZoneUR_Y*30.48, false, ourFlagColour);
-				x0 += 2;
-				x1 += 2;
-			}*/
+			//If top Right corner
+			if ((odo.getX() > x1 && odo.getY() > y1)){
+				if((x1-x0) > (y1-y0)){
+					navController.longX = true;
+				}
+				else if((x1-x0) < (y1-y0)){
+					navController.longX = false;
+				}
+				
+				navController.inv = -1;
+				
+				//Find zone
+				navController.avoidanceSetter(x1*square -10, y1*square -10, false);
+				navController.travelTo(0, y1*square - 10, true,  false);
+				navController.travelTo(x0*square-10, y0*square-10, true,  false);
 
-			
+				//Search and Exit zone
+				navController.search(x1*square, y1*square,x0*square,y0*square, true, flag);
+				
+				navController.travelTo(x0*square, y0*square, false,  false);
+				
+				//Travel to destination
+				Sound.beepSequenceUp();
+				navController.avoidanceSetter(xf*square, yf*square, false);
+				navController.travelTo(odo.getX(), yf*square, true,  false);
+				navController.travelTo(xf*square, yf*square, true,  false);
+				
+			}
+			//If any other corner
+			else{
+				
+				if((x1-x0) > (y1-y0)){
+					navController.longX = true;
+				}
+				
+				
+				else if((x1-x0) < (y1-y0)){
+					navController.longX = false;
+				}
+				
+				navController.avoidanceSetter(x0*square - 10, y0*square -10, false);
+				navController.travelTo(0, y0*square-10, true,  false);
+				navController.travelTo(x0*square-10, y0*square-10, true,  false);
+				//Search
+				navController.search(x0*square, y0*square,x1*square,y1*square, true, flag);
+				
+				
+				//Leave search zone
+				navController.travelTo(x1*square, y1*square, false,  false);
+				
+				//Travel to Final destination
+				navController.avoidanceSetter(xf*square, yf*square, false);
+				navController.travelTo(odo.getX(), yf*square, true,  false);
+				navController.travelTo(xf*square, yf*square, true,  false);
+			}
+
 			break;
 		default:
 			System.out.println("Error - invalid button");

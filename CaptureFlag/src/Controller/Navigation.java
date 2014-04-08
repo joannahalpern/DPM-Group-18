@@ -111,6 +111,9 @@ public class Navigation {
 		isTurning = false; 
 	}
 
+    public void setSpeeds (double forwardSpd, double turningSpd){
+    	robot.setSpeeds(forwardSpd, turningSpd);
+    }
 	
 	/**
 	 * Calculates angle for which to turn given x and y coordinates

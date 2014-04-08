@@ -1,4 +1,4 @@
- package Robot;
+package Robot;
 
 import java.util.Queue;
 
@@ -7,35 +7,48 @@ import lejos.nxt.ColorSensor;
 
 
 public class LightPoller extends Thread{
-	public static final int LINE_THRESHOLD = 260;
-	public static final int QUEUE_SIZE = 5;
-	public static long POLLING_PERIOD = 20; // (1 poll per 50ms) THIS IS CHANGED FOR ACCURACY IN LOCALIZATION
-	public boolean lineSeen;
+	public static final int LINE_THRESHOLD_DIFFERENCE = 68;
+//	public static final double LINE_THRESHOLD = Localization.intlReading-LINE_THRESHOLD_DIFFERENCE;
+	public static final int QUEUE_SIZE = 9;
+	public static long POLLING_PERIOD = 55; // (1 poll per 50ms)
 	private ColorSensor ls;
 	private double colourVal = 99999;
 	private Colour colour;
 	private Queue<Double> coloursQueue;
+	private double value1, value2, value3; 
+	public boolean lineSeen = false;
 	
 	public LightPoller(ColorSensor ls, Colour colour) {
 		this.ls = ls;
 		this.colour = colour;
-		this.start();
-		initializeQueue();
+		start();
 	}
 
 	public void run() {
-//		setFloodLight(colour);
+		long correctionStart, correctionEnd;
+		setFloodLight(colour);
 		while(true){
+			correctionStart = System.currentTimeMillis();
+			value1 = value2;
+			value2 = value3;
+			
 			colourVal = ls.getRawLightValue();
-			coloursQueue.push(colourVal);
-			coloursQueue.pop();
-			if (ls.getRawLightValue()<LINE_THRESHOLD){
-				lineSeen = true;
-			}
-			else { lineSeen = false; }
-			try { Thread.sleep(POLLING_PERIOD); } catch(Exception e){}
+			value3 = colourVal;
+			
+			lineSeen = isLine();
+			correctionEnd = System.currentTimeMillis();
+			if (correctionEnd - correctionStart < POLLING_PERIOD) {
+				try {
+					Thread.sleep(POLLING_PERIOD
+							- (correctionEnd - correctionStart));
+				} catch (InterruptedException e) {
+					// there is nothing to be done here because it is not
+					// expected that the odometry correction will be
+					// interrupted by another thread
+				}
 			}
 		}
+	}
 
 	public void setFloodLight(Colour colour) {
 		ls.setFloodlight(true);
@@ -51,6 +64,7 @@ public class LightPoller extends Thread{
 				break;
 				
 			case BLUE:
+				ls.setFloodlight(false);
 				ls.setFloodlight(ColorSensor.Color.BLUE);
 				break;
 			
@@ -64,53 +78,18 @@ public class LightPoller extends Thread{
 		return colourVal;
 	}
 
-	//initialize queue with 5 values
-	private void initializeQueue() {
-		coloursQueue = new Queue<Double>();
-		for (int i = 0; i<QUEUE_SIZE; i++){
-			coloursQueue.addElement(9999.9);
+	public boolean isLine(){
+		double negativeDiff = value2-value1;
+		double positiveDiff = value3-value2;
+		if ((negativeDiff<0) && (positiveDiff>0)){ //If it's a dip like \/
+			if( ((-1 * negativeDiff)>LINE_THRESHOLD_DIFFERENCE) || (positiveDiff > LINE_THRESHOLD_DIFFERENCE)){
+				return true;
+			}
 		}
+		return false;
 	}
-	
-	/**
-	 * computes mean of all the values in the coloursQueue
-	 */
-	public double getMean(){
-		Double sum = 0.0;
-		Double temp = 0.0;
-		
-		for (int i = 0; i<QUEUE_SIZE; i++){
-			temp = ((Double) coloursQueue.pop());
-			sum = sum + temp; //sum everything in queue
-			coloursQueue.push(temp); //put values back in queue afterwards
-		}
-		double mean = (double) (sum/QUEUE_SIZE); //mean formula
-		return mean;
-	}
-	
-	/**
-	 * computes median of all the values in the coloursQueue
-	 * by putting queue into array, sorting the array with QuickSort,
-	 * then returning the middle value of that array.
-	 * 
-	 * If the array is an even number size, it will return the larger
-	 * of the two middle numbers
-	 */
-	public double getMedian(){
-		double array[] = new double[QUEUE_SIZE];
-		Double temp;
-		
-		//put all colour values from the queue into an array
-		for (int i = 0; i<QUEUE_SIZE; i++){
-			temp = ((Double) coloursQueue.pop());
-			array[i] = temp; 
-			coloursQueue.push(temp); //put values back in queue afterwards
-		}
-		
-		//sort the array
-		QuickSort.quickSort(array, 0, (QUEUE_SIZE-1));
-		double median = array[(QUEUE_SIZE/2 + 1)]; //median is the middle number of the sorted array
-		
-		return median;
+
+	public static void setPOLLING_PERIOD(long POLLING_PERIOD) {
+		POLLING_PERIOD = POLLING_PERIOD;
 	}
 }
