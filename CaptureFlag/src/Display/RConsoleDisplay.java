@@ -42,10 +42,31 @@ public class RConsoleDisplay implements TimerListener{
 		
 		// start the timer
 		lcdTimer.start();
-		RConsole.println("X  | Y | Angle");
 	}
 	
 	public void timedOut() { 
-		RConsole.println("" + odo.getX() + ", " + odo.getY() + ", " + odo.getAngle());
+//		RConsole.println("" + odo.getX() + ", " + odo.getY() + ", " + odo.getAngle());
+		
+//		RConsole.println("");
+//		RConsole.println("" + Controller.task);
+//		RConsole.println("");
+//		RConsole.println("");
+//		RConsole.println("X: " + (int)odo.getX());
+//		RConsole.println("Y: " + (int)odo.getY());	
+//		RConsole.println("Angle: " + (int)odo.getAngle());
+//		RConsole.println("");
+//		RConsole.println("");
+//		RConsole.println("Search Zone: (" + Controller.ourZoneLL_X + ", " + Controller.ourZoneLL_Y + ") to (" + Controller.ourZoneUR_X + ", " + Controller.ourZoneUR_Y + ")");
+//		RConsole.println("Flag coulour: " + Controller.ourFlagColour);
+//		
+//		
+//		switch (Controller.task){
+//			case NAVIGATING:
+//				break;
+//			case SEARCHING:
+//				break;
+//			default:
+//				 break;
+//		}
 	}
 }

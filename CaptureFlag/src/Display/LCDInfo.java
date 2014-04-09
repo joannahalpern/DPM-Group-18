@@ -43,11 +43,36 @@ public class LCDInfo implements TimerListener{
 	}
 	
 	public void timedOut() { 
-
-		LCD.drawString("X: " + (int)odo.getX(), 0, 0);
-		LCD.drawString("Y: " + (int)odo.getY(), 0, 1);
-		LCD.drawString("H: " + (int)odo.getAngle(), 0, 2);
+		LCD.drawString("Task: " + Controller.task, 0, 0);
+		LCD.drawString("X: " + (int)odo.getX(), 0, 1);
+		LCD.drawString("Y: " + (int)odo.getY(), 0, 2);
+		LCD.drawString("H: " + (int)odo.getAngle(), 0, 3);
+		LCD.drawString("          ", 0, 4);
 		
-		LCD.drawString("LineVal: " + (int)linePoller.getColourVal(), 0, 6);
+		LCD.drawString("Zn: (" + Controller.ourZoneLL_X + "," + Controller.ourZoneLL_Y + ")to(" + Controller.ourZoneUR_X + "," + Controller.ourZoneUR_Y + ")", 0, 5);
+		LCD.drawString("Flag: " + Controller.ourFlagColour, 0, 6);
+		
+		switch (Controller.task){
+		case LOCALIZING:
+			LCD.drawString("                 ", 0, 5);
+			LCD.drawString("LineVal: " + (int)linePoller.getColourVal(), 0, 6);
+			
+			break;
+		case NAVIGATING:
+			LCD.drawString("Zn: (" + Controller.ourZoneLL_X + "," + Controller.ourZoneLL_Y + ")to(" + Controller.ourZoneUR_X + "," + Controller.ourZoneUR_Y + ")", 0, 5);
+			LCD.drawString("Flag: " + Controller.ourFlagColour, 0, 6);
+			
+			break;
+		case SEARCHING:
+			LCD.drawString("Zn: (" + Controller.ourZoneLL_X + "," + Controller.ourZoneLL_Y + ")to(" + Controller.ourZoneUR_X + "," + Controller.ourZoneUR_Y + ")", 0, 5);
+			LCD.drawString("Flag: " + Controller.ourFlagColour, 0, 6);
+			break;
+//		case DROPPING_OFF:
+//			break;
+		default:
+			LCD.drawString("Zn: (" + Controller.ourZoneLL_X + "," + Controller.ourZoneLL_Y + ")to(" + Controller.ourZoneUR_X + "," + Controller.ourZoneUR_Y + ")", 0, 5);
+			LCD.drawString("Flag: " + Controller.ourFlagColour, 0, 6);
+			 break;
+	}
 	}
 }

@@ -7,7 +7,7 @@ import lejos.nxt.ColorSensor;
 
 
 public class LightPoller extends Thread{
-	public static final int LINE_THRESHOLD_DIFFERENCE = 68;
+	public static final int LINE_THRESHOLD_DIFFERENCE = 55;
 //	public static final double LINE_THRESHOLD = Localization.intlReading-LINE_THRESHOLD_DIFFERENCE;
 	public static final int QUEUE_SIZE = 9;
 	public static long POLLING_PERIOD = 55; // (1 poll per 50ms)

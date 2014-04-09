@@ -122,13 +122,13 @@ public class NavController {
 
 			
 			if (exit) {
-				LCD.clear();
-				LCD.drawString("Exit Return ", 0, 6);
+//				LCD.clear();
+//				LCD.drawString("Exit Return ", 0, 6);
 				return;
 			}
 			if (!searching && !avoid) {
-				LCD.clear();
-				LCD.drawString("Search Return ", 0, 6);
+//				LCD.clear();
+//				LCD.drawString("Search Return ", 0, 6);
 				leftMotor.setSpeed(0);
 				rightMotor.setSpeed(0);
 				return;
@@ -136,8 +136,8 @@ public class NavController {
 			// Main code for navigation
 			desiredAngle = nav.calculateAngle(x, y);
 			if (!nav.isAcceptableTrajectory(desiredAngle)) {
-				LCD.clear();
-				LCD.drawString("Is HERE", 0, 6);
+//				LCD.clear();
+//				LCD.drawString("Is HERE", 0, 6);
 				nav.turnTo(desiredAngle, false, false);
 			}
 
@@ -205,8 +205,8 @@ public class NavController {
 			}
 
 			if (exit) {
-				LCD.clear();
-				LCD.drawString("Exit Return ", 0, 6);
+//				LCD.clear();
+//				LCD.drawString("Exit Return ", 0, 6);
 				return;
 			}
 		}
@@ -214,8 +214,8 @@ public class NavController {
 		// stop at destination
 		leftMotor.setSpeed(0);
 		rightMotor.setSpeed(0);
-		LCD.clear();
-		LCD.drawString("Finish Return ", 0, 6);
+//		LCD.clear();
+//		LCD.drawString("Finish Return ", 0, 6);
 		return;
 
 	}
@@ -236,8 +236,8 @@ public class NavController {
 
 		nav.travelTo(x0 , y0 );
 
-		LCD.clear();
-		LCD.drawString("Searching", 0, 7);
+//		LCD.clear();
+//		LCD.drawString("Searching", 0, 7);
 		searchCount = 0;
 		//Search Algorithm
 		while (searching) {
@@ -300,8 +300,8 @@ public class NavController {
 				
 			searchCount++;
 		}
-		LCD.clear();
-		LCD.drawString("Found", 0, 7);
+//		LCD.clear();
+//		LCD.drawString("Found", 0, 7);
 		return;
 	}
 
