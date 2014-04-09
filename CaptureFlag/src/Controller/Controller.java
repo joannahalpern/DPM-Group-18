@@ -1,17 +1,3 @@
-/*
- * To test:
- *	-starting from all 4 corners 
- *	-ourZone being 2*6 vs 6*2
- *
- *	-integrating odo correction
- *
- *redFlag, lineval
- *  
- *  RConsole
- *  	-goto C:\Program Files (x86)\leJOS NXJ\bin\nxjconsoleviewer
- *  on Nancy's comp go to: -goto D:\Program Files\leJOS NXJ\bin\nxjconsoleviewer
- */
-
 package Controller;
 
 import bluetooth.*;
@@ -35,18 +21,18 @@ import Robot.*;
 public class Controller {
 	
 	//When bluetooth is not enabled, all of the values should be set here
-	private static boolean bluetoothEnabled = false;
-	public static StartCorner corner = StartCorner.TOP_LEFT;
-	public static int ourZoneLL_X = 3;
-	public static int ourZoneLL_Y = 4;
+	private static boolean bluetoothEnabled = true;
+	public static StartCorner corner = StartCorner.BOTTOM_LEFT;
+	public static int ourZoneLL_X = 2;
+	public static int ourZoneLL_Y = 2;
 	public static int ourZoneUR_X = 5;
-	public static int ourZoneUR_Y = 7;
+	public static int ourZoneUR_Y = 4;
 	public static int opponentZoneLL_X;
 	public static int opponentZoneLL_Y;
 	public static int opponentZoneUR_X;
 	public static int opponentZoneUR_Y;
-	public static int ourDZone_X = 8;
-	public static int ourDZone_Y = 4;
+	public static int ourDZone_X = 1;
+	public static int ourDZone_Y = 1;
 	public static int opponentDZone_X;
 	public static int opponentDZone_Y;
 	public static int ourFlag = 1; 
@@ -173,15 +159,9 @@ public class Controller {
 		
 		NavController navController = new NavController(odo, fuzzyPinkRobot,objectDisplacement, nav, objectDetection, ostacleAvoidance);
 		
-		//initializeRConsole();
-		//RConsoleDisplay rcd = new RConsoleDisplay(odo, fuzzyPinkRobot, csPollerLineReader);
+//		initializeRConsole();
+//		RConsoleDisplay rcd = new RConsoleDisplay(odo, fuzzyPinkRobot);
 
-		int option = 0;
-		while (option == 0)
-			option = Button.waitForAnyPress();
-			
-		switch(option) {
-		case Button.ID_LEFT:
 			LCD.clear();
 			LCDInfo lcd = new LCDInfo(odo, fuzzyPinkRobot, csPollerLineReader);
 			
@@ -303,16 +283,7 @@ public class Controller {
 			navController.travelTo(xf*SQUARE+15, yf*SQUARE+15, true, false);
 			objectDisplacement.release();
 		
-			break;
-		default:
-			System.out.println("Error - invalid button");
-			System.exit(-1);
-			break;
-		}
 			
-		Button.waitForAnyPress();
-		System.exit(0);
-
 	}
 	//for testing
 	private static void initializeRConsole() {
