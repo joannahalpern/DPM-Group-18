@@ -1,6 +1,10 @@
 DPM-Group-18
 ============
 
+Everythings's working and we're ready to present! The final code is on the robot and in master.
+-Joanna 04/09/2014
+
+--------------------------------------
 The working tested and best version of Odometry Correction in in the branch "OdoCorrectionTesting"
 The master branch contains everything from Dropbox version 9.
 
