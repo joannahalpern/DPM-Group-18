@@ -36,7 +36,7 @@ public class Controller {
 	
 	//When bluetooth is not enabled, all of the values should be set here
 	private static boolean bluetoothEnabled = false;
-	public static StartCorner corner = StartCorner.TOP_RIGHT;
+	public static StartCorner corner = StartCorner.TOP_LEFT;
 	public static int ourZoneLL_X = 3;
 	public static int ourZoneLL_Y = 4;
 	public static int ourZoneUR_X = 5;
@@ -52,6 +52,8 @@ public class Controller {
 	public static int ourFlag = 1; 
 	public static int opponentFlag;
 	public static Task task = Task.LOCALIZING;
+	final static double SQUARE = 30.48;
+
 	
 	//our flag
 	public static Colour ourFlagColour;
@@ -194,7 +196,6 @@ public class Controller {
 			task = Task.NAVIGATING;
 			int x0,y0,x1,y1;
 			int xf, yf;
-			final double SQUARE = 30.48;
 			Colour flag = ourFlagColour;
 			
 			
@@ -205,16 +206,16 @@ public class Controller {
 			xf = ourDZone_X; 
 			yf = ourDZone_Y;
 			
+			//Changes search algorithm depending if search zone is wider than it is long
+			if((x1-x0) > (y1-y0)){
+				navController.longX = true;
+			}
+			else{
+				navController.longX = false;
+			}
+			
 			//If top Right corner, inverts search zone so travels to top right corner instead of bvottom left
-			if ((odo.getX() > x1 && odo.getY() > y1)){
-
-				//Changes search algorithm depending if search zone is wider than it is long
-				if((x1-x0) > (y1-y0)){
-					navController.longX = true;
-				}
-				else if((x1-x0) < (y1-y0)){
-					navController.longX = false;
-				}
+			if ((corner == StartCorner.TOP_RIGHT)){
 
 				navController.inv = -1;
 
@@ -252,21 +253,31 @@ public class Controller {
 				if(!navController.xReached){
 						navController.travelTo(xf*SQUARE+15, yf*SQUARE+15, true, false);
 				}
-				objectDisplacement.release();
+			}
+			else if(corner == StartCorner.TOP_LEFT){ //travel to x0y1
+				navController.avoidanceSetter((x0*SQUARE) - 15, (y1*SQUARE) -15, false);
+				navController.travelTo(0, (y1*SQUARE)-15, true,  false);
+				if(navController.xReached){
+					navController.travelTo((x0*SQUARE)-15, (y1*SQUARE)-15, true,  false);
+				}
 
+				//Search
+				navController.search(x0*SQUARE, y1*SQUARE,x1*SQUARE,y0*SQUARE, true, flag);
+
+
+				//Leave search zone
+				task = Task.DROPPING_OFF;
+			//	navController.travelTo(x1*SQUARE, y1*SQUARE, false,  false);
+
+				//Travel to Final destination
+				navController.avoidanceSetter((xf*SQUARE)+15, (yf*SQUARE)+15, false);
+				navController.travelTo(odo.getX(), (yf*SQUARE)+15, true,  false);
+				if(navController.xReached){
+					navController.travelTo((xf*SQUARE)+15, (yf*SQUARE)+15, true,  false);
+				}
 			}
 			//If any other corner travels to x0,y0
 			else{
-				//if wider than long, changes search algorrithm according
-				if((x1-x0) > (y1-y0)){
-					navController.longX = true;
-				}
-
-
-				else if((x1-x0) < (y1-y0)){
-					navController.longX = false;
-				}
-
 				navController.avoidanceSetter((x0*SQUARE) - 15, (y0*SQUARE) -15, false);
 				navController.travelTo(0, (y0*SQUARE)-15, true,  false);
 				if(navController.xReached){
@@ -287,8 +298,11 @@ public class Controller {
 				if(navController.xReached){
 					navController.travelTo((xf*SQUARE)+15, (yf*SQUARE)+15, true,  false);
 				}
-				objectDisplacement.release();
 			}
+			navController.avoidanceSetter((xf*SQUARE) + 15, (yf*SQUARE) +15, false);
+			navController.travelTo(xf*SQUARE+15, yf*SQUARE+15, true, false);
+			objectDisplacement.release();
+		
 			break;
 		default:
 			System.out.println("Error - invalid button");

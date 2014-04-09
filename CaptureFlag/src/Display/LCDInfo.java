@@ -44,8 +44,20 @@ public class LCDInfo implements TimerListener{
 	
 	public void timedOut() { 
 		LCD.drawString("Task: " + Controller.task, 0, 0);
-		LCD.drawString("X: " + (int)(odo.getX()/30.48), 0, 1);
-		LCD.drawString("Y: " + (int)(odo.getY()/30.48), 0, 2);
+		int x = (int)(odo.getX()/30.48);
+		if (x<10){
+			LCD.drawString("X:  " + x, 0, 1);
+		}
+		else{
+			LCD.drawString("X: " + x, 0, 1);
+		}
+		int y = (int)(odo.getY()/30.48);
+		if (y<10){
+			LCD.drawString("Y:  " + y, 0, 2);
+		}
+		else{
+			LCD.drawString("Y: " + y, 0, 2);
+		}
 		int angle = (int)odo.getAngle();
 		if (angle<100){
 			LCD.drawString("H: 0" + angle, 0, 3);
