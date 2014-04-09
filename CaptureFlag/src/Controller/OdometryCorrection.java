@@ -35,7 +35,7 @@ public class OdometryCorrection extends Thread {
 			if (lightVal < LIGHT_THRESHOLD) {
 				theta = odometer.getAngle();
 				
-				if (!Navigation.isTurning){
+				if ((!Navigation.isTurning) && (!nearCorner())){
 
 					if ((theta > 315 || theta < 45 || (135 < theta && theta < 225))) { // affects y
 						y = odometer.getY();
@@ -130,6 +130,10 @@ public class OdometryCorrection extends Thread {
 			y -= SENSOR_POS_Y;
 		}
 		return y;
+	}
+
+	private boolean nearCorner() {
+		return false;
 	}
 
 	public static double getLightVal() {

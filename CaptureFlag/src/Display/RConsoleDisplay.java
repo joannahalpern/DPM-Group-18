@@ -14,22 +14,21 @@ import lejos.util.TimerListener;
  *Display on the computer 
  */
 public class RConsoleDisplay implements TimerListener{
-	public static final int LCD_REFRESH = 143;
+	public static final int LCD_REFRESH = 50;
 	private Timer lcdTimer;
 
 	private Odometer odo;
 	private TwoWheeledRobot robot;
 	private ColorSensor csFlagReader, csLineReader;
 	private UltrasonicSensor usLeft, usRight;
-	
 //	private UltrasonicPoller usPollerLeft;
 //	private UltrasonicPoller usPollerRight;
-//	private LightPoller csLinePoller;
+	private LightPoller linePoller;
 //	private LightPoller csFlagPoller;
 	
 	// arrays for displaying data
 	
-	public RConsoleDisplay(Odometer odo, TwoWheeledRobot robot) {
+	public RConsoleDisplay(Odometer odo, TwoWheeledRobot robot, LightPoller linePoller) {
 		this.odo = odo;
 		this.robot = robot;
 		this.csFlagReader = robot.getColourSensorFlag();
@@ -37,6 +36,7 @@ public class RConsoleDisplay implements TimerListener{
 		
 		this.usLeft = this.robot.getLeftUSSensor();
 		this.usRight = this.robot.getRightUSSensor();
+		this.linePoller = linePoller;
 
 		this.lcdTimer = new Timer(LCD_REFRESH, this);
 		
@@ -45,8 +45,10 @@ public class RConsoleDisplay implements TimerListener{
 	}
 	
 	public void timedOut() { 
+		RConsole.println("" + odo.getAngle() + ", " + linePoller.getColourVal());
+
 //		RConsole.println("" + odo.getX() + ", " + odo.getY() + ", " + odo.getAngle());
-		
+
 //		RConsole.println("");
 //		RConsole.println("" + Controller.task);
 //		RConsole.println("");

@@ -57,7 +57,7 @@ public class Localization extends Thread{
           
         nav.setSpeeds(0, 50); 
         while(usPollerLeft.getMedianDistance()<CLOSE_THRESHOLD || usPollerRight.getMedianDistance()<CLOSE_THRESHOLD){     } 
-        try{Thread.sleep(150);} catch (Exception e){}; 
+        try{Thread.sleep(350);} catch (Exception e){}; 
         while(usPollerLeft.getMedianDistance()>=CLOSE_THRESHOLD){    } 
         nav.setSpeeds(0, 0); 
           
@@ -122,6 +122,7 @@ public class Localization extends Thread{
         try{Thread.sleep(100);} catch (Exception e){}; 
           
         nav.setSpeeds(0,0); 
+        nav.turnTo(0, true, true);
           
         calculateCurrentPosition(); 
         calibratePosition(); 
@@ -132,12 +133,11 @@ public class Localization extends Thread{
         boolean[] update = new boolean[3]; 
         switch(Controller.corner){  
         case BOTTOM_LEFT:  
-            //PUT CODE HERE  
             break;  
         case BOTTOM_RIGHT:  
             pos[0] = odo.getX() + 304.8; 
-            pos[1] = 999; 
-            pos[2] = odo.getAngle() - 90; 
+            pos[1] = 0; 
+            pos[2] = odo.getAngle() + 270.0; 
             update[0] = true; 
             update[1] = false; 
             update[2] = true; 
@@ -159,7 +159,7 @@ public class Localization extends Thread{
         case TOP_RIGHT: 
             pos[0] = odo.getX() + 304.8; 
             pos[1] = odo.getY() + 304.8; 
-            pos[2] = odo.getAngle() + 1800; 
+            pos[2] = odo.getAngle() + 180; 
             update[0] = true; 
             update[1] = true; 
             update[2] = true; 

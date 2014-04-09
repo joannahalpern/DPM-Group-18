@@ -54,19 +54,19 @@ public class ObjectDetectIdentify {
 		double baseRed= cs.getRawColor().getRed();
 		double baseBlue = cs.getRawColor().getBlue();
 		double baseGreen = cs.getRawColor().getGreen();
-		LCD.clear();
-		LCD.drawString("baseRed  " + baseRed, 0, 4);   
-		LCD.drawString("baseBlue  " + baseBlue, 0, 5);
-		LCD.drawString("BaseGreen  " + baseGreen, 0, 6);
+//		LCD.clear();
+//		LCD.drawString("baseRed  " + baseRed, 0, 4);   
+//		LCD.drawString("baseBlue  " + baseBlue, 0, 5);
+//		LCD.drawString("BaseGreen  " + baseGreen, 0, 6);
 		if( baseRed > lowValue || baseBlue > lowValue || baseGreen > lowValue){
 			csCount++;
 			if(csCount > 5){
 				csCount = 0;
-				LCD.drawString("True", 0, 3);
+//				LCD.drawString("True", 0, 3);
 				return true;
 			}
 		}
-		LCD.drawString("false", 0, 3);
+//		LCD.drawString("false", 0, 3);
 	return false;
 	}
 
@@ -80,7 +80,7 @@ public class ObjectDetectIdentify {
 	 */
 	public Colour getColour() {
 		block = true;
-		LCD.clear();
+//		LCD.clear();
 		// Calls and returns medians for each value
 		
 		
@@ -90,17 +90,17 @@ public class ObjectDetectIdentify {
 	
 		
 		double green = cs.getRawColor().getGreen();
-		LCD.drawString("Green Value: " + green, 0, 0);
+//		LCD.drawString("Green Value: " + green, 0, 0);
 
 //		csFlagPoller.run(Colour.BLUE);
 //		double blue = csFlagPoller.getMedian()
 		double blue = cs.getRawColor().getBlue();;
-		LCD.drawString("Blue value: " + blue, 0, 1);
+//		LCD.drawString("Blue value: " + blue, 0, 1);
 
 //		csFlagPoller.run(Colour.RED);
 //		double red = csFlagPoller.getMedian();
 		double red = cs.getRawColor().getRed();
-		LCD.drawString("Red Vale: : " + red, 0, 2);
+//		LCD.drawString("Red Vale: : " + red, 0, 2);
 		/*
 		 * double green = cs.getRawColor().getGreen(); double red =
 		 * cs.getRawColor().getRed(); double blue = cs.getRawColor().getBlue();
@@ -108,33 +108,33 @@ public class ObjectDetectIdentify {
 		 */
 
 		if ((blue > green )  && (blue > 270) && (blue < 400) && (red < 250) && (red > 150) ) {
-			LCD.drawString("Dark blue: ", 0, 3);
+//			LCD.drawString("Dark blue: ", 0, 3);
 			// LCD.drawString("LCDblue: " + blue, 0, 3);
 			// LCD.drawString("LCDgreen: " + green, 0, 4);
 			// LCD.drawString("LCDred: " + red, 0, 5);
 			return Colour.DARK_BLUE;
 		} 
 		else if ( (red > green) && (green > blue) && (red > 300) && (green > 200) && (blue < 200)) {
-			LCD.drawString("Yellow: ", 0, 3);
+//			LCD.drawString("Yellow: ", 0, 3);
 			return Colour.YELLOW;
 
 		} 
 		else if ( ( (red > blue) && (red > green) && (red > 400) ) && (blue < 200) && (green < 200)) {
-			LCD.drawString("Red: ", 0, 3);
+//			LCD.drawString("Red: ", 0, 3);
 			return Colour.RED;
 
 		} 
 		else if ( ((red > 450) && (green > 400) && (blue > 450))  && ((blue +40) > red	)	) { 
-			LCD.drawString("Light Blue: ", 0, 3);
+//			LCD.drawString("Light Blue: ", 0, 3);
 			return Colour.LIGHT_BLUE;
 		} 
 		else if ((red > blue) && (red > green) && (red > 500 ) && (green > 400) && (blue > 400)){ 		 // ((red && green && blue) >300) && ( (red + 20) > (green &&
 					// blue) )
-			LCD.drawString("White: ", 0, 3);
+//			LCD.drawString("White: ", 0, 3);
 			return Colour.WHITE;
 		}
 		else{
-			LCD.drawString("Nothing", 0, 3);
+//			LCD.drawString("Nothing", 0, 3);
 			block = false;
 			return Colour.OFF;
 		}

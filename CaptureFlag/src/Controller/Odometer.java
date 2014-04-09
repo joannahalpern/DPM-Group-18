@@ -116,10 +116,11 @@ public class Odometer implements TimerListener {
 	
 	// static 'helper' methods
 	public static double fixDegAngle(double angle) {		
-		if (angle < 0.0)
-			angle = 360.0 + (angle % 360.0);
-		
-		return angle % 360.0;
+		if (angle < 0.0){
+			angle += 360.0;
+		}
+		angle = angle % 360.0;
+		return angle;
 	}
 	
 	public static double minimumAngleFromTo(double a, double b) {

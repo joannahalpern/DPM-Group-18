@@ -12,7 +12,7 @@ public class Navigation {
 	// Constants for navigation
 	private final double ACCEPTABLE_THETA_ERROR = Math.PI / 110;
 	private final double ACCEPTABLE_DISTANCE_ERROR = 1;
-	private final int TURNING_SPEED = 300;
+	private final int TURNING_SPEED = 330;
 	private final int FORWARD_SPEED = 330;
 	// private final int ACCELERATION = 3000;
 

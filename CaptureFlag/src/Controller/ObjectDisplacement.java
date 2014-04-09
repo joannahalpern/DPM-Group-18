@@ -21,7 +21,7 @@ public class ObjectDisplacement {
 	
 	public void run(){
 		
-		try { Thread.sleep((250)); } catch(Exception e){}
+		try { Thread.sleep((450)); } catch(Exception e){}
 		clamp.setSpeed(CLAMP_SPEED);
 		clamp.forward();
 		clamp.rotate(-160);
@@ -29,4 +29,12 @@ public class ObjectDisplacement {
 		return;
 		
 	}
+	public void release(){
+		clamp.setSpeed(CLAMP_SPEED);
+		clamp.forward();
+		clamp.rotate(160);
+		clamp.stop();
+	}
+		
+	
 }

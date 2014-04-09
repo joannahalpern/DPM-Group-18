@@ -1,18 +1,5 @@
-/*
- * To test:
- *	-starting from all 4 corners 
- *	-ourZone being 2*6 vs 6*2
- *
- *	-integrating odo correction
- *
- *redFlag, lineval
- *  
- *  RConsole
- *  	-goto C:\Program Files (x86)\leJOS NXJ\bin\nxjconsoleviewer
- *  on Nancy's comp go to: -goto D:\Program Files\leJOS NXJ\bin\nxjconsoleviewer
- */
+package Testing;
 
-package Controller;
 
 import bluetooth.*;
 import lejos.geom.Point;
@@ -27,26 +14,27 @@ import lejos.nxt.UltrasonicSensor;
 import lejos.nxt.comm.RConsole;
 import Display.*;
 import Robot.*;
+import Controller.*;
 
 /**
  * This is the main controller. Everything is controlled from here
  *
  */
-public class Controller {
+public class LineTest {
 	
 	//When bluetooth is not enabled, all of the values should be set here
 	private static boolean bluetoothEnabled = false;
-	public static StartCorner corner = StartCorner.TOP_RIGHT;
-	public static int ourZoneLL_X = 3;
-	public static int ourZoneLL_Y = 4;
+	public static StartCorner corner = StartCorner.BOTTOM_RIGHT;
+	public static int ourZoneLL_X = 2;
+	public static int ourZoneLL_Y = 2;
 	public static int ourZoneUR_X = 5;
-	public static int ourZoneUR_Y = 7;
+	public static int ourZoneUR_Y = 4;
 	public static int opponentZoneLL_X;
 	public static int opponentZoneLL_Y;
 	public static int opponentZoneUR_X;
 	public static int opponentZoneUR_Y;
-	public static int ourDZone_X = 8;
-	public static int ourDZone_Y = 4;
+	public static int ourDZone_X = 1;
+	public static int ourDZone_Y = 1;
 	public static int opponentDZone_X;
 	public static int opponentDZone_Y;
 	public static int ourFlag = 1; 
@@ -171,8 +159,8 @@ public class Controller {
 		
 		NavController navController = new NavController(odo, fuzzyPinkRobot,objectDisplacement, nav, objectDetection, ostacleAvoidance);
 		
-		//initializeRConsole();
-		//RConsoleDisplay rcd = new RConsoleDisplay(odo, fuzzyPinkRobot, csPollerLineReader);
+//		initializeRConsole();
+//		RConsoleDisplay rcd = new RConsoleDisplay(odo, fuzzyPinkRobot, csPollerLineReader);
 
 		int option = 0;
 		while (option == 0)
@@ -187,108 +175,7 @@ public class Controller {
 			task = Task.LOCALIZING;
 			localizer.doUSLocalization();
 			localizer.doLSLocalization();
-			//Start OdoCorrection
-//			odoCorrection.start();
 			
-			//Full Search and Nav
-			task = Task.NAVIGATING;
-			int x0,y0,x1,y1;
-			int xf, yf;
-			final double SQUARE = 30.48;
-			Colour flag = ourFlagColour;
-			
-			
-			x0 = ourZoneLL_X;
-			y0 = ourZoneLL_Y;
-			x1 = ourZoneUR_X;
-			y1 = ourZoneUR_Y;
-			xf = ourDZone_X; 
-			yf = ourDZone_Y;
-			
-			//If top Right corner, inverts search zone so travels to top right corner instead of bvottom left
-			if ((odo.getX() > x1 && odo.getY() > y1)){
-
-				//Changes search algorithm depending if search zone is wider than it is long
-				if((x1-x0) > (y1-y0)){
-					navController.longX = true;
-				}
-				else if((x1-x0) < (y1-y0)){
-					navController.longX = false;
-				}
-
-				navController.inv = -1;
-
-				//Find zone
-				//Avoidance setter sets destiantion of TravelTo and original heading
-				navController.avoidanceSetter(x1*SQUARE +15, y1*SQUARE +15, false);
-				//Travel to call travels along y until object
-				navController.travelTo(0, y1*SQUARE + 15, true,  false);
-
-				//If robot never encounters obstacles, will then travel to destination
-				if(navController.xReached){
-					navController.travelTo(x0*SQUARE+15, y0*SQUARE+15, true,  false);
-				}
-
-				//Search and Exit zone    
-				task = Task.SEARCHING;
-				//Iniaties search, travels aroudn edge of search zone, then through middle, and then gradually increases ntil it finds the falg
-				navController.search(x1*SQUARE, y1*SQUARE,x0*SQUARE,y0*SQUARE, true, ourFlagColour);
-
-
-				//Travels out of the zone without obstacle avoidance
-				//This should be improved, but not neccesary
-				//May have to travel back through zone ot get to final destnation
-				//navController.travelTo(x0*SQUARE, y0*SQUARE, false,  false);
-
-				//Travel to destination
-				task = Task.DROPPING_OFF;
-				Sound.beepSequenceUp();
-				//Sets final values for navitgation
-				navController.avoidanceSetter((xf*SQUARE) + 15, (yf*SQUARE) +15, false);
-				//Travels along y axis until reaches an obstacle or yf
-				navController.travelTo(odo.getX(), (yf*SQUARE)+15, true, false);
-				//If never turns need to reach final destination
-				//Again, this shoudl probably be in an if statement
-				if(!navController.xReached){
-						navController.travelTo(xf*SQUARE+15, yf*SQUARE+15, true, false);
-				}
-				objectDisplacement.release();
-
-			}
-			//If any other corner travels to x0,y0
-			else{
-				//if wider than long, changes search algorrithm according
-				if((x1-x0) > (y1-y0)){
-					navController.longX = true;
-				}
-
-
-				else if((x1-x0) < (y1-y0)){
-					navController.longX = false;
-				}
-
-				navController.avoidanceSetter((x0*SQUARE) - 15, (y0*SQUARE) -15, false);
-				navController.travelTo(0, (y0*SQUARE)-15, true,  false);
-				if(navController.xReached){
-					navController.travelTo((x0*SQUARE)-15, (y0*SQUARE)-15, true,  false);
-				}
-
-				//Search
-				navController.search(x0*SQUARE, y0*SQUARE,x1*SQUARE,y1*SQUARE, true, flag);
-
-
-				//Leave search zone
-				task = Task.DROPPING_OFF;
-			//	navController.travelTo(x1*SQUARE, y1*SQUARE, false,  false);
-
-				//Travel to Final destination
-				navController.avoidanceSetter((xf*SQUARE)+15, (yf*SQUARE)+15, false);
-				navController.travelTo(odo.getX(), (yf*SQUARE)+15, true,  false);
-				if(navController.xReached){
-					navController.travelTo((xf*SQUARE)+15, (yf*SQUARE)+15, true,  false);
-				}
-				objectDisplacement.release();
-			}
 			break;
 		default:
 			System.out.println("Error - invalid button");

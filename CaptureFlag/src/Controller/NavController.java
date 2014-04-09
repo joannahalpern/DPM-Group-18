@@ -34,8 +34,9 @@ public class NavController {
 	private boolean turnON = false;
 
 	// Avoidance Status variables
-	private boolean xReached;
-	private boolean yReached;
+	public boolean xReached;
+	public boolean yReached;
+	public boolean xfReached;
 	private boolean xAxis;
 	private boolean exit;
 	private int searchCount = 0;

@@ -77,8 +77,8 @@ public class ObstacleAvoidance {
 
 			usLeftDistance = usLeft.getDistance();
 			usRightDistance = usRight.getDistance();
-			LCD.drawString("usLeft: " + usLeftDistance, 0, 5);
-			LCD.drawString("usRight: " + usRightDistance, 0, 6);
+//			LCD.drawString("usLeft: " + usLeftDistance, 0, 5);
+//			LCD.drawString("usRight: " + usRightDistance, 0, 6);
 			if (checkObstacle) {
 				for (int i = 0; i < 3; i++) {
 					usLeftDistance = usLeft.getDistance();
@@ -122,9 +122,9 @@ public class ObstacleAvoidance {
 			while (test) {
 				usLeftDistance = usLeft.getDistance();
 				usRightDistance = usRight.getDistance();
-				LCD.clear();
-				LCD.drawString("usLeft: " + usLeftDistance, 0, 5);
-				LCD.drawString("usRight: " + usRightDistance, 0, 6);
+//				LCD.clear();
+//				LCD.drawString("usLeft: " + usLeftDistance, 0, 5);
+//				LCD.drawString("usRight: " + usRightDistance, 0, 6);
 
 			}
 			return false;

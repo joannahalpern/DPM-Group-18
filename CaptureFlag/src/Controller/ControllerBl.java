@@ -1,18 +1,3 @@
-/*
- * To change:
-
- * 	-make and TestNav___ for each thing and replace folder for each
- *  -check that no more arrays
- *  
- * 	-email Connor to test nav on TestNav
- *  email team to name well and alt-shift-r and ctrl-d
- *  email team about RConsole
- *  email Ben about detection and that we pollers
- *  
- *  RConsole
- *  	-goto C:\Program Files (x86)\leJOS NXJ\bin\nxjconsoleviewer
- */
-
 package Controller;
 
 import bluetooth.*;
@@ -33,27 +18,29 @@ import Robot.*;
  * This is the main controller. Everything is controlled from here
  *
  */
-public class ControllerBluetooth {
-
+public class ControllerBl {
+	
+	//When bluetooth is not enabled, all of the values should be set here
 	private static boolean bluetoothEnabled = true;
 	public static StartCorner corner = StartCorner.BOTTOM_LEFT;
-	public static int ourZoneLL_X = 4;
-	public static int ourZoneLL_Y = 4;
-	public static int ourZoneUR_X = 6;
-	public static int ourZoneUR_Y = 6;
+	public static int ourZoneLL_X = 2;
+	public static int ourZoneLL_Y = 2;
+	public static int ourZoneUR_X = 5;
+	public static int ourZoneUR_Y = 4;
 	public static int opponentZoneLL_X;
 	public static int opponentZoneLL_Y;
 	public static int opponentZoneUR_X;
 	public static int opponentZoneUR_Y;
-	public static int ourDZone_X;
-	public static int ourDZone_Y;
+	public static int ourDZone_X = 1;
+	public static int ourDZone_Y = 1;
 	public static int opponentDZone_X;
 	public static int opponentDZone_Y;
-	public static int ourFlag = 1;
+	public static int ourFlag = 1; 
 	public static int opponentFlag;
+	public static Task task = Task.LOCALIZING;
 	
 	//our flag
-	static Colour ourFlagColour;
+	public static Colour ourFlagColour;
 	
 	/* Create an object that can be used for synchronization across threads. */
 	static class theLock extends Object {//this is a lock
@@ -154,7 +141,7 @@ public class ControllerBluetooth {
 		UltrasonicPoller usPollerLeft = new UltrasonicPoller(usLeft);
 		UltrasonicPoller usPollerRight = new UltrasonicPoller(usRight);
 		
-		LightPoller csPollerLineReader = new LightPoller(csLineReader, Colour.BLUE);
+		LightPoller csPollerLineReader = new LightPoller(csLineReader, Colour.GREEN);
 
 		TwoWheeledRobot fuzzyPinkRobot = new TwoWheeledRobot(Motor.A, Motor.C, Motor.B, usLeft, usRight, csFlagReader, csLineReader);
 		Odometer odo = new Odometer(fuzzyPinkRobot, true);
@@ -173,90 +160,118 @@ public class ControllerBluetooth {
 //		initializeRConsole();
 //		RConsoleDisplay rcd = new RConsoleDisplay(odo, fuzzyPinkRobot);
 
+			LCD.clear();
+			LCDInfo lcd = new LCDInfo(odo, fuzzyPinkRobot, csPollerLineReader);
 			
-//////////----MAIN CODE-------//////////		
-		LCDInfo lcd = new LCDInfo(odo, fuzzyPinkRobot, csPollerLineReader);
-		
-		//Localization
-		localizer.doUSLocalization();
-		localizer.doLSLocalization();
-		
-		//Start OdoCorrection
-		odoCorrection.start();
-		
-		//Full Search and Nav
-		int x0,y0,x1,y1;
-		int xf, yf;
-		double square = 30.48;
-		Colour flag = Colour.RED;
-		
-		x0 = ourZoneLL_X;
-		y0 = ourZoneLL_Y;
-		x1 = ourZoneUR_X;
-		y1 = ourZoneUR_Y;
-		xf = ourDZone_X; 
-		yf = ourDZone_Y;
-		
-		//If top Right corner
-		if ((odo.getX() > x1 && odo.getY() > y1)){
-			if((x1-x0) > (y1-y0)){
-				navController.longX = true;
-			}
-			else if((x1-x0) < (y1-y0)){
-				navController.longX = false;
-			}
+			//Localization
+			task = Task.LOCALIZING;
+			localizer.doUSLocalization();
+			localizer.doLSLocalization();
+			//Start OdoCorrection
+//			odoCorrection.start();
 			
-			navController.inv = -1;
+			//Full Search and Nav
+			task = Task.NAVIGATING;
+			int x0,y0,x1,y1;
+			int xf, yf;
+			final double SQUARE = 30.48;
+			Colour flag = ourFlagColour;
 			
-			//Find zone
-			navController.avoidanceSetter(x1*square -10, y1*square -10, false);
-			navController.travelTo(0, y1*square - 10, true,  false);
-			navController.travelTo(x0*square-10, y0*square-10, true,  false);
+			
+			x0 = ourZoneLL_X;
+			y0 = ourZoneLL_Y;
+			x1 = ourZoneUR_X;
+			y1 = ourZoneUR_Y;
+			xf = ourDZone_X; 
+			yf = ourDZone_Y;
+			
+			//If top Right corner, inverts search zone so travels to top right corner instead of bvottom left
+			if ((odo.getX() > x1 && odo.getY() > y1)){
 
-			//Search and Exit zone
-			navController.search(x1*square, y1*square,x0*square,y0*square, true, flag);
-			
-			navController.travelTo(x0*square, y0*square, false,  false);
-			
-			//Travel to destination
-			Sound.beepSequenceUp();
-			navController.avoidanceSetter(xf*square, yf*square, false);
-			navController.travelTo(odo.getX(), yf*square, true,  false);
-			navController.travelTo(xf*square, yf*square, true,  false);
-			
-		}
-		//If any other corner
-		else{
-			
-			if((x1-x0) > (y1-y0)){
-				navController.longX = true;
+				//Changes search algorithm depending if search zone is wider than it is long
+				if((x1-x0) > (y1-y0)){
+					navController.longX = true;
+				}
+				else if((x1-x0) < (y1-y0)){
+					navController.longX = false;
+				}
+
+				navController.inv = -1;
+
+				//Find zone
+				//Avoidance setter sets destiantion of TravelTo and original heading
+				navController.avoidanceSetter(x1*SQUARE +15, y1*SQUARE +15, false);
+				//Travel to call travels along y until object
+				navController.travelTo(0, y1*SQUARE + 15, true,  false);
+
+				//If robot never encounters obstacles, will then travel to destination
+				if(navController.xReached){
+					navController.travelTo(x0*SQUARE+15, y0*SQUARE+15, true,  false);
+				}
+
+				//Search and Exit zone    
+				task = Task.SEARCHING;
+				//Iniaties search, travels aroudn edge of search zone, then through middle, and then gradually increases ntil it finds the falg
+				navController.search(x1*SQUARE, y1*SQUARE,x0*SQUARE,y0*SQUARE, true, ourFlagColour);
+
+
+				//Travels out of the zone without obstacle avoidance
+				//This should be improved, but not neccesary
+				//May have to travel back through zone ot get to final destnation
+				task = Task.DROPPING_OFF;
+				navController.travelTo(x0*SQUARE, y0*SQUARE, false,  false);
+
+				//Travel to destination
+				Sound.beepSequenceUp();
+				//Sets final values for navitgation
+				navController.avoidanceSetter(xf*SQUARE, yf*SQUARE, false);
+				//Travels along y axis until reaches an obstacle or yf
+				navController.travelTo(odo.getX(), yf*SQUARE, true,  false);
+				//If never turns need to reach final destination
+				//Again, this shoudl probably be in an if statement
+				if(!navController.xReached){
+						navController.travelTo(xf*SQUARE, yf*SQUARE, true,  false);
+				}
+				objectDisplacement.release();
+
 			}
-			
-			
-			else if((x1-x0) < (y1-y0)){
-				navController.longX = false;
+			//If any other corner travels to x0,y0
+			else{
+				//if wider than long, changes search algorrithm according
+				if((x1-x0) > (y1-y0)){
+					navController.longX = true;
+				}
+
+
+				else if((x1-x0) < (y1-y0)){
+					navController.longX = false;
+				}
+
+				navController.avoidanceSetter(x0*SQUARE - 15, y0*SQUARE -15, false);
+				navController.travelTo(0, y0*SQUARE-15, true,  false);
+				if(navController.xReached){
+					navController.travelTo(x0*SQUARE-15, y0*SQUARE-15, true,  false);
+				}
+
+				//Search
+				navController.search(x0*SQUARE, y0*SQUARE,x1*SQUARE,y1*SQUARE, true, flag);
+
+
+				//Leave search zone
+				navController.travelTo(x1*SQUARE, y1*SQUARE, false,  false);
+
+				//Travel to Final destination
+				navController.avoidanceSetter(xf*SQUARE, yf*SQUARE, false);
+				navController.travelTo(odo.getX(), yf*SQUARE, true,  false);
+				if(navController.xReached){
+					navController.travelTo(xf*SQUARE, yf*SQUARE, true,  false);
+				}
 			}
-			
-			navController.avoidanceSetter(x0*square - 10, y0*square -10, false);
-			navController.travelTo(0, y0*square-10, true,  false);
-			navController.travelTo(x0*square-10, y0*square-10, true,  false);
-			//Search
-			navController.search(x0*square, y0*square,x1*square,y1*square, true, flag);
-			
-			
-			//Leave search zone
-			navController.travelTo(x1*square, y1*square, false,  false);
-			
-			//Travel to Final destination
-			navController.avoidanceSetter(xf*square, yf*square, false);
-			navController.travelTo(odo.getX(), yf*square, true,  false);
-			navController.travelTo(xf*square, yf*square, true,  false);
-		}
 	}
-
 	//for testing
 	private static void initializeRConsole() {
 		RConsole.openUSB(20000);
+//		RConsole.openBluetooth(20000);
 		RConsole.println("Connected");
 	}
 }
