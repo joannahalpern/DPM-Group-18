@@ -85,19 +85,21 @@ public class NavController {
 	}
 
 	/**
-	 * Travels to x,y Avoid sets obstacle avoidance on
+	 * Main Method for navigation. Used for obstacle avoidance and Search and objectDetection. 
+	 * Calls other calsses with each iteration of the Navigation loop. 
 	 * 
+	 * Avoid boolean runs iniaties avoidance methods.
+	 * Search initates object detection methods
+	 *
 	 * 
 	 * @param x
-	 *            : final x coord
+	 *            : final x coord. Will travel until x reaches this destiantion
 	 * @param y
-	 *            : final y coord
+	 *            : final y coordinate, will travel untill y reaches this destinatiuon
 	 * @param avoid
-	 *            : true turns avoid on
-	 * @param turn
-	 *            : true sets turn on
+	 *            : true enters avoidance loops for obstacle avoidance. 
 	 * @param search
-	 *            : true sets search on
+	 *            : true sets search on for object detection
 	 */
 	public void travelTo(double x, double y, boolean avoid,
 			boolean search) {
@@ -222,6 +224,21 @@ public class NavController {
 	}
 
 	// SEARCH Methods
+	/** Iniates search algorithm. Calls multiple travelTo methods to traverse aroudn inputed search zone. 
+	 * Continues to search until the flag is found, increasing the serarch zone with every iteration
+	 * 
+	 * 
+	 * Inputs are the vlaues of the search zone
+ 	* @param x0
+	 *            : bottom left x coordiante
+	 * @param y0
+	 *            : botom left y coordinate
+	 * @param x1
+	 *            : top left x coordinate
+	 * @param y1  : top left y coordiante of search zone
+	 * 	
+	 * 
+	 */
 	public void search(double x0, double y0, double x1, double y1,
 			boolean setFlag, Colour flagInput) {
 
@@ -308,9 +325,9 @@ public class NavController {
 
 	// obstacle Avoidance Methods
 
-	/**
-	 * Checks if there is an obstacle, if so turns again towards heading with an
-	 * offset of Lcorretciton. Used to avoid L-shaped obstacles
+	/**Method called when travelTo is called. Used to detect if there is an object immediatly infornt of the robot. 
+	 * If there is an obstacle, turns again away from destination and travels distance lcorreciton then turns and checks again
+	 * Used to avoid L-shaped obstacles
 	 * 
 	 * @return
 	 */
@@ -401,7 +418,10 @@ public class NavController {
 
 	/**
 	 * Called when robot reaches x0 or y0 axis, initiates avoidance by moving
-	 * robot Lcorrection distance off axis
+	 * robot Lcorrection distance off axis then continuing in current direction 
+	 * Used for when an an obstacel is on the axis of the destination. 
+	 * 
+	 * 
 	 * 
 	 * @return
 	 */
@@ -480,7 +500,7 @@ public class NavController {
 	 *            : final x coordinate
 	 * @param y1
 	 *            : final y coordinate
-	 * @param axis
+	 * @param axis : direction of inital travel, true if along x axis, false if along y axis
 	 */
 	public void avoidanceSetter(double x1, double y1, boolean axis) {
 		x0 = x1;
