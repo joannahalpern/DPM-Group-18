@@ -3,8 +3,12 @@
 
 import java.util.Queue;
 import lejos.nxt.UltrasonicSensor;
-
-//This code is what was given in lab 1 except that we added myMutex
+/**
+ * This class puts all of the ultrasonic values in a queue. It can then get the mean and median
+ * values of the queue.
+ * @author Joanna
+ *
+ */
 public class UltrasonicPoller extends Thread{
 	public static final int QUEUE_SIZE = 5;
 	public static final long POLLING_PERIOD = 25;
@@ -44,7 +48,10 @@ public class UltrasonicPoller extends Thread{
 			distancesQueue.addElement(9999.9);
 		}
 	}
-	
+	/**
+	 * This returns the mean value of the queue
+	 * @return
+	 */
 	public double getMeanDistance(){
 		Double sum = 0.0;
 		Double temp = 0.0;
@@ -57,6 +64,9 @@ public class UltrasonicPoller extends Thread{
 		double mean = (double) (sum/QUEUE_SIZE); //mean formula
 		return mean;
 	}
+	/**
+	 * This method uses QuickSort to sort all of the values in the queue and then returns the median value
+	 */
 	public double getMedianDistance(){
 		double array[] = new double[QUEUE_SIZE];
 		Double temp;
