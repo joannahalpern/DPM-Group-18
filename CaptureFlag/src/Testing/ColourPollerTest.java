@@ -47,9 +47,9 @@ public class ColourPollerTest {
 		
 		ObstacleAvoidance obstacleAvoidance =  new ObstacleAvoidance(fuzzyPinkRobot, nav, odo);
 		ObjectDisplacement objectDisplacement = new ObjectDisplacement(fuzzyPinkRobot,nav);
-		ObjectDetectIdentify objectDetection = new ObjectDetectIdentify(fuzzyPinkRobot, nav, objectDisplacement, colourDetector);
+		ObjectDetectIdentify objectDetection = new ObjectDetectIdentify(fuzzyPinkRobot, nav, objectDisplacement);
 
-		NavController navController = new NavController(odo, fuzzyPinkRobot,objectDisplacement, colourDetector, nav, objectDetection, obstacleAvoidance);
+		NavController navController = new NavController(odo, fuzzyPinkRobot,objectDisplacement, nav, objectDetection, obstacleAvoidance);
 		OdometryCorrection odoCorection = new OdometryCorrection(odo, csPollerLineReader);
 		//
 		// Localization localizer = new Localization(odo, nav, usPollerLeft,

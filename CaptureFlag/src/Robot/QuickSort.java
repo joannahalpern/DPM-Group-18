@@ -1,9 +1,9 @@
 package Robot;
 
 /**
- * Working and tested sorting algorithm to sort any double array
+ * Working and tested sorting algorithm to sort any double array.
  * 
- * original code taken and then tweaked from:
+ * Original code taken and then tweaked from:
  * http://codereview.stackexchange.com/questions/4022/java-implementation-of-quick-sort
  */
 public class QuickSort {

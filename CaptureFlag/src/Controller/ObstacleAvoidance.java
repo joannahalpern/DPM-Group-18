@@ -7,11 +7,8 @@ import Display.*;
 import Robot.*;
 
 /**
- * While Lab5.obstacleAvoidance == true:
- * 
- * if us sensor sees something within threshold, it stops navigation (navigation = false), and turns right.
- * It then checks if something's in front, if it is it turns right again. If not, moves forward an amount d (d should be bigger than a block),
- * then it sets navigation to true again. (some of this should be in a synchronized lock)
+ * This class deals with avoiding wooden blocks. Since the ultrasonic sensors are higher than the
+ * styrofoam blocks, it only avoids wooden blocks. (The styrofoam blocks funnel right under the robot.
  */
 public class ObstacleAvoidance {
 	private NXTRegulatedMotor leftMotor, rightMotor;

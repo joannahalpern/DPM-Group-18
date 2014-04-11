@@ -57,13 +57,13 @@ public class OdoCorTest {
 			
 		switch(option) {
 			case Button.ID_LEFT:
-				LCDInfo lcd = new LCDInfo(odo, fuzzyPinkRobot);
+				LCDInfo lcd = new LCDInfo(odo, fuzzyPinkRobot, csPollerLineReader);
 				
 			//PUT MAIN CODE HERE
-				nav.travelTo(0,90, false, false);
-				nav.travelTo(30, 90, false, false);
-				nav.travelTo(30, 0 , false,  false);
-				nav.travelTo(0, 0 , false,  false);
+				nav.travelTo(0,90);
+				nav.travelTo(30, 90);
+				nav.travelTo(30, 0);
+				nav.travelTo(0, 0);
 				
 				break;
 			default:

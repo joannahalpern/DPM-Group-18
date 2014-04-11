@@ -34,7 +34,7 @@ public class ObjectDisplacementTest {
 //		UltrasonicPoller usPollerLeft = new UltrasonicPoller(usLeft);
 //		UltrasonicPoller usPollerRight = new UltrasonicPoller(usRight);
 //		
-//		LightPoller csPollerLineReader = new LightPoller(csLineReader, Colour.BLUE);
+		LightPoller csPollerLineReader = new LightPoller(csLineReader, Colour.BLUE);
 //		LightPoller colourDetector = new LightPoller(csFlagReader, Colour.BLUE);
 //
 		TwoWheeledRobot fuzzyPinkRobot = new TwoWheeledRobot(Motor.A, Motor.C, Motor.B, usLeft, usRight, csFlagReader, csLineReader);
@@ -50,7 +50,7 @@ public class ObjectDisplacementTest {
 		
 //		initializeRConsole();
 //		RConsoleDisplay rcd = new RConsoleDisplay(odo, colourDetector, usPollerLeft);
-		LCDInfo lcd = new LCDInfo(odo, fuzzyPinkRobot);
+		LCDInfo lcd = new LCDInfo(odo, fuzzyPinkRobot, csPollerLineReader);
 
 		int option = 0;
 		while (option == 0)

@@ -51,7 +51,7 @@ public class LocalizationTest {
 		
 //		initializeRConsole();
 //		RConsoleDisplay rcd = new RConsoleDisplay(odo, colourDetector, usPollerLeft);
-		LCDInfo lcd = new LCDInfo(odo, fuzzyPinkRobot, localizer, usPollerLeft, usPollerRight, csLineReader);
+//		LCDInfo lcd = new LCDInfo(odo, fuzzyPinkRobot, localizer, usPollerLeft, usPollerRight, csLineReader);
 
 		int option = 0;
 		while (option == 0)

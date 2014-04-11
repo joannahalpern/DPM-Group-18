@@ -3,6 +3,9 @@ package Controller;
 import Robot.*;
 import lejos.nxt.*;
 
+/**
+ * Instead of using a thread, the NavController uses recursion to control ObstacleAvoidance
+ */
 public class NavController {
 	// Initializers
 	private TwoWheeledRobot robot;

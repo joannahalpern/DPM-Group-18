@@ -49,8 +49,8 @@ public class ObjectDetectionTest {
 		
 		
 		initializeRConsole();
-		RConsoleDisplay rcd = new RConsoleDisplay(odo, colourDetector, usPollerLeft);
-		LCDInfo lcd = new LCDInfo(odo, fuzzyPinkRobot);
+//		RConsoleDisplay rcd = new RConsoleDisplay(odo, colourDetector, usPollerLeft);
+//		LCDInfo lcd = new LCDInfo(odo, fuzzyPinkRobot);
 
 		int option = 0;
 		while (option == 0)

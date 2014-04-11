@@ -4,6 +4,13 @@ package Controller;
 import lejos.nxt.Sound;
 import Robot.*;
 
+/**
+ * Corrects the odometer every time the robot is detects a line as long as it is not turning.
+ * If the robot is headed in the x direction, only the x odometer reading will be corrected 
+ * and same with y.
+ * @author Joanna
+ *
+ */
 public class OdometryCorrection extends Thread { //How frequently the correction iterates in ms
 	private static final long CORRECTION_PERIOD = 10;
 	private Odometer odometer;

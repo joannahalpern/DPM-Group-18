@@ -46,9 +46,9 @@ public class ObjectDetectTest {
 //		Localization localizer = new Localization(odo, nav, usPollerLeft, usPollerRight, csPollerLineReader);
 //		
 		ObjectDisplacement objectDisplacement = new ObjectDisplacement(fuzzyPinkRobot, nav);
-		ObjectDetectIdentify objectDetection = new ObjectDetectIdentify(fuzzyPinkRobot, nav, objectDisplacement, colourDetector);
+		ObjectDetectIdentify objectDetection = new ObjectDetectIdentify(fuzzyPinkRobot, nav, objectDisplacement);
 		
-		NavController navController = new NavController(odo, fuzzyPinkRobot,objectDisplacement, colourDetector, nav, objectDetection);
+//		NavController navController = new NavController(odo, fuzzyPinkRobot,objectDisplacement, colourDetector, nav, objectDetection);
 //		initializeRConsole();
 //		RConsoleDisplay rcd = new RConsoleDisplay(odo, colourDetector, usPollerLeft);
 //		LCDInfo lcd = new LCDInfo(odo, fuzzyPinkRobot);
@@ -73,7 +73,7 @@ public class ObjectDetectTest {
 
 					option = Button.ID_ENTER;
 //						objectDetection.isBlock();
-						navController.search(0,0,60,60);
+//						navController.search(0,0,60,60);
 					
 					
 					}

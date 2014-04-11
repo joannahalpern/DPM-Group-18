@@ -1,12 +1,13 @@
 package Controller;
 
 
-import Display.*;
 import Robot.*;
 import lejos.util.Timer;
 import lejos.util.TimerListener;
-//Odometer using theta in degrees
-
+/**
+ *Keeps track of the robots position. This includes x, y, and the angle in degrees.
+ *0 degrees it forward and it increases clockwise
+ */
 public class Odometer implements TimerListener { 
 	public static final int DEFAULT_PERIOD = 25;
 	private TwoWheeledRobot robot;

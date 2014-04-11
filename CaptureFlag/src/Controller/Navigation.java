@@ -2,7 +2,10 @@ package Controller;
 
 import Robot.*;
 import lejos.nxt.*;
-  
+
+/**
+ * Controls the left and right motors of the robot.
+ */
 public class Navigation {
 	// Initializers
 	private NXTRegulatedMotor leftMotor, rightMotor;
