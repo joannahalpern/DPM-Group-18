@@ -3,6 +3,12 @@ package Robot;
 import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.*;
 
+/**
+ * This contains all of the 2 motors for the wheels, the motor for the claw, The left and right 
+ * ultrasonic sensors, the flag reader colour sensor and the line reader colour sensor.
+ * @author Joanna
+ *
+ */
 public class TwoWheeledRobot {
 	public static final double DEFAULT_LEFT_RADIUS = 1.6;
 	public static final double DEFAULT_RIGHT_RADIUS = 1.6;
