@@ -25,7 +25,7 @@ public class OdometryCorrection extends Thread { //How frequently the correction
 		SENSOR_POS_Y = -1 * TwoWheeledRobot.GROUND_LS_Y_OFFSET;
 	}
 	/**
-	 * If a line is detected when the robot is not, the odometer will be updated to a more accurate value.
+	 * If a line is detected when the robot is not turning, the odometer will be updated to a more accurate value.
 	 * If it's headed in the x direction, only the y odometer reading will be correctedd and vice versa.
 	 */
 	public void run() {
