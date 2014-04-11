@@ -5,7 +5,12 @@ import java.util.Queue;
 import Controller.*;
 import lejos.nxt.ColorSensor;
 
-
+/**
+ * This is class is used to accurately detect lines and it uses the method isLine() to do this. 
+ * This line detection is then used in both odometry correction and localization
+ * @author Joanna
+ *
+ */
 public class LightPoller extends Thread{
 	public static final int LINE_THRESHOLD_DIFFERENCE = 68;
 //	public static final double LINE_THRESHOLD = Localization.intlReading-LINE_THRESHOLD_DIFFERENCE;
@@ -23,7 +28,10 @@ public class LightPoller extends Thread{
 		this.colour = colour;
 		start();
 	}
-
+	/**
+	 * The way the light poller works is that each POLLING_PERIOD, the colour sensor records 
+	 * the light value from the floor. It saves that value as well as the two previous values.
+	 */
 	public void run() {
 		long correctionStart, correctionEnd;
 		setFloodLight(colour);
@@ -77,7 +85,11 @@ public class LightPoller extends Thread{
 	public double getColourVal() {
 		return colourVal;
 	}
-
+	/**
+	 * A line is detected if there is a drop followed by a rise, and either the drop or the rise 
+	 * is greater than LINE_TRESHOLD_DIFFERENCE.
+	 * @return
+	 */
 	public boolean isLine(){
 		double negativeDiff = value2-value1;
 		double positiveDiff = value3-value2;
