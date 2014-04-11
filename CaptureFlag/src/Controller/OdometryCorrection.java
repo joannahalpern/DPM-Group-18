@@ -116,7 +116,7 @@ public class OdometryCorrection extends Thread { //How frequently the correction
 	 * axle by 4.5cm by adding or subtracting that value to x or y, based on the
 	 * rotation of the robot (theta)
 	 */
-	public double centerPositionX(double x, double theta) {
+	private double centerPositionX(double x, double theta) {
 		double centerCorrection = SENSOR_POS_X;
 		if (isPositiveXDirection(theta)) { // x is changing positively
 			x -= centerCorrection;
@@ -126,7 +126,7 @@ public class OdometryCorrection extends Thread { //How frequently the correction
 		return x;
 	}
 
-	public double centerPositionY(double y, double theta) {
+	private double centerPositionY(double y, double theta) {
 		double centerCorrection = SENSOR_POS_Y;
 		if (isPositiveYDirection(theta)) { // y is changing positively
 			y -= centerCorrection;
@@ -139,7 +139,7 @@ public class OdometryCorrection extends Thread { //How frequently the correction
 	/**
 	 * The inversePosition functions do the exact inverse of the centerPostition functions for x and y
 	 */
-	public double inversePositionX(double x, double theta) {
+	private double inversePositionX(double x, double theta) {
 		double centerCorrection = SENSOR_POS_X;
 		if (isPositiveXDirection(theta)) { // x is changing positively
 			x += centerCorrection;
@@ -148,7 +148,7 @@ public class OdometryCorrection extends Thread { //How frequently the correction
 		}
 		return x;
 	}
-	public double inversePositionY(double y, double theta) {
+	private double inversePositionY(double y, double theta) {
 		double centerCorrection = SENSOR_POS_Y;
 		if (isPositiveYDirection(theta)) { // y is changing positively
 			y += centerCorrection;
