@@ -170,7 +170,7 @@ public class Controller {
 			localizer.doUSLocalization();
 			localizer.doLSLocalization();
 			//Start OdoCorrection
-//			odoCorrection.start();
+			odoCorrection.start();
 			
 			//Full Search and Nav
 			task = Task.NAVIGATING;
